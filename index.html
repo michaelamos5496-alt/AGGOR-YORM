@@ -939,7 +939,8 @@ html.js .reveal.active {
                         culture and leave a lasting legacy.</p>
                 </div>
                 <div class="image-block">
-                    <video src="assets/about-video.mp4" class="about-image" autoplay loop muted playsinline></video>
+                    <video src="assets/about-video.mp4" class="about-image" autoplay loop muted playsinline
+                        preload="auto"></video>
                 </div>
             </div>
         </section>
@@ -1138,6 +1139,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
 
     // ── Scroll Reveal Animations ──────────────────────────────────────────────
+    // Anything already in the viewport at load (e.g. arriving via an anchor
+    // link) is shown immediately — the observer only animates what scrolls in later.
+    document.querySelectorAll('.reveal').forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) {
+            el.classList.add('active');
+        }
+    });
+
     if (!('IntersectionObserver' in window)) {
         document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
     } else {
@@ -1153,11 +1163,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     }
 
-    // ── About Video — Mobile Autoplay Nudge ───────────────────────────────────
-    // iOS sometimes refuses autoplay (e.g. Low Power Mode); retry on first touch.
+    // ── About Video — Autoplay Nudge & Fallback ───────────────────────────────
+    // Some browsers refuse autoplay (e.g. iOS Low Power Mode, strict settings).
+    // Retry on first touch; if it still won't play, show controls so the
+    // video is never just an empty box.
     const aboutVideo = document.querySelector('.about-image');
     if (aboutVideo && aboutVideo.tagName === 'VIDEO') {
-        const tryPlay = () => { aboutVideo.play().catch(() => {}); };
+        const tryPlay = () => {
+            const p = aboutVideo.play();
+            if (p && p.then) {
+                p.then(() => { aboutVideo.controls = false; })
+                 .catch(() => { aboutVideo.controls = true; });
+            }
+        };
         tryPlay();
         document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
     }
