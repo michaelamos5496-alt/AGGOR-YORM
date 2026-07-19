@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggor Yorm | Media Producer & Director</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Portfolio of Aggor Yorm, a Media Producer and Director specializing in premium visual storytelling.">
+
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <style>
+/* ==========================================================================
+   CSS Variables & Reset
+   ========================================================================== */
+:root {
+    --color-bg: #FFFFFF;
+    --color-text: #111111;
+    --color-text-light: #555555;
+    --color-accent: #000000;
+    --color-border: #EAEAEA;
+
+    --font-main: 'Montserrat', sans-serif;
+
+    --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+    --spacing-xl: 8rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+.section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300;
+    margin-bottom: var(--spacing-lg);
+    letter-spacing: -0.01em;
+}
+
+p {
+    color: var(--color-text-light);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ==========================================================================
+   Layout & Utilities
+   ========================================================================== */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section {
+    padding: var(--spacing-xl) 0;
+}
+
+.mt-4 {
+    margin-top: var(--spacing-lg);
+}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 2rem 0;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+
+.navbar.scrolled {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.nav-container {
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    font-size: 0.9rem;
+    font-weight: 400;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--color-accent);
+    transition: var(--transition);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001; /* stays above the fullscreen nav overlay */
+    padding: 10px;
+    margin-right: -10px;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 2px;
+    margin: 5px auto;
+    background-color: var(--color-text);
+    transition: var(--transition);
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero {
+    position: relative;
+    height: 100vh;
+    height: 100svh; /* mobile browsers: ignore collapsing URL bar */
+    display: flex;
+    align-items: center;
+    padding: 0;
+    /* Remove inherited section padding for perfect vertical center */
+    overflow: hidden;
+}
+
+.hero-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    /* Handled by .text-block */
+}
+
+.hero-image {
+    /* Handled by .image-block */
+}
+
+.hero-image img {
+    width: 100%;
+    height: 600px;
+    height: min(600px, 72svh); /* never taller than a short laptop screen */
+    object-fit: cover;
+    filter: grayscale(0%);
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-text);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--color-text);
+    z-index: -1;
+    transition: var(--transition);
+}
+
+.cta-button:hover {
+    color: var(--color-bg);
+}
+
+.cta-button:hover::before {
+    width: 100%;
+}
+
+/* ==========================================================================
+   About Section
+   ========================================================================== */
+.split-layout {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.text-block {
+    flex: 1;
+    padding-right: var(--spacing-md);
+}
+
+.image-block {
+    flex: 1;
+}
+
+.list-block {
+    flex: 1;
+}
+
+.list-title {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.clientele .split-layout {
+    align-items: flex-start;
+}
+
+/* About Specific Dynamic Layout */
+#about .split-layout {
+    position: relative;
+    min-height: 600px;
+}
+
+#about .text-block {
+    width: calc(50% - (var(--spacing-lg) / 2));
+    flex: none;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateX(-20px);
+}
+
+#about:hover .text-block {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#about .image-block {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#about:hover .image-block {
+    width: calc(50% - (var(--spacing-lg) / 2));
+}
+
+.about-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0%);
+    transition: filter 0.8s ease;
+}
+
+#about:hover .about-image {
+    filter: grayscale(0%);
+}
+
+/* Touch tablets wider than the mobile breakpoint can't hover — show the
+   split layout in its revealed state permanently */
+@media (hover: none) and (min-width: 993px) {
+    #about .text-block {
+        opacity: 1;
+        transform: none;
+    }
+
+    #about .image-block {
+        width: calc(50% - (var(--spacing-lg) / 2));
+    }
+}
+
+/* ==========================================================================
+   Work / Portfolio Section — Film Strip
+   ========================================================================== */
+.portfolio-grid {
+    /* Horizontal film strip: swipe on touch, drag on desktop */
+    --perf-height: 0.9rem;   /* sprocket hole height */
+    --frame-pad-y: 3.1rem;   /* filmstock above/below each frame */
+    --frame-pad-x: 0.75rem;  /* filmstock between frames */
+
+    overflow: hidden;
+    background: #0A0A0A;
+    cursor: grab;
+    touch-action: pan-y; /* horizontal drag moves the strip, vertical swipe scrolls the page */
+
+    /* Full-bleed: break out of the centered container */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+}
+
+.portfolio-grid.dragging {
+    cursor: grabbing;
+    user-select: none;
+}
+
+/* Without JS there is no drag engine — fall back to native scrolling */
+html:not(.js) .portfolio-grid {
+    overflow-x: auto;
+}
+
+/* The moving reel — JS translates this for the infinite loop */
+.film-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+}
+
+.portfolio-item {
+    position: relative;
+    flex: 0 0 clamp(560px, 58vw, 920px);
+    padding: var(--frame-pad-y) var(--frame-pad-x);
+}
+
+/* Sprocket holes punched along the top and bottom of the strip */
+.portfolio-item::before,
+.portfolio-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--perf-height);
+    background-image: repeating-linear-gradient(90deg,
+            transparent 0,
+            transparent 8px,
+            #EFEFEF 8px,
+            #EFEFEF 18px);
+    border-radius: 1px;
+}
+
+.portfolio-item::before {
+    top: 1.1rem;
+}
+
+.portfolio-item::after {
+    bottom: 1.1rem;
+}
+
+/* The frame itself — 16:9 via padding hack, works in every browser */
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 0;
+    padding-top: 56.25%;
+    background: #000;
+    outline: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Iframe fills the frame; slight over-scale hides the player's letterbox edges */
+.image-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    transform: scale(1.15);
+    pointer-events: none;
+    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.portfolio-item:hover .image-wrapper iframe {
+    transform: scale(1.25);
+}
+
+.portfolio-info {
+    position: absolute;
+    bottom: var(--frame-pad-y);
+    left: var(--frame-pad-x);
+    right: var(--frame-pad-x);
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.portfolio-info h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.portfolio-info p {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.center-cta {
+    text-align: center;
+}
+
+.cta-link {
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-text);
+    padding-bottom: 4px;
+}
+
+.cta-link:hover {
+    color: var(--color-text-light);
+    border-color: var(--color-text-light);
+}
+
+/* ==========================================================================
+   Services Section
+   ========================================================================== */
+.services {
+    background-color: #FAFAFA;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.service-card {
+    padding: var(--spacing-lg) var(--spacing-md);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+}
+
+.service-number {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.service-card p {
+    font-size: 1rem;
+}
+
+/* ==========================================================================
+   Contact Section & Footer
+   ========================================================================== */
+.contact-text {
+    font-size: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+
+.email-link {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 300;
+    position: relative;
+    display: inline-block;
+}
+
+.email-link::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.email-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.social-link {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.social-link:hover {
+    color: var(--color-text-light);
+}
+
+.footer {
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+}
+
+.footer p {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+.clean-list li {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.clean-list li:last-child {
+    border-bottom: none;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+html.js .reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+html.js .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+/* ── Tablet (≤ 992px) ── */
+@media screen and (max-width: 992px) {
+    :root {
+        --spacing-xl: 5rem;
+    }
+
+    /* Hero: stack text above image at full opacity instead of fading it */
+    .hero {
+        height: auto;
+        min-height: 100svh;
+        padding: 8rem 0 var(--spacing-lg);
+    }
+
+    .hero-container.split-layout {
+        gap: var(--spacing-md);
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero-image img {
+        height: clamp(300px, 42vh, 480px);
+        object-position: center 20%;
+    }
+
+    .split-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .text-block {
+        padding-right: 0;
+    }
+
+    /* Reset About dynamic hover layout for stacked flow */
+    #about .split-layout {
+        min-height: auto;
+    }
+
+    #about .text-block {
+        width: 100%;
+        opacity: 1;
+        transform: none;
+    }
+
+    #about .image-block {
+        position: relative;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+        min-height: 240px; /* fallback for browsers without aspect-ratio */
+        margin-top: var(--spacing-md);
+    }
+
+    #about:hover .image-block {
+        width: 100%;
+    }
+
+    /* Clientele: keep two columns side by side on tablet */
+    .clientele .split-layout {
+        flex-direction: row;
+        gap: var(--spacing-md);
+    }
+
+    /* Film strip: wider frames so roughly 1.3 are visible */
+    .portfolio-item {
+        flex-basis: 72vw;
+    }
+
+    .portfolio-info {
+        padding: 1.25rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .service-card {
+        padding: var(--spacing-md);
+    }
+
+    .service-number {
+        margin-bottom: 1rem;
+    }
+}
+
+/* ── Mobile (≤ 768px) ── */
+@media screen and (max-width: 768px) {
+    :root {
+        --spacing-xl: 4rem;
+        --spacing-lg: 3rem;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        height: 100dvh;
+        width: 100%;
+        background-color: var(--color-bg);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: right 0.5s ease-in-out;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-link {
+        font-size: 1.5rem;
+        padding: 0.5rem 1rem; /* comfortable tap target */
+    }
+
+    .menu-toggle.is-active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.is-active .bar:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle.is-active .bar:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .hero {
+        padding-top: 7rem;
+    }
+
+    .hero-image img {
+        height: clamp(260px, 38vh, 400px);
+    }
+
+    /* Clientele columns stack on phones */
+    .clientele .split-layout {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    /* Film strip: one frame nearly full width, next frame peeking for swipe cue */
+    .portfolio-grid {
+        --frame-pad-y: 2.1rem;
+        --perf-height: 0.6rem;
+    }
+
+    .portfolio-item {
+        flex-basis: 88vw;
+    }
+
+    .portfolio-item::before {
+        top: 0.7rem;
+    }
+
+    .portfolio-item::after {
+        bottom: 0.7rem;
+    }
+
+    .portfolio-info {
+        padding: 1rem;
+    }
+
+    .portfolio-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .contact-text {
+        font-size: 1.15rem;
+        margin-bottom: 2rem;
+    }
+
+    .social-links {
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
+    }
+
+    .social-link {
+        padding: 0.5rem 0; /* comfortable tap target */
+    }
+}
+
+/* ── Small phones (≤ 480px) ── */
+@media screen and (max-width: 480px) {
+    p {
+        font-size: 1rem;
+    }
+
+    .list-title {
+        font-size: 1.5rem;
+    }
+
+    .clean-list li {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .cta-button {
+        display: block;
+        text-align: center;
+        padding: 1rem 1.5rem;
+    }
+
+    .email-link {
+        word-break: break-word;
+    }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    html.js .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .cta-button,
+    .cta-button::before,
+    .image-wrapper iframe,
+    .portfolio-info,
+    .nav-links {
+        transition: none;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">AGGOR YORM.</a>
+            <div class="menu-toggle" id="mobile-menu" role="button" tabindex="0" aria-label="Toggle menu"
+                aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#work" class="nav-link">Selected Work</a></li>
+                <li><a href="#services" class="nav-link">Expertise</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <header class="hero section reveal">
+            <div class="hero-container split-layout">
+                <div class="hero-content text-block">
+                    <p class="subtitle">Creative Strategist, Producer & Director</p>
+                    <h1 class="title">Shaping ideas into<br>unforgettable experiences.</h1>
+                    <a href="#work" class="cta-button">Explore Works</a>
+                </div>
+                <div class="hero-image image-block">
+                    <img src="assets/JHOE5456.JPG" alt="Aggor Yorm Editorial Portrait">
+                </div>
+            </div>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="about section reveal">
+            <div class="container split-layout">
+                <div class="text-block">
+                    <h2 class="section-title">About</h2>
+                    <p>Working where storytelling, culture, entertainment, and strategy meet, I am dedicated to shaping
+                        ideas into unforgettable experiences.</p>
+                    <p>Whether producing a live television event, directing a documentary, building an original IP, or
+                        advising a brand, my mission is to shape African stories and creative businesses that influence
+                        culture and leave a lasting legacy.</p>
+                </div>
+                <div class="image-block">
+                    <video src="assets/about-video.mp4" class="about-image" autoplay loop muted playsinline></video>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clientele & Projects -->
+        <section id="clientele" class="clientele section reveal" style="background-color: #FAFAFA;">
+            <div class="container split-layout">
+                <div class="list-block">
+                    <h2 class="section-title list-title">Clientele Categories</h2>
+                    <ul class="clean-list">
+                        <li>FanMilk</li>
+                        <li>Echo House</li>
+                        <li>Charter House</li>
+                        <li>Burniton Group</li>
+                        <li>One Shot Studios</li>
+                    </ul>
+                </div>
+                <div class="list-block">
+                    <h2 class="section-title list-title">Notable Projects</h2>
+                    <ul class="clean-list">
+                        <li>Miss Malaika</li>
+                        <li>Telecel Music Awards</li>
+                        <li>Besties</li>
+                        <li>Black Star line</li>
+                        <li>Global Citizen</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selected Work / Portfolio -->
+        <section id="work" class="work section">
+            <div class="container">
+                <h2 class="section-title">Selected Works</h2>
+                <div class="portfolio-grid">
+                    <div class="film-track" id="film-track">
+                    <div class="portfolio-item">
+                        <div class="image-wrapper">
+                            <iframe title="vimeo-player"
+                                src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
+                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Cinematic Campaign</h3>
+                            <p>Production</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="image-wrapper">
+                            <iframe title="vimeo-player"
+                                src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
+                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Brand Narrative</h3>
+                            <p>Creative Direction</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="image-wrapper">
+                            <iframe title="vimeo-player"
+                                src="https://player.vimeo.com/video/1025899842?background=1&autopause=0"
+                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Documentary Series</h3>
+                            <p>Producer</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="image-wrapper">
+                            <iframe title="vimeo-player"
+                                src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
+                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="portfolio-info">
+                            <h3>Music Video</h3>
+                            <p>Director</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="center-cta mt-4">
+                    <a href="#contact" class="cta-link">View Full Archive &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services / Expertise -->
+        <section id="services" class="services section reveal">
+            <div class="container">
+                <h2 class="section-title text-center">Expertise</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-number">01</div>
+                        <h3>Creative Strategy</h3>
+                        <p>Seeing opportunities others don't. Designing ideas before they're produced and helping
+                            brands, networks, and creators think bigger.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-number">02</div>
+                        <h3>Production Excellence</h3>
+                        <p>Television, live experiences, and original formats. Ensuring every production reflects
+                            world-class precision and professionalism.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-number">03</div>
+                        <h3>Storytelling</h3>
+                        <p>Every project must have emotional clarity. Whether it's a reality show, documentary, or
+                            campaign, the audience should feel something.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact section reveal">
+            <div class="container text-center">
+                <h2 class="section-title">Let's Create</h2>
+                <p class="contact-text">Available for select projects and collaborations globally.</p>
+                <a href="mailto:hello@aggoryorm.com" class="email-link">hello@aggoryorm.com</a>
+
+                <div class="social-links mt-4">
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Vimeo</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2026 Aggor Yorm. All rights reserved.</p>
+            <p>Developed by Mickey D</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+document.documentElement.classList.add('js');
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ── Mobile Menu Toggle ────────────────────────────────────────────────────
+    const menuToggle = document.querySelector('#mobile-menu');
+    const navLinks   = document.querySelector('.nav-links');
+
+    const setMenu = (open) => {
+        menuToggle.classList.toggle('is-active', open);
+        navLinks.classList.toggle('active', open);
+        document.body.classList.toggle('menu-open', open);
+        menuToggle.setAttribute('aria-expanded', String(open));
+    };
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            setMenu(!navLinks.classList.contains('active'));
+        });
+
+        // Keyboard support for the toggle
+        menuToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setMenu(!navLinks.classList.contains('active'));
+            }
+        });
+    }
+
+    // Close mobile menu when clicking a nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                setMenu(false);
+            }
+        });
+    });
+
+    // If the viewport grows past the mobile breakpoint with the menu open,
+    // release the page scroll lock
+    const desktopQuery = window.matchMedia('(min-width: 769px)');
+    if (desktopQuery.addEventListener) {
+        desktopQuery.addEventListener('change', (e) => {
+            if (e.matches) setMenu(false);
+        });
+    }
+
+    // ── Navbar Scrolled State ─────────────────────────────────────────────────
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // ── Scroll Reveal Animations ──────────────────────────────────────────────
+    if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+    } else {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    }
+
+    // ── About Video — Mobile Autoplay Nudge ───────────────────────────────────
+    // iOS sometimes refuses autoplay (e.g. Low Power Mode); retry on first touch.
+    const aboutVideo = document.querySelector('.about-image');
+    if (aboutVideo && aboutVideo.tagName === 'VIDEO') {
+        const tryPlay = () => { aboutVideo.play().catch(() => {}); };
+        tryPlay();
+        document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+    }
+
+    // ── Film Strip — Infinite Loop ────────────────────────────────────────────
+    // Frames are cloned once; the track position wraps with a modulo, so the
+    // reel never ends. Moves only when dragged (mouse) or swiped (touch).
+    const filmStrip = document.querySelector('.portfolio-grid');
+    const filmTrack = document.getElementById('film-track');
+
+    if (filmStrip && filmTrack) {
+        Array.from(filmTrack.children).forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            filmTrack.appendChild(clone);
+        });
+
+        let setWidth = 0;   // width of one set of frames (half the track)
+        let offset   = 0;   // current reel position
+        let dragging = false;
+        let lastX    = 0;
+
+        // Fractional width — scrollWidth rounds to integers, which leaves a
+        // sliver of a seam at the wrap point on vw-sized frames
+        const measure = () => { setWidth = filmTrack.getBoundingClientRect().width / 2; };
+        measure();
+        window.addEventListener('resize', measure);
+
+        function render() {
+            if (setWidth > 0) {
+                offset = ((offset % setWidth) + setWidth) % setWidth;
+                filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+            }
+        }
+
+        // Scrolling while the cursor is over the strip slides the reel
+        filmStrip.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            offset += delta * (e.deltaMode === 1 ? 16 : 1); // deltaMode 1 = lines, not pixels
+            render();
+        }, { passive: false });
+
+        filmStrip.addEventListener('pointerdown', (e) => {
+            dragging = true;
+            lastX = e.clientX;
+            filmStrip.classList.add('dragging');
+            filmStrip.setPointerCapture(e.pointerId);
+        });
+
+        filmStrip.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            offset -= e.clientX - lastX;
+            lastX = e.clientX;
+            render();
+        });
+
+        ['pointerup', 'pointercancel'].forEach(type => {
+            filmStrip.addEventListener(type, () => {
+                dragging = false;
+                filmStrip.classList.remove('dragging');
+            });
+        });
+    }
+});
+
+    </script>
+</body>
+
+</html>
