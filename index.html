@@ -788,9 +788,17 @@ html:not(.js) .portfolio-grid {
     transition: var(--transition);
 }
 
-.strip-nav:hover {
-    background-color: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.5);
+/* Hover feedback only on devices with a real pointer — on touch screens
+   :hover sticks after a tap, leaving the button stuck highlighted */
+@media (hover: hover) {
+    .strip-nav:hover {
+        background-color: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+.strip-nav:active {
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 .strip-nav svg {
@@ -1685,12 +1693,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Netflix-style arrows: each click slides the reel by one frame with
-        // an eased tween; the modulo wrap in render() keeps the loop endless
+        // Netflix-style arrows: every slide lands exactly on a frame boundary.
+        // Rapid clicks queue up (each advances one more frame from the last
+        // target), and swipes snap to the nearest frame on release, so the
+        // strip is never left showing awkward half-cut frames.
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const prevBtn = document.getElementById('strip-prev');
         const nextBtn = document.getElementById('strip-next');
         let slideAnim = null;
+        let pendingTarget = null; // destination of the in-flight tween, if any
 
         const frameWidth = () => {
             const item = filmTrack.querySelector('.portfolio-item');
@@ -1704,14 +1715,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        function slideBy(delta) {
+        function slideTo(target) {
             stopSlide();
+            pendingTarget = target;
             if (reduceMotion) {
-                offset += delta;
+                offset = target;
+                pendingTarget = null;
                 render();
                 return;
             }
             const start = offset;
+            const delta = target - start;
             const startTime = performance.now();
             const DURATION = 500;
             const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -1719,18 +1733,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 const t = Math.min((now - startTime) / DURATION, 1);
                 offset = start + delta * easeOut(t);
                 render();
-                slideAnim = t < 1 ? requestAnimationFrame(step) : null;
+                if (t < 1) {
+                    slideAnim = requestAnimationFrame(step);
+                } else {
+                    slideAnim = null;
+                    pendingTarget = null;
+                }
             };
             slideAnim = requestAnimationFrame(step);
         }
 
-        if (prevBtn) prevBtn.addEventListener('click', () => slideBy(-frameWidth()));
-        if (nextBtn) nextBtn.addEventListener('click', () => slideBy(frameWidth()));
+        const slideFrames = (dir) => {
+            const w = frameWidth();
+            if (!w) return;
+            const base = pendingTarget !== null ? pendingTarget : offset;
+            slideTo((Math.round(base / w) + dir) * w);
+        };
+
+        if (prevBtn) prevBtn.addEventListener('click', () => slideFrames(-1));
+        if (nextBtn) nextBtn.addEventListener('click', () => slideFrames(1));
 
         // Drag (mouse) and swipe (touch) still work for free browsing
         filmStrip.addEventListener('pointerdown', (e) => {
             if (e.target.closest('.strip-nav')) return; // arrows handle their own clicks
             stopSlide();
+            pendingTarget = null;
             dragging = true;
             lastX = e.clientX;
             filmStrip.classList.add('dragging');
@@ -1746,8 +1773,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ['pointerup', 'pointercancel'].forEach(type => {
             filmStrip.addEventListener(type, () => {
+                if (!dragging) return;
                 dragging = false;
                 filmStrip.classList.remove('dragging');
+                const w = frameWidth();
+                if (w) slideTo(Math.round(offset / w) * w); // settle on a full frame
             });
         });
     }
