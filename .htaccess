@@ -1,0 +1,13 @@
+# Caching policy
+# - HTML is always revalidated: visitors get new versions immediately after a deploy
+# - Media assets may be cached for a week (they rarely change and are the heavy files)
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    <FilesMatch "\.(jpg|jpeg|png|webp|gif|svg|mp4|woff2?)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+</IfModule>
