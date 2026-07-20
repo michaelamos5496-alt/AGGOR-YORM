@@ -47,6 +47,7 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    overflow-x: hidden; /* full-bleed 100vw sections: prevent iOS sideways wiggle */
 }
 
 body {
@@ -1558,6 +1559,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Escape closes the overlay menu
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            setMenu(false);
+        }
+    });
+
     // ── Navbar Scrolled State ─────────────────────────────────────────────────
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
@@ -1686,67 +1694,82 @@ document.addEventListener('DOMContentLoaded', () => {
         measure();
         window.addEventListener('resize', measure);
 
+        const wrap = (v) => (setWidth > 0 ? ((v % setWidth) + setWidth) % setWidth : v);
+
+        // Instant positioning (drag + wrap normalization)
         function render() {
-            if (setWidth > 0) {
-                offset = ((offset % setWidth) + setWidth) % setWidth;
-                filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
-            }
+            offset = wrap(offset);
+            filmTrack.style.transition = 'none';
+            filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
         }
 
+        // Actual on-screen position — correct even mid-transition
+        const currentX = () => {
+            const m = getComputedStyle(filmTrack).transform;
+            if (m && m !== 'none') {
+                const p = m.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+, (-?[\d.]+)/);
+                if (p) return -parseFloat(p[1]);
+            }
+            return offset;
+        };
+
         // Netflix-style arrows: every slide lands exactly on a frame boundary.
-        // Rapid clicks queue up (each advances one more frame from the last
-        // target), and swipes snap to the nearest frame on release, so the
-        // strip is never left showing awkward half-cut frames.
+        // The slide itself is a CSS transition — it runs on the compositor, so
+        // mobile/tablet rAF throttling (which stalled the old JS tween mid-
+        // slide) cannot interrupt it. Rapid clicks queue up one frame each,
+        // and swipes snap to the nearest frame on release.
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const prevBtn = document.getElementById('strip-prev');
         const nextBtn = document.getElementById('strip-next');
-        let slideAnim = null;
-        let pendingTarget = null; // destination of the in-flight tween, if any
+        let pendingTarget = null; // destination of the in-flight slide, if any
 
         const frameWidth = () => {
             const item = filmTrack.querySelector('.portfolio-item');
             return item ? item.getBoundingClientRect().width : 0;
         };
 
-        const stopSlide = () => {
-            if (slideAnim) {
-                cancelAnimationFrame(slideAnim);
-                slideAnim = null;
-            }
-        };
-
         function slideTo(target) {
-            stopSlide();
-            pendingTarget = target;
-            if (reduceMotion) {
+            // Pin the reel at its actual on-screen position first
+            offset = currentX();
+
+            if (reduceMotion || setWidth <= 0) {
                 offset = target;
                 pendingTarget = null;
                 render();
                 return;
             }
-            const start = offset;
-            const delta = target - start;
-            const startTime = performance.now();
-            const DURATION = 500;
-            const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-            const step = (now) => {
-                const t = Math.min((now - startTime) / DURATION, 1);
-                offset = start + delta * easeOut(t);
-                render();
-                if (t < 1) {
-                    slideAnim = requestAnimationFrame(step);
-                } else {
-                    slideAnim = null;
-                    pendingTarget = null;
-                }
-            };
-            slideAnim = requestAnimationFrame(step);
+
+            // The track holds two identical sets; shift start + target together
+            // by whole sets so the transition never runs past the track's edges
+            while (Math.min(offset, target) < 0) {
+                offset += setWidth;
+                target += setWidth;
+            }
+            while (Math.min(offset, target) >= setWidth) {
+                offset -= setWidth;
+                target -= setWidth;
+            }
+
+            filmTrack.style.transition = 'none';
+            filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+            void filmTrack.offsetWidth; // reflow: make the transition start from here
+
+            pendingTarget = target;
+            filmTrack.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            filmTrack.style.transform = `translate3d(${-target}px, 0, 0)`;
         }
+
+        filmTrack.addEventListener('transitionend', (e) => {
+            if (e.propertyName !== 'transform' || pendingTarget === null) return;
+            offset = pendingTarget;
+            pendingTarget = null;
+            render(); // normalize back into the wrapped range
+        });
 
         const slideFrames = (dir) => {
             const w = frameWidth();
             if (!w) return;
-            const base = pendingTarget !== null ? pendingTarget : offset;
+            const base = pendingTarget !== null ? pendingTarget : wrap(currentX());
             slideTo((Math.round(base / w) + dir) * w);
         };
 
@@ -1756,8 +1779,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Drag (mouse) and swipe (touch) still work for free browsing
         filmStrip.addEventListener('pointerdown', (e) => {
             if (e.target.closest('.strip-nav')) return; // arrows handle their own clicks
-            stopSlide();
+            offset = wrap(currentX());
             pendingTarget = null;
+            render();
             dragging = true;
             lastX = e.clientX;
             filmStrip.classList.add('dragging');
