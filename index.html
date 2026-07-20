@@ -168,9 +168,11 @@ p {
     backdrop-filter: none;
 }
 
-/* Desktop/tablet: the hero card carries its own logo + menu button, so the
-   fixed navbar slides in only after scrolling (or while the overlay menu is open) */
-@media (min-width: 769px) {
+/* Whenever the hero shows as the three-panel card (desktop, and tablets in
+   landscape), it carries its own logo + menu button, so the fixed navbar
+   slides in only after scrolling (or while the overlay menu is open).
+   Stacked layouts (phones, portrait tablets) keep the navbar visible. */
+@media (min-width: 1201px), (min-width: 769px) and (orientation: landscape) {
     .navbar {
         transform: translateY(-100%);
     }
@@ -896,39 +898,6 @@ html.js .reveal.active {
         --spacing-xl: 5rem;
     }
 
-    /* Hero: keep the full-page three-panel layout, just tightened */
-    .hero-card {
-        grid-template-columns: 32% 39% 29%;
-    }
-
-    .hero-left {
-        padding-left: 1.75rem;
-    }
-
-    .hero-title-group {
-        margin-right: -3.5rem;
-    }
-
-    .hero-dots {
-        display: none;
-    }
-
-    .hero-panel {
-        padding: 2rem 1.5rem 1.75rem;
-    }
-
-    .panel-body {
-        padding-right: 0.5rem;
-    }
-
-    .panel-vertical {
-        display: none;
-    }
-
-    .panel-social {
-        padding-right: 0;
-    }
-
     .split-layout {
         flex-direction: column;
         align-items: stretch;
@@ -978,14 +947,79 @@ html.js .reveal.active {
     }
 }
 
-/* ── Mobile (≤ 768px) ── */
-@media screen and (max-width: 768px) {
-    :root {
-        --spacing-xl: 4rem;
-        --spacing-lg: 3rem;
+/* ── Tablet landscape (769–992px): keep the full-page three-panel hero, tightened ── */
+@media screen and (max-width: 992px) and (orientation: landscape) {
+    .hero-card {
+        grid-template-columns: 32% 39% 29%;
     }
 
-    /* Hero: the panels stack — white panel, portrait, dark panel */
+    .hero-left {
+        padding-left: 1.75rem;
+    }
+
+    .hero-title-group {
+        margin-right: -3.5rem;
+    }
+
+    .hero-dots {
+        display: none;
+    }
+
+    .hero-panel {
+        padding: 2rem 1.5rem 1.75rem;
+    }
+
+    .panel-body {
+        padding-right: 0.5rem;
+    }
+
+    .panel-vertical {
+        display: none;
+    }
+
+    .panel-social {
+        padding-right: 0;
+    }
+}
+
+/* ── Short landscape screens (rotated phones): compress the hero vertically ── */
+@media screen and (min-width: 769px) and (orientation: landscape) and (max-height: 560px) {
+    .hero {
+        min-height: 480px;
+    }
+
+    .hero .title {
+        font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+    }
+
+    .hero-left {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .hero-title-group {
+        padding: 1.5rem 1.5rem 1.5rem 0;
+        margin-right: -3rem;
+    }
+
+    .hero-panel {
+        padding-top: 1.5rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .panel-row {
+        padding: 0.5rem 0.6rem;
+    }
+
+    .panel-num {
+        flex-basis: 34px;
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* ── Stacked hero: phones (any orientation) and portrait tablets ── */
+@media screen and (max-width: 768px), screen and (max-width: 1200px) and (orientation: portrait) {
     .hero {
         height: auto;
         min-height: 0;
@@ -1001,7 +1035,11 @@ html.js .reveal.active {
     }
 
     .hero-logo {
-        display: none; /* the fixed navbar logo covers this on small screens */
+        display: none; /* the fixed navbar logo covers this in stacked mode */
+    }
+
+    .hero-dots {
+        display: none;
     }
 
     .hero-title-group {
@@ -1019,7 +1057,7 @@ html.js .reveal.active {
     }
 
     .hero-photo {
-        height: clamp(260px, 42vh, 420px);
+        height: clamp(260px, 45vh, 460px);
     }
 
     .hero-panel {
@@ -1027,7 +1065,7 @@ html.js .reveal.active {
     }
 
     .panel-top {
-        display: none; /* the fixed navbar hamburger covers this on small screens */
+        display: none; /* the fixed navbar hamburger covers this in stacked mode */
     }
 
     .panel-body {
@@ -1035,9 +1073,22 @@ html.js .reveal.active {
         padding-right: 0;
     }
 
+    .panel-vertical {
+        display: none;
+    }
+
     .panel-social {
         justify-content: flex-start;
+        padding-right: 0;
         margin-top: 2rem;
+    }
+}
+
+/* ── Mobile (≤ 768px) ── */
+@media screen and (max-width: 768px) {
+    :root {
+        --spacing-xl: 4rem;
+        --spacing-lg: 3rem;
     }
 
     /* Clientele columns stack on phones */
@@ -1176,7 +1227,8 @@ html.js .reveal.active {
                 </div>
 
                 <div class="hero-photo">
-                    <img src="assets/JHOE5456.JPG" alt="Aggor Yorm Editorial Portrait">
+                    <img src="assets/JHOE5456.JPG" alt="Aggor Yorm Editorial Portrait" fetchpriority="high"
+                        decoding="async">
                 </div>
 
                 <aside class="hero-panel">
@@ -1194,9 +1246,7 @@ html.js .reveal.active {
                     </div>
 
                     <div class="panel-body">
-                        <h2 class="panel-heading">Profile</h2>
-                        <p>Working where storytelling, culture, entertainment and strategy meet — shaping African
-                            stories and creative businesses that influence culture and leave a lasting legacy.</p>
+                        <h2 class="panel-heading">Expertise</h2>
                     <ul class="panel-list">
                         <li>
                             <div class="panel-row">
@@ -1258,8 +1308,8 @@ html.js .reveal.active {
                         culture and leave a lasting legacy.</p>
                 </div>
                 <div class="image-block">
-                    <video src="assets/about-video.mp4" class="about-image" autoplay loop muted playsinline
-                        preload="auto" disablepictureinpicture
+                    <video src="assets/about-video.mp4" class="about-image" loop muted playsinline
+                        preload="metadata" disablepictureinpicture
                         controlslist="nodownload nofullscreen noremoteplayback"></video>
                 </div>
             </div>
@@ -1300,7 +1350,7 @@ html.js .reveal.active {
                     <div class="portfolio-item">
                         <div class="image-wrapper">
                             <iframe title="vimeo-player"
-                                src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
+                                data-src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -1312,7 +1362,7 @@ html.js .reveal.active {
                     <div class="portfolio-item">
                         <div class="image-wrapper">
                             <iframe title="vimeo-player"
-                                src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
+                                data-src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -1324,7 +1374,7 @@ html.js .reveal.active {
                     <div class="portfolio-item">
                         <div class="image-wrapper">
                             <iframe title="vimeo-player"
-                                src="https://player.vimeo.com/video/1025899842?background=1&autopause=0"
+                                data-src="https://player.vimeo.com/video/1025899842?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -1336,7 +1386,7 @@ html.js .reveal.active {
                     <div class="portfolio-item">
                         <div class="image-wrapper">
                             <iframe title="vimeo-player"
-                                src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
+                                data-src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -1455,10 +1505,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     }
 
-    // ── About Video — Autoplay Nudge ──────────────────────────────────────────
-    // Some browsers refuse autoplay (e.g. iOS Low Power Mode, strict settings).
-    // The video is purely decorative, so never surface native player controls;
-    // just retry playback on the first user interaction.
+    // ── About Video — Deferred Playback ───────────────────────────────────────
+    // The large loop only starts downloading/playing once the About section
+    // nears the viewport, and pauses again off-screen (saves mobile data and
+    // battery). Decorative only — native player controls are never shown.
     const aboutVideo = document.querySelector('.about-image');
     if (aboutVideo && aboutVideo.tagName === 'VIDEO') {
         aboutVideo.controls = false;
@@ -1466,9 +1516,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const p = aboutVideo.play();
             if (p && p.catch) p.catch(() => {});
         };
-        tryPlay();
+
+        if ('IntersectionObserver' in window) {
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        tryPlay();
+                    } else {
+                        aboutVideo.pause();
+                    }
+                });
+            }, { rootMargin: '200px 0px' });
+            videoObserver.observe(aboutVideo);
+        } else {
+            tryPlay();
+        }
+
+        // Autoplay nudge: some browsers only allow playback after a first
+        // interaction — retry then if the video is on screen
         ['touchstart', 'click', 'scroll'].forEach(evt => {
-            document.addEventListener(evt, tryPlay, { once: true, passive: true });
+            document.addEventListener(evt, () => {
+                const r = aboutVideo.getBoundingClientRect();
+                if (r.top < window.innerHeight && r.bottom > 0) tryPlay();
+            }, { once: true, passive: true });
         });
     }
 
@@ -1485,6 +1555,27 @@ document.addEventListener('DOMContentLoaded', () => {
             clone.setAttribute('aria-hidden', 'true');
             filmTrack.appendChild(clone);
         });
+
+        // The 8 Vimeo players (4 frames + 4 clones) are expensive on mobile —
+        // hold their src in data-src and load only when the strip approaches
+        const loadFrames = () => {
+            filmTrack.querySelectorAll('iframe[data-src]').forEach(frame => {
+                frame.src = frame.dataset.src;
+                frame.removeAttribute('data-src');
+            });
+        };
+
+        if ('IntersectionObserver' in window) {
+            const frameObserver = new IntersectionObserver((entries, obs) => {
+                if (entries.some(entry => entry.isIntersecting)) {
+                    loadFrames();
+                    obs.disconnect();
+                }
+            }, { rootMargin: '600px 0px' });
+            frameObserver.observe(filmStrip);
+        } else {
+            loadFrames();
+        }
 
         let setWidth = 0;   // width of one set of frames (half the track)
         let offset   = 0;   // current reel position
@@ -1506,7 +1597,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Auto-slide: constant drift, paused while hovered or dragged.
         // Skipped entirely for users who prefer reduced motion.
+        // Hover-pause only applies to devices with a real pointer — on touch
+        // screens a tap makes :hover stick, which froze the reel permanently.
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const canHover = window.matchMedia('(hover: hover)').matches;
         const SPEED = 40; // px per second
         let hovered = false;
         let lastTick = performance.now();
@@ -1525,8 +1619,10 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(tick);
         }
 
-        filmStrip.addEventListener('mouseenter', () => { hovered = true; });
-        filmStrip.addEventListener('mouseleave', () => { hovered = false; });
+        if (canHover) {
+            filmStrip.addEventListener('mouseenter', () => { hovered = true; });
+            filmStrip.addEventListener('mouseleave', () => { hovered = false; });
+        }
 
         filmStrip.addEventListener('pointerdown', (e) => {
             dragging = true;
