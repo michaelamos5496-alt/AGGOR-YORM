@@ -768,6 +768,34 @@ html:not(.js) .portfolio-grid {
     pointer-events: none;
 }
 
+/* Touch devices: the reel is driven by a compositor CSS animation instead of
+   JS — phones/tablets throttle rAF loops, which made the drift stall there.
+   The track holds two identical sets of frames, so -50% is exactly one set
+   and the loop wraps seamlessly. */
+.portfolio-grid.autoscroll {
+    cursor: default;
+}
+
+.portfolio-grid.autoscroll .film-track {
+    animation: filmreel 50s linear infinite;
+}
+
+@keyframes filmreel {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .portfolio-grid.autoscroll .film-track {
+        animation: none;
+    }
+}
+
 .portfolio-info {
     position: absolute;
     bottom: var(--frame-pad-y);
@@ -1602,6 +1630,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFrames();
         }
 
+        // Touch devices: hand the reel to the CSS marquee animation
+        if (touchDevice) {
+            filmStrip.classList.add('autoscroll');
+        }
+
         let setWidth = 0;   // width of one set of frames (half the track)
         let offset   = 0;   // current reel position
         let dragging = false;
@@ -1640,7 +1673,7 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(tick);
         }
 
-        if (!reduceMotion) {
+        if (!reduceMotion && !touchDevice) {
             requestAnimationFrame(tick);
         }
 
@@ -1649,26 +1682,30 @@ document.addEventListener('DOMContentLoaded', () => {
             filmStrip.addEventListener('mouseleave', () => { hovered = false; });
         }
 
-        filmStrip.addEventListener('pointerdown', (e) => {
-            dragging = true;
-            lastX = e.clientX;
-            filmStrip.classList.add('dragging');
-            filmStrip.setPointerCapture(e.pointerId);
-        });
-
-        filmStrip.addEventListener('pointermove', (e) => {
-            if (!dragging) return;
-            offset -= e.clientX - lastX;
-            lastX = e.clientX;
-            render();
-        });
-
-        ['pointerup', 'pointercancel'].forEach(type => {
-            filmStrip.addEventListener(type, () => {
-                dragging = false;
-                filmStrip.classList.remove('dragging');
+        // Manual drag applies to mouse-driven devices only — on touch the CSS
+        // animation owns the track's transform
+        if (!touchDevice) {
+            filmStrip.addEventListener('pointerdown', (e) => {
+                dragging = true;
+                lastX = e.clientX;
+                filmStrip.classList.add('dragging');
+                filmStrip.setPointerCapture(e.pointerId);
             });
-        });
+
+            filmStrip.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                offset -= e.clientX - lastX;
+                lastX = e.clientX;
+                render();
+            });
+
+            ['pointerup', 'pointercancel'].forEach(type => {
+                filmStrip.addEventListener(type, () => {
+                    dragging = false;
+                    filmStrip.classList.remove('dragging');
+                });
+            });
+        }
     }
 });
 
