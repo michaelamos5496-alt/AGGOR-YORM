@@ -635,6 +635,15 @@ p {
     object-fit: cover;
     filter: grayscale(0%);
     transition: filter 0.8s ease;
+    /* Decorative background video: never show native player UI */
+    pointer-events: none;
+}
+
+.about-image::-webkit-media-controls,
+.about-image::-webkit-media-controls-enclosure,
+.about-image::-webkit-media-controls-panel {
+    display: none !important;
+    -webkit-appearance: none;
 }
 
 #about:hover .about-image {
@@ -1250,7 +1259,8 @@ html.js .reveal.active {
                 </div>
                 <div class="image-block">
                     <video src="assets/about-video.mp4" class="about-image" autoplay loop muted playsinline
-                        preload="auto"></video>
+                        preload="auto" disablepictureinpicture
+                        controlslist="nodownload nofullscreen noremoteplayback"></video>
                 </div>
             </div>
         </section>
@@ -1445,26 +1455,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     }
 
-    // ── About Video — Autoplay Nudge & Fallback ───────────────────────────────
+    // ── About Video — Autoplay Nudge ──────────────────────────────────────────
     // Some browsers refuse autoplay (e.g. iOS Low Power Mode, strict settings).
-    // Retry on first touch; if it still won't play, show controls so the
-    // video is never just an empty box.
+    // The video is purely decorative, so never surface native player controls;
+    // just retry playback on the first user interaction.
     const aboutVideo = document.querySelector('.about-image');
     if (aboutVideo && aboutVideo.tagName === 'VIDEO') {
+        aboutVideo.controls = false;
         const tryPlay = () => {
             const p = aboutVideo.play();
-            if (p && p.then) {
-                p.then(() => { aboutVideo.controls = false; })
-                 .catch(() => { aboutVideo.controls = true; });
-            }
+            if (p && p.catch) p.catch(() => {});
         };
         tryPlay();
-        document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+        ['touchstart', 'click', 'scroll'].forEach(evt => {
+            document.addEventListener(evt, tryPlay, { once: true, passive: true });
+        });
     }
 
-    // ── Film Strip — Infinite Loop ────────────────────────────────────────────
+    // ── Film Strip — Infinite Auto-Slide ──────────────────────────────────────
     // Frames are cloned once; the track position wraps with a modulo, so the
-    // reel never ends. Moves only when dragged (mouse) or swiped (touch).
+    // reel never ends. It drifts on its own like a rolling reel, pausing while
+    // hovered or dragged; drag/swipe still works for manual browsing.
     const filmStrip = document.querySelector('.portfolio-grid');
     const filmTrack = document.getElementById('film-track');
 
@@ -1493,13 +1504,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Scrolling while the cursor is over the strip slides the reel
-        filmStrip.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            offset += delta * (e.deltaMode === 1 ? 16 : 1); // deltaMode 1 = lines, not pixels
-            render();
-        }, { passive: false });
+        // Auto-slide: constant drift, paused while hovered or dragged.
+        // Skipped entirely for users who prefer reduced motion.
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const SPEED = 40; // px per second
+        let hovered = false;
+        let lastTick = performance.now();
+
+        function tick(now) {
+            const dt = Math.min((now - lastTick) / 1000, 0.1); // cap: ignore inactive-tab gaps
+            lastTick = now;
+            if (!hovered && !dragging) {
+                offset += SPEED * dt;
+                render();
+            }
+            requestAnimationFrame(tick);
+        }
+
+        if (!reduceMotion) {
+            requestAnimationFrame(tick);
+        }
+
+        filmStrip.addEventListener('mouseenter', () => { hovered = true; });
+        filmStrip.addEventListener('mouseleave', () => { hovered = false; });
 
         filmStrip.addEventListener('pointerdown', (e) => {
             dragging = true;
