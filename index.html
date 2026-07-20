@@ -162,6 +162,25 @@ p {
     border-bottom: 1px solid var(--color-border);
 }
 
+/* At the top of the page the nav floats transparently over the gray backdrop */
+.navbar:not(.scrolled) {
+    background-color: transparent;
+    backdrop-filter: none;
+}
+
+/* Desktop/tablet: the hero card carries its own logo + menu button, so the
+   fixed navbar slides in only after scrolling (or while the overlay menu is open) */
+@media (min-width: 769px) {
+    .navbar {
+        transform: translateY(-100%);
+    }
+
+    .navbar.scrolled,
+    body.menu-open .navbar {
+        transform: translateY(0);
+    }
+}
+
 .nav-container {
     width: 90%;
     max-width: 1400px;
@@ -177,15 +196,32 @@ p {
     letter-spacing: 0.1em;
 }
 
+/* Fullscreen overlay menu — used at every screen size */
 .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    background-color: var(--color-bg);
     display: flex;
-    gap: 2.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: right 0.5s ease-in-out;
+}
+
+.nav-links.active {
+    right: 0;
 }
 
 .nav-link {
-    font-size: 0.9rem;
+    font-size: 1.5rem;
     font-weight: 400;
     position: relative;
+    padding: 0.5rem 1rem;
 }
 
 .nav-link::after {
@@ -204,7 +240,7 @@ p {
 }
 
 .menu-toggle {
-    display: none;
+    display: block;
     cursor: pointer;
     position: relative;
     z-index: 1001; /* stays above the fullscreen nav overlay */
@@ -221,77 +257,312 @@ p {
     transition: var(--transition);
 }
 
+.menu-toggle.is-active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.is-active .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.is-active .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 /* ==========================================================================
-   Hero Section
+   Hero Section — full-bleed three-panel editorial layout
    ========================================================================== */
 .hero {
-    position: relative;
     height: 100vh;
     height: 100svh; /* mobile browsers: ignore collapsing URL bar */
-    display: flex;
-    align-items: center;
-    padding: 0;
-    /* Remove inherited section padding for perfect vertical center */
+    min-height: 560px;
+}
+
+.hero-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 29% 42% 29%;
     overflow: hidden;
 }
 
-.hero-container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
+/* ── Left: white typography panel ── */
+.hero-left {
     position: relative;
     z-index: 2;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2.75rem 0 2.5rem clamp(2rem, 4.5vw, 4rem);
 }
 
-.hero-content {
-    /* Handled by .text-block */
+.hero-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    line-height: 1.4;
 }
 
-.hero-image {
-    /* Handled by .image-block */
+.hero-logo svg {
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
 }
 
-.hero-image img {
-    width: 100%;
-    height: 600px;
-    height: min(600px, 72svh); /* never taller than a short laptop screen */
-    object-fit: cover;
-    filter: grayscale(0%);
-}
-
-.cta-button {
-    display: inline-block;
-    padding: 1rem 2.5rem;
-    background-color: transparent;
-    color: var(--color-text);
-    border: 1px solid var(--color-text);
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: var(--spacing-md);
+/* White block extends past the panel edge so the title overlaps the photo */
+.hero-title-group {
+    background-color: #FFFFFF;
+    margin: auto -5rem auto 0;
+    padding: 2.75rem 2rem;
     position: relative;
-    overflow: hidden;
-    z-index: 1;
+    z-index: 2;
+    align-self: stretch;
 }
 
-.cta-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background-color: var(--color-text);
-    z-index: -1;
+.hero .title {
+    font-size: clamp(2.1rem, 3.7vw, 3.8rem);
+    line-height: 1.15;
+    margin-bottom: 0;
+}
+
+.hero .title strong {
+    font-weight: 700;
+}
+
+.hero-tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--color-text-light);
+    margin: 1.5rem 0 0;
+    text-align: center;
+}
+
+.hero-meta {
+    margin-top: auto;
+}
+
+.hero-counter {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.hero-counter strong {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.hero-counter span {
+    display: inline-block;
+    margin-left: 0.5rem;
     transition: var(--transition);
 }
 
-.cta-button:hover {
-    color: var(--color-bg);
+.hero-counter:hover span {
+    transform: translateX(6px);
 }
 
-.cta-button:hover::before {
+.hero-dots {
+    position: absolute;
+    left: 1.1rem;
+    top: 42%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.hero-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #D5D5D5;
+}
+
+.hero-dots span:first-child {
+    background-color: var(--color-text);
+}
+
+/* ── Center: full-height portrait ── */
+.hero-photo {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    background-color: #1A1A1A;
+}
+
+/* Tight close-up crop: zoom toward the face so the portrait fills the
+   frame like a studio shot rather than a wide environmental photo */
+.hero-photo img {
+    position: absolute;
+    inset: 0;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+    transform: scale(1.55);
+    transform-origin: 52% 26%;
+    filter: grayscale(100%) contrast(1.05) brightness(0.95);
+}
+
+/* ── Right: dark info panel ── */
+.hero-panel {
+    position: relative;
+    z-index: 1;
+    background-color: #101010;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    padding: 2.2rem 2.4rem 2rem;
+}
+
+.panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-search svg {
+    display: block;
+    width: 17px;
+    height: 17px;
+    fill: #FFFFFF;
+}
+
+.panel-search {
+    opacity: 0.85;
+}
+
+.panel-search:hover {
+    opacity: 1;
+}
+
+.panel-menu {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 6px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+}
+
+.panel-menu span {
+    display: block;
+    height: 2px;
+    width: 34px;
+    background-color: #FFFFFF;
+}
+
+.panel-menu span:last-child {
+    width: 20px;
+}
+
+.panel-body {
+    margin: auto 0;
+    padding-right: 1.75rem;
+}
+
+.panel-heading {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    margin-bottom: 1.1rem;
+}
+
+.hero-panel p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0;
+}
+
+.panel-list {
+    margin-top: 1.75rem;
+}
+
+.panel-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0.75rem;
+}
+
+.panel-list li:first-child .panel-row {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+.panel-num {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.panel-item-title {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.panel-item-meta {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.55);
+    margin-top: 2px;
+}
+
+.panel-vertical {
+    position: absolute;
+    top: 50%;
+    right: 0.95rem;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.panel-social {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.3rem;
+    padding-right: 0.5rem;
+}
+
+.panel-social a {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.panel-social a:hover {
+    color: #FFFFFF;
+}
+
+.panel-social svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
 }
 
 /* ==========================================================================
@@ -518,48 +789,6 @@ html:not(.js) .portfolio-grid {
 }
 
 /* ==========================================================================
-   Services Section
-   ========================================================================== */
-.services {
-    background-color: #FAFAFA;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
-}
-
-.service-card {
-    padding: var(--spacing-lg) var(--spacing-md);
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    transition: var(--transition);
-}
-
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
-}
-
-.service-number {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-text-light);
-    margin-bottom: 2rem;
-}
-
-.service-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.service-card p {
-    font-size: 1rem;
-}
-
-/* ==========================================================================
    Contact Section & Footer
    ========================================================================== */
 .contact-text {
@@ -658,24 +887,37 @@ html.js .reveal.active {
         --spacing-xl: 5rem;
     }
 
-    /* Hero: stack text above image at full opacity instead of fading it */
-    .hero {
-        height: auto;
-        min-height: 100svh;
-        padding: 8rem 0 var(--spacing-lg);
+    /* Hero: keep the full-page three-panel layout, just tightened */
+    .hero-card {
+        grid-template-columns: 32% 39% 29%;
     }
 
-    .hero-container.split-layout {
-        gap: var(--spacing-md);
+    .hero-left {
+        padding-left: 1.75rem;
     }
 
-    .hero-content {
-        max-width: 100%;
+    .hero-title-group {
+        margin-right: -3.5rem;
     }
 
-    .hero-image img {
-        height: clamp(300px, 42vh, 480px);
-        object-position: center 20%;
+    .hero-dots {
+        display: none;
+    }
+
+    .hero-panel {
+        padding: 2rem 1.5rem 1.75rem;
+    }
+
+    .panel-body {
+        padding-right: 0.5rem;
+    }
+
+    .panel-vertical {
+        display: none;
+    }
+
+    .panel-social {
+        padding-right: 0;
     }
 
     .split-layout {
@@ -725,19 +967,6 @@ html.js .reveal.active {
     .portfolio-info {
         padding: 1.25rem;
     }
-
-    .services-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .service-card {
-        padding: var(--spacing-md);
-    }
-
-    .service-number {
-        margin-bottom: 1rem;
-    }
 }
 
 /* ── Mobile (≤ 768px) ── */
@@ -747,51 +976,59 @@ html.js .reveal.active {
         --spacing-lg: 3rem;
     }
 
-    .menu-toggle {
-        display: block;
-    }
-
-    .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        height: 100vh;
-        height: 100dvh;
-        width: 100%;
-        background-color: var(--color-bg);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: right 0.5s ease-in-out;
-    }
-
-    .nav-links.active {
-        right: 0;
-    }
-
-    .nav-link {
-        font-size: 1.5rem;
-        padding: 0.5rem 1rem; /* comfortable tap target */
-    }
-
-    .menu-toggle.is-active .bar:nth-child(2) {
-        opacity: 0;
-    }
-
-    .menu-toggle.is-active .bar:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
-    }
-
-    .menu-toggle.is-active .bar:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
-    }
-
+    /* Hero: the panels stack — white panel, portrait, dark panel */
     .hero {
-        padding-top: 7rem;
+        height: auto;
+        min-height: 0;
     }
 
-    .hero-image img {
-        height: clamp(260px, 38vh, 400px);
+    .hero-card {
+        display: block;
+        height: auto;
+    }
+
+    .hero-left {
+        padding: 6.5rem 6% 2.5rem;
+    }
+
+    .hero-logo {
+        display: none; /* the fixed navbar logo covers this on small screens */
+    }
+
+    .hero-title-group {
+        margin: 0;
+        padding: 1.25rem 0 0;
+        align-self: auto;
+    }
+
+    .hero-tagline {
+        text-align: left;
+    }
+
+    .hero-meta {
+        margin-top: 2rem;
+    }
+
+    .hero-photo {
+        height: clamp(260px, 42vh, 420px);
+    }
+
+    .hero-panel {
+        padding: 2.25rem 6% 2.5rem;
+    }
+
+    .panel-top {
+        display: none; /* the fixed navbar hamburger covers this on small screens */
+    }
+
+    .panel-body {
+        margin: 0;
+        padding-right: 0;
+    }
+
+    .panel-social {
+        justify-content: flex-start;
+        margin-top: 2rem;
     }
 
     /* Clientele columns stack on phones */
@@ -857,12 +1094,6 @@ html.js .reveal.active {
         padding-bottom: 0.75rem;
     }
 
-    .cta-button {
-        display: block;
-        text-align: center;
-        padding: 1rem 1.5rem;
-    }
-
     .email-link {
         word-break: break-word;
     }
@@ -880,8 +1111,7 @@ html.js .reveal.active {
         transition: none;
     }
 
-    .cta-button,
-    .cta-button::before,
+    .hero-counter span,
     .image-wrapper iframe,
     .portfolio-info,
     .nav-links {
@@ -906,7 +1136,6 @@ html.js .reveal.active {
             <ul class="nav-links">
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#work" class="nav-link">Selected Work</a></li>
-                <li><a href="#services" class="nav-link">Expertise</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
         </div>
@@ -914,16 +1143,97 @@ html.js .reveal.active {
 
     <main>
         <!-- Hero Section -->
-        <header class="hero section reveal">
-            <div class="hero-container split-layout">
-                <div class="hero-content text-block">
-                    <p class="subtitle">Creative Strategist, Producer & Director</p>
-                    <h1 class="title">Shaping ideas into<br>unforgettable experiences.</h1>
-                    <a href="#work" class="cta-button">Explore Works</a>
+        <header class="hero reveal">
+            <div class="hero-card">
+                <div class="hero-left">
+                    <a href="#" class="hero-logo">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="7.05" y="7.05" width="9.9" height="9.9" fill="none" stroke="currentColor"
+                                stroke-width="1.6" transform="rotate(45 12 12)" />
+                        </svg>
+                        <span>AGGOR<br>YORM</span>
+                    </a>
+                    <div class="hero-dots" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="hero-title-group">
+                        <h1 class="title">Shaping ideas<br>into unforgettable<br><strong>experiences.</strong></h1>
+                        <p class="hero-tagline">creative strategist / producer &amp; director</p>
+                    </div>
+                    <div class="hero-meta">
+                        <a href="#work" class="hero-counter"><strong>01</strong> / 04 &nbsp; Selected Works
+                            <span>&gt;</span></a>
+                    </div>
                 </div>
-                <div class="hero-image image-block">
+
+                <div class="hero-photo">
                     <img src="assets/JHOE5456.JPG" alt="Aggor Yorm Editorial Portrait">
                 </div>
+
+                <aside class="hero-panel">
+                    <div class="panel-top">
+                        <a href="#work" class="panel-search" aria-label="Browse selected works">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M10.5 3a7.5 7.5 0 1 0 4.55 13.46l4.5 4.5 1.41-1.42-4.5-4.5A7.5 7.5 0 0 0 10.5 3zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z" />
+                            </svg>
+                        </a>
+                        <button class="panel-menu" id="panel-menu" type="button" aria-label="Open menu"
+                            aria-expanded="false">
+                            <span></span><span></span>
+                        </button>
+                    </div>
+
+                    <div class="panel-body">
+                        <h2 class="panel-heading">Profile</h2>
+                        <p>Working where storytelling, culture, entertainment and strategy meet — shaping African
+                            stories and creative businesses that influence culture and leave a lasting legacy.</p>
+                    <ul class="panel-list">
+                        <li>
+                            <div class="panel-row">
+                                <span class="panel-num">01</span>
+                                <span>
+                                    <span class="panel-item-title">Creative Strategy</span>
+                                    <span class="panel-item-meta">Seeing what others don't</span>
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="panel-row">
+                                <span class="panel-num">02</span>
+                                <span>
+                                    <span class="panel-item-title">Production Excellence</span>
+                                    <span class="panel-item-meta">TV, live &amp; original formats</span>
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="panel-row">
+                                <span class="panel-num">03</span>
+                                <span>
+                                    <span class="panel-item-title">Storytelling</span>
+                                    <span class="panel-item-meta">Emotional clarity first</span>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                    <div class="panel-vertical" aria-hidden="true">Producer &middot; Director &middot; Strategist</div>
+                <div class="panel-social">
+                    <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zm5.8-3.3a1 1 0 1 1-1-1 1 1 0 0 1 1 1z" />
+                        </svg></a>
+                    <a href="#" aria-label="Vimeo"><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M22.4 7.4c-.1 2.2-1.6 5.2-4.6 9-3 3.9-5.6 5.9-7.7 5.9-1.3 0-2.4-1.2-3.3-3.6L5 12.1c-.7-2.4-1.4-3.6-2.2-3.6-.2 0-.8.4-1.8 1.1L0 8.2c1.1-1 2.3-2 3.4-3C4.9 3.9 6 3.2 6.8 3.1c1.9-.2 3 1.1 3.4 3.8.4 2.9.7 4.7.9 5.4.5 2.2 1 3.3 1.6 3.3.5 0 1.2-.7 2.1-2.2.9-1.5 1.4-2.6 1.5-3.4.1-1.3-.4-1.9-1.5-1.9-.5 0-1.1.1-1.6.4 1.1-3.5 3.1-5.2 6.1-5.1 2.2 0 3.2 1.4 3.1 4z" />
+                        </svg></a>
+                    <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z" />
+                        </svg></a>
+                    </div>
+                </aside>
             </div>
         </header>
 
@@ -1033,33 +1343,6 @@ html.js .reveal.active {
             </div>
         </section>
 
-        <!-- Services / Expertise -->
-        <section id="services" class="services section reveal">
-            <div class="container">
-                <h2 class="section-title text-center">Expertise</h2>
-                <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-number">01</div>
-                        <h3>Creative Strategy</h3>
-                        <p>Seeing opportunities others don't. Designing ideas before they're produced and helping
-                            brands, networks, and creators think bigger.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-number">02</div>
-                        <h3>Production Excellence</h3>
-                        <p>Television, live experiences, and original formats. Ensuring every production reflects
-                            world-class precision and professionalism.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-number">03</div>
-                        <h3>Storytelling</h3>
-                        <p>Every project must have emotional clarity. Whether it's a reality show, documentary, or
-                            campaign, the audience should feel something.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Contact Section -->
         <section id="contact" class="contact section reveal">
             <div class="container text-center">
@@ -1091,6 +1374,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Mobile Menu Toggle ────────────────────────────────────────────────────
     const menuToggle = document.querySelector('#mobile-menu');
+    const panelMenu  = document.querySelector('#panel-menu');
     const navLinks   = document.querySelector('.nav-links');
 
     const setMenu = (open) => {
@@ -1098,7 +1382,14 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.classList.toggle('active', open);
         document.body.classList.toggle('menu-open', open);
         menuToggle.setAttribute('aria-expanded', String(open));
+        if (panelMenu) panelMenu.setAttribute('aria-expanded', String(open));
     };
+
+    if (panelMenu) {
+        panelMenu.addEventListener('click', () => {
+            setMenu(!navLinks.classList.contains('active'));
+        });
+    }
 
     if (menuToggle) {
         menuToggle.addEventListener('click', () => {
@@ -1122,15 +1413,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // If the viewport grows past the mobile breakpoint with the menu open,
-    // release the page scroll lock
-    const desktopQuery = window.matchMedia('(min-width: 769px)');
-    if (desktopQuery.addEventListener) {
-        desktopQuery.addEventListener('change', (e) => {
-            if (e.matches) setMenu(false);
-        });
-    }
 
     // ── Navbar Scrolled State ─────────────────────────────────────────────────
     const navbar = document.querySelector('.navbar');
