@@ -100,15 +100,6 @@ h6 {
     margin-bottom: var(--spacing-md);
 }
 
-.subtitle {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--color-text-light);
-    margin-bottom: var(--spacing-sm);
-    font-weight: 500;
-}
-
 .section-title {
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 300;
@@ -1007,7 +998,7 @@ html.js .reveal.active {
 }
 
 /* ── Tablet landscape (769–992px): keep the full-page three-panel hero, tightened ── */
-@media screen and (max-width: 992px) and (orientation: landscape) {
+@media screen and (min-width: 769px) and (max-width: 992px) and (orientation: landscape) {
     .hero-card {
         grid-template-columns: 32% 39% 29%;
     }
@@ -1090,15 +1081,17 @@ html.js .reveal.active {
     }
 
     .hero-left {
-        padding: 6.5rem 6% 2.5rem;
+        padding: 6.5rem max(2.5rem, 6%) 2.5rem;
     }
 
     .hero-logo {
         display: none; /* the fixed navbar logo covers this in stacked mode */
     }
 
+    /* Keep the desktop's pagination dots on the panel's left edge */
     .hero-dots {
-        display: none;
+        left: 0.9rem;
+        top: 55%;
     }
 
     .hero-title-group {
@@ -1107,12 +1100,13 @@ html.js .reveal.active {
         align-self: auto;
     }
 
-    .hero-tagline {
-        text-align: left;
-    }
-
     .hero-meta {
         margin-top: 2rem;
+    }
+
+    .hero-counter {
+        display: inline-block;
+        padding: 0.5rem 0; /* comfortable tap target */
     }
 
     .hero-photo {
@@ -1120,7 +1114,7 @@ html.js .reveal.active {
     }
 
     .hero-panel {
-        padding: 2.25rem 6% 2.5rem;
+        padding: 2.25rem max(2.5rem, 6%) 2.5rem;
     }
 
     .panel-top {
@@ -1129,15 +1123,11 @@ html.js .reveal.active {
 
     .panel-body {
         margin: 0;
-        padding-right: 0;
-    }
-
-    .panel-vertical {
-        display: none;
+        padding-right: 1.5rem; /* clear of the vertical side-text */
     }
 
     .panel-social {
-        justify-content: flex-start;
+        justify-content: flex-end;
         padding-right: 0;
         margin-top: 2rem;
     }
@@ -1183,8 +1173,8 @@ html.js .reveal.active {
     }
 
     .strip-nav {
-        width: 40px;
-        height: 40px;
+        width: 44px; /* minimum comfortable tap target */
+        height: 44px;
     }
 
     .strip-prev {
@@ -1246,6 +1236,7 @@ html.js .reveal.active {
     .hero-counter span,
     .image-wrapper iframe,
     .portfolio-info,
+    .strip-nav,
     .nav-links {
         transition: none;
     }
