@@ -674,6 +674,7 @@ p {
     --frame-pad-y: 3.1rem;   /* filmstock above/below each frame */
     --frame-pad-x: 0.75rem;  /* filmstock between frames */
 
+    position: relative; /* anchors the overlay nav arrows */
     overflow: hidden;
     background: #0A0A0A;
     cursor: grab;
@@ -768,32 +769,42 @@ html:not(.js) .portfolio-grid {
     pointer-events: none;
 }
 
-/* Touch devices: the reel is driven by a compositor CSS animation instead of
-   JS — phones/tablets throttle rAF loops, which made the drift stall there.
-   The track holds two identical sets of frames, so -50% is exactly one set
-   and the loop wraps seamlessly. */
-.portfolio-grid.autoscroll {
-    cursor: default;
+/* Netflix-style navigation arrows overlaid on the strip edges */
+.strip-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgba(10, 10, 10, 0.65);
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
 }
 
-.portfolio-grid.autoscroll .film-track {
-    animation: filmreel 50s linear infinite;
+.strip-nav:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
-@keyframes filmreel {
-    from {
-        transform: translate3d(0, 0, 0);
-    }
-
-    to {
-        transform: translate3d(-50%, 0, 0);
-    }
+.strip-nav svg {
+    width: 20px;
+    height: 20px;
+    display: block;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .portfolio-grid.autoscroll .film-track {
-        animation: none;
-    }
+.strip-prev {
+    left: 1.25rem;
+}
+
+.strip-next {
+    right: 1.25rem;
 }
 
 .portfolio-info {
@@ -1162,6 +1173,19 @@ html.js .reveal.active {
         font-size: 1.1rem;
     }
 
+    .strip-nav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .strip-prev {
+        left: 0.6rem;
+    }
+
+    .strip-next {
+        right: 0.6rem;
+    }
+
     .contact-text {
         font-size: 1.15rem;
         margin-bottom: 2rem;
@@ -1435,6 +1459,19 @@ html.js .reveal.active {
                         </div>
                     </div>
                     </div>
+                    <button class="strip-nav strip-prev" id="strip-prev" type="button"
+                        aria-label="Previous project">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <button class="strip-nav strip-next" id="strip-next" type="button" aria-label="Next project">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
                 </div>
                 <div class="center-cta mt-4">
                     <a href="#contact" class="cta-link">View Full Archive &rarr;</a>
@@ -1630,11 +1667,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFrames();
         }
 
-        // Touch devices: hand the reel to the CSS marquee animation
-        if (touchDevice) {
-            filmStrip.classList.add('autoscroll');
-        }
-
         let setWidth = 0;   // width of one set of frames (half the track)
         let offset   = 0;   // current reel position
         let dragging = false;
@@ -1653,59 +1685,71 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Auto-slide: constant drift, paused while hovered or dragged.
-        // Skipped entirely for users who prefer reduced motion.
-        // Hover-pause only applies to devices with a real pointer — on touch
-        // screens a tap makes :hover stick, which froze the reel permanently.
+        // Netflix-style arrows: each click slides the reel by one frame with
+        // an eased tween; the modulo wrap in render() keeps the loop endless
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const canHover = window.matchMedia('(hover: hover)').matches;
-        const SPEED = 40; // px per second
-        let hovered = false;
-        let lastTick = performance.now();
+        const prevBtn = document.getElementById('strip-prev');
+        const nextBtn = document.getElementById('strip-next');
+        let slideAnim = null;
 
-        function tick(now) {
-            const dt = Math.min((now - lastTick) / 1000, 0.1); // cap: ignore inactive-tab gaps
-            lastTick = now;
-            if (!hovered && !dragging) {
-                offset += SPEED * dt;
-                render();
+        const frameWidth = () => {
+            const item = filmTrack.querySelector('.portfolio-item');
+            return item ? item.getBoundingClientRect().width : 0;
+        };
+
+        const stopSlide = () => {
+            if (slideAnim) {
+                cancelAnimationFrame(slideAnim);
+                slideAnim = null;
             }
-            requestAnimationFrame(tick);
-        }
+        };
 
-        if (!reduceMotion && !touchDevice) {
-            requestAnimationFrame(tick);
-        }
-
-        if (canHover) {
-            filmStrip.addEventListener('mouseenter', () => { hovered = true; });
-            filmStrip.addEventListener('mouseleave', () => { hovered = false; });
-        }
-
-        // Manual drag applies to mouse-driven devices only — on touch the CSS
-        // animation owns the track's transform
-        if (!touchDevice) {
-            filmStrip.addEventListener('pointerdown', (e) => {
-                dragging = true;
-                lastX = e.clientX;
-                filmStrip.classList.add('dragging');
-                filmStrip.setPointerCapture(e.pointerId);
-            });
-
-            filmStrip.addEventListener('pointermove', (e) => {
-                if (!dragging) return;
-                offset -= e.clientX - lastX;
-                lastX = e.clientX;
+        function slideBy(delta) {
+            stopSlide();
+            if (reduceMotion) {
+                offset += delta;
                 render();
-            });
-
-            ['pointerup', 'pointercancel'].forEach(type => {
-                filmStrip.addEventListener(type, () => {
-                    dragging = false;
-                    filmStrip.classList.remove('dragging');
-                });
-            });
+                return;
+            }
+            const start = offset;
+            const startTime = performance.now();
+            const DURATION = 500;
+            const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+            const step = (now) => {
+                const t = Math.min((now - startTime) / DURATION, 1);
+                offset = start + delta * easeOut(t);
+                render();
+                slideAnim = t < 1 ? requestAnimationFrame(step) : null;
+            };
+            slideAnim = requestAnimationFrame(step);
         }
+
+        if (prevBtn) prevBtn.addEventListener('click', () => slideBy(-frameWidth()));
+        if (nextBtn) nextBtn.addEventListener('click', () => slideBy(frameWidth()));
+
+        // Drag (mouse) and swipe (touch) still work for free browsing
+        filmStrip.addEventListener('pointerdown', (e) => {
+            if (e.target.closest('.strip-nav')) return; // arrows handle their own clicks
+            stopSlide();
+            dragging = true;
+            lastX = e.clientX;
+            filmStrip.classList.add('dragging');
+            filmStrip.setPointerCapture(e.pointerId);
+        });
+
+        filmStrip.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            offset -= e.clientX - lastX;
+            lastX = e.clientX;
+            render();
+        });
+
+        ['pointerup', 'pointercancel'].forEach(type => {
+            filmStrip.addEventListener(type, () => {
+                dragging = false;
+                filmStrip.classList.remove('dragging');
+            });
+        });
     }
 });
 
