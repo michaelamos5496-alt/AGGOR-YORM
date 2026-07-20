@@ -757,6 +757,17 @@ html:not(.js) .portfolio-grid {
     transform: scale(1.25);
 }
 
+/* Touch devices: static film still in place of the live player */
+.image-wrapper .film-thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.15);
+    pointer-events: none;
+}
+
 .portfolio-info {
     position: absolute;
     bottom: var(--frame-pad-y);
@@ -1556,12 +1567,26 @@ document.addEventListener('DOMContentLoaded', () => {
             filmTrack.appendChild(clone);
         });
 
-        // The 8 Vimeo players (4 frames + 4 clones) are expensive on mobile —
-        // hold their src in data-src and load only when the strip approaches
+        // The 8 Vimeo players (4 frames + 4 clones) are expensive, and phones/
+        // tablets cap how many videos may play at once — stalled clone players
+        // made the seamless wrap look like a visible restart. Touch devices get
+        // fast local film stills instead (identical originals and clones keep
+        // the loop seamless); devices with a mouse get the live players.
+        const touchDevice = window.matchMedia('(hover: none)').matches;
+
         const loadFrames = () => {
             filmTrack.querySelectorAll('iframe[data-src]').forEach(frame => {
-                frame.src = frame.dataset.src;
-                frame.removeAttribute('data-src');
+                const id = (frame.dataset.src.match(/video\/(\d+)/) || [])[1];
+                if (touchDevice && id) {
+                    const still = document.createElement('img');
+                    still.className = 'film-thumb';
+                    still.src = 'assets/vimeo-' + id + '.jpg';
+                    still.alt = '';
+                    frame.replaceWith(still);
+                } else {
+                    frame.src = frame.dataset.src;
+                    frame.removeAttribute('data-src');
+                }
             });
         };
 
