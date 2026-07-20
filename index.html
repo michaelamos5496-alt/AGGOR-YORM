@@ -1694,12 +1694,15 @@ document.addEventListener('DOMContentLoaded', () => {
             filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
         }
 
-        // Actual on-screen position — correct even mid-transition
+        // Actual on-screen position — correct even mid-transition.
+        // WebKit may report matrix3d() where Blink reports matrix(), so
+        // handle both; otherwise fall back to the last settled offset.
         const currentX = () => {
             const m = getComputedStyle(filmTrack).transform;
             if (m && m !== 'none') {
-                const p = m.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+, (-?[\d.]+)/);
-                if (p) return -parseFloat(p[1]);
+                const v = m.match(/-?[\d.]+(?:e[-+]?\d+)?/g);
+                if (v && v.length === 16) return -parseFloat(v[12]); // matrix3d: tx
+                if (v && v.length === 6) return -parseFloat(v[4]);   // matrix: tx
             }
             return offset;
         };
@@ -1713,6 +1716,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevBtn = document.getElementById('strip-prev');
         const nextBtn = document.getElementById('strip-next');
         let pendingTarget = null; // destination of the in-flight slide, if any
+        let settleTimer = null;
+
+        // Settle the reel at its destination — called by transitionend, or by
+        // the safety timer when a mobile browser drops the transitionend event
+        const finishSlide = (target) => {
+            if (pendingTarget !== target) return; // superseded by a newer action
+            pendingTarget = null;
+            offset = target;
+            render(); // normalize back into the wrapped range
+        };
 
         const frameWidth = () => {
             const item = filmTrack.querySelector('.portfolio-item');
@@ -1726,6 +1739,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (reduceMotion || setWidth <= 0) {
                 offset = target;
                 pendingTarget = null;
+                clearTimeout(settleTimer);
                 render();
                 return;
             }
@@ -1748,13 +1762,15 @@ document.addEventListener('DOMContentLoaded', () => {
             pendingTarget = target;
             filmTrack.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             filmTrack.style.transform = `translate3d(${-target}px, 0, 0)`;
+
+            // Safety net: settle even if transitionend never arrives
+            clearTimeout(settleTimer);
+            settleTimer = setTimeout(() => finishSlide(target), 650);
         }
 
         filmTrack.addEventListener('transitionend', (e) => {
             if (e.propertyName !== 'transform' || pendingTarget === null) return;
-            offset = pendingTarget;
-            pendingTarget = null;
-            render(); // normalize back into the wrapped range
+            finishSlide(pendingTarget);
         });
 
         const slideFrames = (dir) => {
@@ -1772,6 +1788,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest('.strip-nav')) return; // arrows handle their own clicks
             offset = wrap(currentX());
             pendingTarget = null;
+            clearTimeout(settleTimer);
             render();
             dragging = true;
             lastX = e.clientX;
