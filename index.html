@@ -590,45 +590,16 @@ p {
     align-items: flex-start;
 }
 
-/* About Specific Dynamic Layout */
-#about .split-layout {
-    position: relative;
-    min-height: 600px;
-}
-
-#about .text-block {
-    width: calc(50% - (var(--spacing-lg) / 2));
-    flex: none;
-    opacity: 0;
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform: translateX(-20px);
-}
-
-#about:hover .text-block {
-    opacity: 1;
-    transform: translateX(0);
-}
-
+/* About Section — always-visible split layout */
 #about .image-block {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-#about:hover .image-block {
-    width: calc(50% - (var(--spacing-lg) / 2));
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
 }
 
 .about-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(0%);
-    transition: filter 0.8s ease;
     /* Decorative background video: never show native player UI */
     pointer-events: none;
 }
@@ -638,23 +609,6 @@ p {
 .about-image::-webkit-media-controls-panel {
     display: none !important;
     -webkit-appearance: none;
-}
-
-#about:hover .about-image {
-    filter: grayscale(0%);
-}
-
-/* Touch tablets wider than the mobile breakpoint can't hover — show the
-   split layout in its revealed state permanently */
-@media (hover: none) and (min-width: 993px) {
-    #about .text-block {
-        opacity: 1;
-        transform: none;
-    }
-
-    #about .image-block {
-        width: calc(50% - (var(--spacing-lg) / 2));
-    }
 }
 
 /* ==========================================================================
@@ -849,28 +803,10 @@ html.js .reveal.active {
         padding-right: 0;
     }
 
-    /* Reset About dynamic hover layout for stacked flow */
-    #about .split-layout {
-        min-height: auto;
-    }
-
-    #about .text-block {
-        width: 100%;
-        opacity: 1;
-        transform: none;
-    }
-
+    /* About: image drops below the text and widens to fill the column */
     #about .image-block {
-        position: relative;
-        width: 100%;
-        height: auto;
         aspect-ratio: 16 / 10;
-        min-height: 240px; /* fallback for browsers without aspect-ratio */
         margin-top: var(--spacing-md);
-    }
-
-    #about:hover .image-block {
-        width: 100%;
     }
 
     /* Clientele: keep two columns side by side on tablet */
@@ -1224,7 +1160,8 @@ html.js .reveal.active {
                         culture and leave a lasting legacy.</p>
                 </div>
                 <div class="image-block">
-                    <video src="assets/about-video.mp4" class="about-image" loop muted playsinline
+                    <video src="assets/about-video.mp4" poster="assets/about-video-poster.jpg"
+                        class="about-image" loop muted playsinline autoplay
                         preload="metadata" disablepictureinpicture
                         controlslist="nodownload nofullscreen noremoteplayback"></video>
                 </div>
