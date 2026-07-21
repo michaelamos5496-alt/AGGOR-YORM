@@ -658,179 +658,71 @@ p {
 }
 
 /* ==========================================================================
-   Work / Portfolio Section — Film Strip
+   Work / Portfolio Section — Editorial Grid
    ========================================================================== */
-.portfolio-grid {
-    /* Horizontal film strip: swipe on touch, drag on desktop */
-    --perf-height: 0.9rem;   /* sprocket hole height */
-    --frame-pad-y: 3.1rem;   /* filmstock above/below each frame */
-    --frame-pad-x: 0.75rem;  /* filmstock between frames */
-
-    position: relative; /* anchors the overlay nav arrows */
-    overflow: hidden;
-    background: #0A0A0A;
-    cursor: grab;
-    touch-action: pan-y; /* horizontal drag moves the strip, vertical swipe scrolls the page */
-
-    /* Full-bleed: break out of the centered container */
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
+.works-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
 }
 
-.portfolio-grid.dragging {
-    cursor: grabbing;
-    user-select: none;
+.work-card {
+    cursor: pointer;
 }
 
-/* Without JS there is no drag engine — fall back to native scrolling */
-html:not(.js) .portfolio-grid {
-    overflow-x: auto;
-}
-
-/* The moving reel — JS translates this for the infinite loop */
-.film-track {
-    display: flex;
-    width: max-content;
-    will-change: transform;
-}
-
-.portfolio-item {
-    position: relative;
-    flex: 0 0 clamp(560px, 58vw, 920px);
-    padding: var(--frame-pad-y) var(--frame-pad-x);
-}
-
-/* Sprocket holes punched along the top and bottom of the strip */
-.portfolio-item::before,
-.portfolio-item::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: var(--perf-height);
-    background-image: repeating-linear-gradient(90deg,
-            transparent 0,
-            transparent 8px,
-            #EFEFEF 8px,
-            #EFEFEF 18px);
-    border-radius: 1px;
-}
-
-.portfolio-item::before {
-    top: 1.1rem;
-}
-
-.portfolio-item::after {
-    bottom: 1.1rem;
-}
-
-/* The frame itself — 16:9 via padding hack, works in every browser */
-.image-wrapper {
+.work-media {
     position: relative;
     overflow: hidden;
-    height: 0;
-    padding-top: 56.25%;
-    background: #000;
-    outline: 1px solid rgba(255, 255, 255, 0.08);
+    aspect-ratio: 16 / 9;
+    background-color: #0A0A0A;
 }
 
-/* Iframe fills the frame; slight over-scale hides the player's letterbox edges */
-.image-wrapper iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    transform: scale(1.15);
-    pointer-events: none;
-    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.portfolio-item:hover .image-wrapper iframe {
-    transform: scale(1.25);
-}
-
-/* Touch devices: static film still in place of the live player */
-.image-wrapper .film-thumb {
+.work-media img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.15);
-    pointer-events: none;
+    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Netflix-style navigation arrows overlaid on the strip edges */
-.strip-nav {
+.work-card:hover .work-media img {
+    transform: scale(1.05);
+}
+
+/* Desktop ambient video: fades in over the poster once the player is ready */
+.work-media iframe {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 20;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background-color: rgba(10, 10, 10, 0.65);
-    color: #FFFFFF;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-}
-
-/* Hover feedback only on devices with a real pointer — on touch screens
-   :hover sticks after a tap, leaving the button stuck highlighted */
-@media (hover: hover) {
-    .strip-nav:hover {
-        background-color: rgba(255, 255, 255, 0.18);
-        border-color: rgba(255, 255, 255, 0.5);
-    }
-}
-
-.strip-nav:active {
-    background-color: rgba(255, 255, 255, 0.25);
-}
-
-.strip-nav svg {
-    width: 20px;
-    height: 20px;
-    display: block;
-}
-
-.strip-prev {
-    left: 1.25rem;
-}
-
-.strip-next {
-    right: 1.25rem;
-}
-
-.portfolio-info {
-    position: absolute;
-    bottom: var(--frame-pad-y);
-    left: var(--frame-pad-x);
-    right: var(--frame-pad-x);
-    padding: 1.5rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
-    z-index: 10;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    transform: scale(1.15); /* hides the player's letterbox edges */
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
 }
 
-.portfolio-info h3 {
-    font-size: 1.5rem;
+.work-media iframe.is-ready {
+    opacity: 1;
+}
+
+.work-info {
+    margin-top: 1.1rem;
+}
+
+.work-info h3 {
+    font-size: 1.25rem;
     font-weight: 400;
-    margin-bottom: 0.5rem;
-    color: #ffffff;
+    margin-bottom: 0.25rem;
 }
 
-.portfolio-info p {
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
+.work-info p {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--color-text-light);
     margin-bottom: 0;
-    color: rgba(255, 255, 255, 0.75);
 }
 
 .center-cta {
@@ -987,13 +879,10 @@ html.js .reveal.active {
         gap: var(--spacing-md);
     }
 
-    /* Film strip: wider frames so roughly 1.3 are visible */
-    .portfolio-item {
-        flex-basis: 72vw;
-    }
-
-    .portfolio-info {
-        padding: 1.25rem;
+    /* Portfolio grid: two columns feel cramped on tablet, drop to one */
+    .works-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
 }
 
@@ -1146,43 +1035,8 @@ html.js .reveal.active {
         gap: var(--spacing-md);
     }
 
-    /* Film strip: one frame nearly full width, next frame peeking for swipe cue */
-    .portfolio-grid {
-        --frame-pad-y: 2.1rem;
-        --perf-height: 0.6rem;
-    }
-
-    .portfolio-item {
-        flex-basis: 88vw;
-    }
-
-    .portfolio-item::before {
-        top: 0.7rem;
-    }
-
-    .portfolio-item::after {
-        bottom: 0.7rem;
-    }
-
-    .portfolio-info {
-        padding: 1rem;
-    }
-
-    .portfolio-info h3 {
+    .work-info h3 {
         font-size: 1.1rem;
-    }
-
-    .strip-nav {
-        width: 44px; /* minimum comfortable tap target */
-        height: 44px;
-    }
-
-    .strip-prev {
-        left: 0.6rem;
-    }
-
-    .strip-next {
-        right: 0.6rem;
     }
 
     .contact-text {
@@ -1234,9 +1088,8 @@ html.js .reveal.active {
     }
 
     .hero-counter span,
-    .image-wrapper iframe,
-    .portfolio-info,
-    .strip-nav,
+    .work-media img,
+    .work-media iframe,
     .nav-links {
         transition: none;
     }
@@ -1408,70 +1261,59 @@ html.js .reveal.active {
         <section id="work" class="work section">
             <div class="container">
                 <h2 class="section-title">Selected Works</h2>
-                <div class="portfolio-grid">
-                    <div class="film-track" id="film-track">
-                    <div class="portfolio-item">
-                        <div class="image-wrapper">
+                <div class="works-grid">
+                    <div class="work-card reveal">
+                        <div class="work-media">
+                            <img src="assets/vimeo-1135942055.jpg" alt="Cinematic Campaign">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
-                        <div class="portfolio-info">
+                        <div class="work-info">
                             <h3>Cinematic Campaign</h3>
                             <p>Production</p>
                         </div>
                     </div>
-                    <div class="portfolio-item">
-                        <div class="image-wrapper">
+                    <div class="work-card reveal">
+                        <div class="work-media">
+                            <img src="assets/vimeo-1127082566.jpg" alt="Brand Narrative">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
-                        <div class="portfolio-info">
+                        <div class="work-info">
                             <h3>Brand Narrative</h3>
                             <p>Creative Direction</p>
                         </div>
                     </div>
-                    <div class="portfolio-item">
-                        <div class="image-wrapper">
+                    <div class="work-card reveal">
+                        <div class="work-media">
+                            <img src="assets/vimeo-1025899842.jpg" alt="Documentary Series">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1025899842?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
-                        <div class="portfolio-info">
+                        <div class="work-info">
                             <h3>Documentary Series</h3>
                             <p>Producer</p>
                         </div>
                     </div>
-                    <div class="portfolio-item">
-                        <div class="image-wrapper">
+                    <div class="work-card reveal">
+                        <div class="work-media">
+                            <img src="assets/vimeo-1072493289.jpg" alt="Music Video">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
-                        <div class="portfolio-info">
+                        <div class="work-info">
                             <h3>Music Video</h3>
                             <p>Director</p>
                         </div>
                     </div>
-                    </div>
-                    <button class="strip-nav strip-prev" id="strip-prev" type="button"
-                        aria-label="Previous project">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
-                    <button class="strip-nav strip-next" id="strip-next" type="button" aria-label="Next project">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
                 </div>
                 <div class="center-cta mt-4">
                     <a href="#contact" class="cta-link">View Full Archive &rarr;</a>
@@ -1625,193 +1467,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Film Strip — Infinite Auto-Slide ──────────────────────────────────────
-    // Frames are cloned once; the track position wraps with a modulo, so the
-    // reel never ends. It drifts on its own like a rolling reel, pausing while
-    // hovered or dragged; drag/swipe still works for manual browsing.
-    const filmStrip = document.querySelector('.portfolio-grid');
-    const filmTrack = document.getElementById('film-track');
+    // ── Portfolio Grid — lazy-load ambient video on hover/view ────────────────
+    // Each card shows a static poster by default; the Vimeo player loads only
+    // once the card is near the viewport, then fades in over the poster.
+    const workCards = document.querySelectorAll('.work-card');
 
-    if (filmStrip && filmTrack) {
-        Array.from(filmTrack.children).forEach(item => {
-            const clone = item.cloneNode(true);
-            clone.setAttribute('aria-hidden', 'true');
-            filmTrack.appendChild(clone);
-        });
-
-        // The 8 Vimeo players (4 frames + 4 clones) are expensive, and phones/
-        // tablets cap how many videos may play at once — stalled clone players
-        // made the seamless wrap look like a visible restart. Touch devices get
-        // fast local film stills instead (identical originals and clones keep
-        // the loop seamless); devices with a mouse get the live players.
+    if (workCards.length) {
         const touchDevice = window.matchMedia('(hover: none)').matches;
 
-        const loadFrames = () => {
-            filmTrack.querySelectorAll('iframe[data-src]').forEach(frame => {
-                const id = (frame.dataset.src.match(/video\/(\d+)/) || [])[1];
-                if (touchDevice && id) {
-                    const still = document.createElement('img');
-                    still.className = 'film-thumb';
-                    still.src = 'assets/vimeo-' + id + '.jpg';
-                    still.alt = '';
-                    frame.replaceWith(still);
-                } else {
-                    frame.src = frame.dataset.src;
-                    frame.removeAttribute('data-src');
-                }
-            });
+        const loadFrame = (card) => {
+            const frame = card.querySelector('iframe[data-src]');
+            if (!frame || touchDevice) return; // touch devices keep the static poster
+            frame.addEventListener('load', () => frame.classList.add('is-ready'), { once: true });
+            frame.src = frame.dataset.src;
+            frame.removeAttribute('data-src');
         };
 
         if ('IntersectionObserver' in window) {
-            const frameObserver = new IntersectionObserver((entries, obs) => {
-                if (entries.some(entry => entry.isIntersecting)) {
-                    loadFrames();
-                    obs.disconnect();
-                }
-            }, { rootMargin: '600px 0px' });
-            frameObserver.observe(filmStrip);
+            const cardObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        loadFrame(entry.target);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '400px 0px' });
+            workCards.forEach(card => cardObserver.observe(card));
         } else {
-            loadFrames();
+            workCards.forEach(loadFrame);
         }
-
-        let setWidth = 0;   // width of one set of frames (half the track)
-        let offset   = 0;   // current reel position
-        let dragging = false;
-        let lastX    = 0;
-
-        // Fractional width — scrollWidth rounds to integers, which leaves a
-        // sliver of a seam at the wrap point on vw-sized frames
-        const measure = () => { setWidth = filmTrack.getBoundingClientRect().width / 2; };
-        measure();
-        window.addEventListener('resize', measure);
-
-        const wrap = (v) => (setWidth > 0 ? ((v % setWidth) + setWidth) % setWidth : v);
-
-        // Instant positioning (drag + wrap normalization)
-        function render() {
-            offset = wrap(offset);
-            filmTrack.style.transition = 'none';
-            filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
-        }
-
-        // Actual on-screen position — correct even mid-transition.
-        // WebKit may report matrix3d() where Blink reports matrix(), so
-        // handle both; otherwise fall back to the last settled offset.
-        const currentX = () => {
-            const m = getComputedStyle(filmTrack).transform;
-            if (m && m !== 'none') {
-                const v = m.match(/-?[\d.]+(?:e[-+]?\d+)?/g);
-                if (v && v.length === 16) return -parseFloat(v[12]); // matrix3d: tx
-                if (v && v.length === 6) return -parseFloat(v[4]);   // matrix: tx
-            }
-            return offset;
-        };
-
-        // Netflix-style arrows: every slide lands exactly on a frame boundary.
-        // The slide itself is a CSS transition — it runs on the compositor, so
-        // mobile/tablet rAF throttling (which stalled the old JS tween mid-
-        // slide) cannot interrupt it. Rapid clicks queue up one frame each,
-        // and swipes snap to the nearest frame on release.
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const prevBtn = document.getElementById('strip-prev');
-        const nextBtn = document.getElementById('strip-next');
-        let pendingTarget = null; // destination of the in-flight slide, if any
-        let settleTimer = null;
-
-        // Settle the reel at its destination — called by transitionend, or by
-        // the safety timer when a mobile browser drops the transitionend event
-        const finishSlide = (target) => {
-            if (pendingTarget !== target) return; // superseded by a newer action
-            pendingTarget = null;
-            offset = target;
-            render(); // normalize back into the wrapped range
-        };
-
-        const frameWidth = () => {
-            const item = filmTrack.querySelector('.portfolio-item');
-            return item ? item.getBoundingClientRect().width : 0;
-        };
-
-        function slideTo(target) {
-            // Pin the reel at its actual on-screen position first
-            offset = currentX();
-
-            if (reduceMotion || setWidth <= 0) {
-                offset = target;
-                pendingTarget = null;
-                clearTimeout(settleTimer);
-                render();
-                return;
-            }
-
-            // The track holds two identical sets; shift start + target together
-            // by whole sets so the transition never runs past the track's edges
-            while (Math.min(offset, target) < 0) {
-                offset += setWidth;
-                target += setWidth;
-            }
-            while (Math.min(offset, target) >= setWidth) {
-                offset -= setWidth;
-                target -= setWidth;
-            }
-
-            filmTrack.style.transition = 'none';
-            filmTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
-            void filmTrack.offsetWidth; // reflow: make the transition start from here
-
-            pendingTarget = target;
-            filmTrack.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            filmTrack.style.transform = `translate3d(${-target}px, 0, 0)`;
-
-            // Safety net: settle even if transitionend never arrives
-            clearTimeout(settleTimer);
-            settleTimer = setTimeout(() => finishSlide(target), 650);
-        }
-
-        filmTrack.addEventListener('transitionend', (e) => {
-            if (e.propertyName !== 'transform' || pendingTarget === null) return;
-            finishSlide(pendingTarget);
-        });
-
-        const slideFrames = (dir) => {
-            const w = frameWidth();
-            if (!w) return;
-            const base = pendingTarget !== null ? pendingTarget : wrap(currentX());
-            slideTo((Math.round(base / w) + dir) * w);
-        };
-
-        if (prevBtn) prevBtn.addEventListener('click', () => slideFrames(-1));
-        if (nextBtn) nextBtn.addEventListener('click', () => slideFrames(1));
-
-        // Drag (mouse) and swipe (touch) still work for free browsing
-        filmStrip.addEventListener('pointerdown', (e) => {
-            if (e.target.closest('.strip-nav')) return; // arrows handle their own clicks
-            offset = wrap(currentX());
-            pendingTarget = null;
-            clearTimeout(settleTimer);
-            render();
-            dragging = true;
-            lastX = e.clientX;
-            filmStrip.classList.add('dragging');
-            filmStrip.setPointerCapture(e.pointerId);
-        });
-
-        filmStrip.addEventListener('pointermove', (e) => {
-            if (!dragging) return;
-            offset -= e.clientX - lastX;
-            lastX = e.clientX;
-            render();
-        });
-
-        ['pointerup', 'pointercancel'].forEach(type => {
-            filmStrip.addEventListener(type, () => {
-                if (!dragging) return;
-                dragging = false;
-                filmStrip.classList.remove('dragging');
-                const w = frameWidth();
-                if (w) slideTo(Math.round(offset / w) * w); // settle on a full frame
-            });
-        });
     }
 });
 
