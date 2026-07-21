@@ -696,6 +696,79 @@ p {
 }
 
 /* ==========================================================================
+   Behind The Scenes Section
+   ========================================================================== */
+.bts {
+    background-color: #0A0A0A;
+    color: #FFFFFF;
+}
+
+.bts .section-title {
+    color: #FFFFFF;
+}
+
+.bts-intro {
+    color: rgba(255, 255, 255, 0.55);
+    max-width: 480px;
+}
+
+.bts-strip {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: var(--spacing-lg);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+}
+
+.bts-strip::-webkit-scrollbar {
+    height: 4px;
+}
+
+.bts-strip::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.bts-frame {
+    position: relative;
+    flex: 0 0 clamp(220px, 26vw, 340px);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    scroll-snap-align: start;
+    background-color: #1A1A1A;
+}
+
+.bts-frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.05) brightness(0.9);
+    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease;
+}
+
+.bts-frame:hover img {
+    transform: scale(1.06);
+    filter: grayscale(0%) contrast(1.05) brightness(1);
+}
+
+.bts-frame figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.1rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+}
+
+/* ==========================================================================
    Contact Section & Footer
    ========================================================================== */
 .contact-text {
@@ -988,6 +1061,10 @@ html.js .reveal.active {
     .social-link {
         padding: 0.5rem 0; /* comfortable tap target */
     }
+
+    .bts-frame {
+        flex-basis: 68vw;
+    }
 }
 
 /* ── Small phones (≤ 480px) ── */
@@ -1048,6 +1125,7 @@ html.js .reveal.active {
             <ul class="nav-links">
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#work" class="nav-link">Selected Work</a></li>
+                <li><a href="#bts" class="nav-link">Behind The Scenes</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
         </div>
@@ -1254,6 +1332,73 @@ html.js .reveal.active {
                 </div>
                 <div class="center-cta mt-4">
                     <a href="#contact" class="cta-link">View Full Archive &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Behind The Scenes -->
+        <section id="bts" class="bts section reveal">
+            <div class="container">
+                <h2 class="section-title">Behind The Scenes</h2>
+                <p class="bts-intro">A closer look at the sets, crews and quiet moments between takes that shape
+                    every finished frame.</p>
+                <div class="bts-strip">
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4152.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 01</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4161.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 02</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4179.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 03</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4193.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 04</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4237.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 05</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4284.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 06</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4288.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 07</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4294.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 08</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4306.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 09</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4336.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 10</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4396.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 11</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4399.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 12</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4438.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 13</figcaption>
+                    </figure>
+                    <figure class="bts-frame">
+                        <img src="assets/bts/JHOE4560.jpg" alt="Behind the scenes" loading="lazy">
+                        <figcaption>On Set &middot; 14</figcaption>
+                    </figure>
                 </div>
             </div>
         </section>
