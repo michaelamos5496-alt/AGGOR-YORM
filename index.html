@@ -336,32 +336,6 @@ p {
     text-align: center;
 }
 
-.hero-meta {
-    margin-top: auto;
-}
-
-.hero-counter {
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    font-weight: 500;
-}
-
-.hero-counter strong {
-    font-weight: 700;
-    font-size: 0.95rem;
-}
-
-.hero-counter span {
-    display: inline-block;
-    margin-left: 0.5rem;
-    transition: var(--transition);
-}
-
-.hero-counter:hover span {
-    transform: translateX(6px);
-}
-
 .hero-dots {
     position: absolute;
     left: 1.1rem;
@@ -431,17 +405,89 @@ p {
     flex: 1;
 }
 
-.list-block {
-    flex: 1;
-}
-
 .list-title {
     margin-bottom: 2rem;
     font-size: 2rem;
 }
 
-.clientele .split-layout {
-    align-items: flex-start;
+/* ── Clientele & Notable Projects: two auto-scrolling marquee rows ── */
+.credit-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.credit-row {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+
+.credit-track {
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    animation: credit-scroll-left 32s linear infinite;
+}
+
+.credit-row--right .credit-track {
+    animation-name: credit-scroll-right;
+}
+
+.credit-row:hover .credit-track {
+    animation-play-state: paused;
+}
+
+@keyframes credit-scroll-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+@keyframes credit-scroll-right {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+}
+
+.credit-card {
+    flex: 0 0 clamp(160px, 18vw, 200px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.9rem;
+    padding: 2rem 1rem;
+    border: 1px solid var(--color-border);
+    background-color: #FFFFFF;
+    transition: var(--transition);
+}
+
+.credit-card:hover {
+    border-color: var(--color-text);
+}
+
+.credit-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--color-text);
+    border-radius: 50%;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.credit-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.credit-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
 }
 
 /* About Section — always-visible split layout */
@@ -683,22 +729,6 @@ p {
 }
 
 /* ==========================================================================
-   Lists
-   ========================================================================== */
-.clean-list li {
-    font-size: 1.1rem;
-    font-weight: 300;
-    color: var(--color-text-light);
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.clean-list li:last-child {
-    border-bottom: none;
-}
-
-/* ==========================================================================
    Animations
    ========================================================================== */
 html.js .reveal {
@@ -734,12 +764,6 @@ html.js .reveal.active {
     #about .image-block {
         aspect-ratio: 16 / 10;
         margin-top: var(--spacing-md);
-    }
-
-    /* Clientele: keep two columns side by side on tablet */
-    .clientele .split-layout {
-        flex-direction: row;
-        gap: var(--spacing-md);
     }
 
     /* Portfolio grid: two columns feel cramped on tablet, drop to one */
@@ -821,15 +845,6 @@ html.js .reveal.active {
         align-self: auto;
     }
 
-    .hero-meta {
-        margin-top: 2rem;
-    }
-
-    .hero-counter {
-        display: inline-block;
-        padding: 0.5rem 0; /* comfortable tap target */
-    }
-
     .hero-photo {
         height: clamp(260px, 45vh, 460px);
     }
@@ -840,12 +855,6 @@ html.js .reveal.active {
     :root {
         --spacing-xl: 4rem;
         --spacing-lg: 3rem;
-    }
-
-    /* Clientele columns stack on phones */
-    .clientele .split-layout {
-        flex-direction: column;
-        gap: var(--spacing-md);
     }
 
     .work-info h3 {
@@ -881,10 +890,9 @@ html.js .reveal.active {
         font-size: 1.5rem;
     }
 
-    .clean-list li {
-        font-size: 1rem;
-        margin-bottom: 0.75rem;
-        padding-bottom: 0.75rem;
+    .credit-card {
+        flex-basis: 42vw;
+        padding: 1.25rem 0.75rem;
     }
 
     .email-link {
@@ -904,11 +912,14 @@ html.js .reveal.active {
         transition: none;
     }
 
-    .hero-counter span,
     .work-media img,
     .work-media iframe,
     .nav-links {
         transition: none;
+    }
+
+    .credit-track {
+        animation: none;
     }
 }
     </style>
@@ -954,10 +965,6 @@ html.js .reveal.active {
                         <h1 class="title">Shaping ideas<br>into unforgettable<br><strong>experiences.</strong></h1>
                         <p class="hero-tagline">CREATIVE STRATEGIST | PRODUCER | DIRECTOR</p>
                     </div>
-                    <div class="hero-meta">
-                        <a href="#work" class="hero-counter"><strong>01</strong> / 04 &nbsp; Selected Works
-                            <span>&gt;</span></a>
-                    </div>
                 </div>
 
                 <div class="hero-photo">
@@ -989,26 +996,117 @@ html.js .reveal.active {
 
         <!-- Clientele & Projects -->
         <section id="clientele" class="clientele section reveal" style="background-color: #FAFAFA;">
-            <div class="container split-layout">
-                <div class="list-block">
-                    <h2 class="section-title list-title">Clientele Categories</h2>
-                    <ul class="clean-list">
-                        <li>FanMilk</li>
-                        <li>Echo House</li>
-                        <li>Charter House</li>
-                        <li>Burniton Group</li>
-                        <li>One Shot Studios</li>
-                    </ul>
-                </div>
-                <div class="list-block">
-                    <h2 class="section-title list-title">Notable Projects</h2>
-                    <ul class="clean-list">
-                        <li>Miss Malaika</li>
-                        <li>Telecel Music Awards</li>
-                        <li>Besties</li>
-                        <li>Black Star line</li>
-                        <li>Global Citizen</li>
-                    </ul>
+            <div class="container">
+                <h2 class="section-title list-title">Clientele &amp; Notable Projects</h2>
+                <div class="credit-rows">
+                    <div class="credit-row credit-row--left">
+                        <div class="credit-track">
+                            <div class="credit-card">
+                                <span class="credit-mark">FA</span>
+                                <span class="credit-name">FanMilk</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">EH</span>
+                                <span class="credit-name">Echo House</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">CH</span>
+                                <span class="credit-name">Charter House</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">BG</span>
+                                <span class="credit-name">Burniton Group</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">OS</span>
+                                <span class="credit-name">One Shot Studios</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">FA</span>
+                                <span class="credit-name">FanMilk</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">EH</span>
+                                <span class="credit-name">Echo House</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">CH</span>
+                                <span class="credit-name">Charter House</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">BG</span>
+                                <span class="credit-name">Burniton Group</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">OS</span>
+                                <span class="credit-name">One Shot Studios</span>
+                                <span class="credit-tag">Client</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="credit-row credit-row--right">
+                        <div class="credit-track">
+                            <div class="credit-card">
+                                <span class="credit-mark">MM</span>
+                                <span class="credit-name">Miss Malaika</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">TM</span>
+                                <span class="credit-name">Telecel Music Awards</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">BE</span>
+                                <span class="credit-name">Besties</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">BS</span>
+                                <span class="credit-name">Black Star Line</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card">
+                                <span class="credit-mark">GC</span>
+                                <span class="credit-name">Global Citizen</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">MM</span>
+                                <span class="credit-name">Miss Malaika</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">TM</span>
+                                <span class="credit-name">Telecel Music Awards</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">BE</span>
+                                <span class="credit-name">Besties</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">BS</span>
+                                <span class="credit-name">Black Star Line</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                            <div class="credit-card" aria-hidden="true">
+                                <span class="credit-mark">GC</span>
+                                <span class="credit-name">Global Citizen</span>
+                                <span class="credit-tag">Project</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
