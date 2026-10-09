@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive | Aggor Yorm</title>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="The full archive of work by Aggor Yorm, Media Producer and Director.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://player.vimeo.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+:root {
+    --bg: #000000;
+    --text: #F5F5F7;
+    --text-dim: rgba(245, 245, 247, 0.62);
+    --font-main: 'Montserrat', sans-serif;
+    --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--bg);
+    color-scheme: dark;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+}
+
+/* ── Top bar ── */
+.topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem var(--pad);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+.back-link {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    transition: background 0.3s var(--ease);
+}
+
+.back-link:hover {
+    background: rgba(255, 255, 255, 0.26);
+}
+
+.brand {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+/* ── Featured hero ── */
+.hero {
+    position: relative;
+    height: min(82vh, 56.25vw + 12rem);
+    min-height: 26rem;
+    overflow: hidden;
+    background: #0a0a0a;
+}
+
+.hero img,
+.hero iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+}
+
+.hero iframe {
+    /* 16:9 player scaled to always cover the hero box */
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 177.78vh);
+    height: max(100%, 56.25vw);
+    transform: translate(-50%, -50%) scale(1.12);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s var(--ease);
+}
+
+.hero iframe.is-ready {
+    opacity: 1;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top, var(--bg) 2%, rgba(0, 0, 0, 0) 55%),
+        linear-gradient(to right, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%);
+}
+
+.hero-content {
+    position: absolute;
+    z-index: 2;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: clamp(2rem, 6vw, 4.5rem);
+}
+
+.hero-content h1 {
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 1.4rem;
+}
+
+.play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1.8rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--text);
+    color: #000;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+    background: #fff;
+}
+
+.play-btn svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: currentColor;
+}
+
+/* ── Shelves ── */
+main {
+    position: relative;
+    z-index: 3;
+    margin-top: -1.5rem;
+    padding-bottom: 5rem;
+}
+
+.shelf {
+    margin-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+.shelf h2 {
+    padding: 0 var(--pad);
+    margin-bottom: 1rem;
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.row {
+    display: flex;
+    gap: clamp(0.9rem, 1.6vw, 1.5rem);
+    overflow-x: auto;
+    padding: 1.4rem var(--pad) 2rem; /* room for the hover scale + shadow */
+    margin: -1.4rem 0 -2rem;
+    scroll-snap-type: x proximity;
+    scroll-padding: 0 var(--pad);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.row::-webkit-scrollbar {
+    display: none;
+}
+
+.card {
+    position: relative;
+    flex: 0 0 auto;
+    border: 0;
+    padding: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #161618;
+    cursor: pointer;
+    scroll-snap-align: start;
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+    outline: none;
+}
+
+.card.film {
+    width: clamp(17rem, 34vw, 31rem);
+    aspect-ratio: 16 / 9;
+}
+
+.card.photo {
+    width: clamp(11rem, 20vw, 18rem);
+    aspect-ratio: 4 / 5;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card .badge {
+    position: absolute;
+    right: 0.8rem;
+    bottom: 0.8rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+}
+
+.card .badge svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    fill: #fff;
+    margin-left: 2px;
+}
+
+.card:hover,
+.card:focus-visible {
+    transform: scale(1.06);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.85);
+    z-index: 2;
+}
+
+/* ── Modal (player / photo viewer) ── */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.92);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    padding: clamp(0.75rem, 4vw, 3rem);
+}
+
+.modal.open {
+    display: flex;
+    animation: fade 0.35s var(--ease);
+}
+
+@keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-stage {
+    width: min(100%, 1280px);
+    max-height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+.modal-stage iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 14px;
+    background: #000;
+}
+
+.modal-stage img {
+    max-width: 100%;
+    max-height: calc(100vh - 6rem);
+    border-radius: 14px;
+    object-fit: contain;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.8rem;
+    height: 2.8rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.3s var(--ease);
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+footer {
+    padding: 3rem var(--pad) 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+@media (hover: none) {
+    .card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .play-btn,
+    .hero iframe {
+        transition: none;
+    }
+
+    .modal.open {
+        animation: none;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="back-link" href="index.html">&larr; Back</a>
+        <span class="brand">Aggor Yorm</span>
+    </header>
+
+    <section class="hero" id="hero">
+        <img src="assets/vimeo-1135942055.jpg" alt="">
+        <iframe id="hero-frame" title="Featured film preview"
+            data-src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
+            frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+            allow="autoplay; fullscreen; picture-in-picture"></iframe>
+        <div class="hero-content">
+            <h1>Archive</h1>
+            <button class="play-btn" type="button" data-video="1135942055?h=cafced5ff7">
+                <svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg>
+                Play
+            </button>
+        </div>
+    </section>
+
+    <main>
+        <section class="shelf">
+            <h2>Films</h2>
+            <div class="row">
+                <button class="card film" type="button" data-video="1135942055?h=cafced5ff7" aria-label="Play film">
+                    <img src="assets/vimeo-1135942055.jpg" alt="" loading="lazy">
+                    <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
+                </button>
+                <button class="card film" type="button" data-video="1127082566?h=6c883e9ae6" aria-label="Play film">
+                    <img src="assets/vimeo-1127082566.jpg" alt="" loading="lazy">
+                    <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
+                </button>
+                <button class="card film" type="button" data-video="1025899842" aria-label="Play film">
+                    <img src="assets/vimeo-1025899842.jpg" alt="" loading="lazy">
+                    <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
+                </button>
+                <button class="card film" type="button" data-video="1072493289" aria-label="Play film">
+                    <img src="assets/vimeo-1072493289.jpg" alt="" loading="lazy">
+                    <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
+                </button>
+            </div>
+        </section>
+
+        <section class="shelf">
+            <h2>Behind the Scenes</h2>
+            <div class="row">
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4152.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4152.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4161.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4161.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4179.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4179.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4193.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4193.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4237.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4237.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4284.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4284.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4288.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4288.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4294.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4294.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4306.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4306.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4336.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4336.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4396.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4396.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4399.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4399.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4438.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4438.jpg" alt="Behind the scenes" loading="lazy"></button>
+                <button class="card photo" type="button" data-photo="assets/bts/JHOE4560.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4560.jpg" alt="Behind the scenes" loading="lazy"></button>
+            </div>
+        </section>
+    </main>
+
+    <footer>&copy; Aggor Yorm</footer>
+
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Viewer">
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close">&times;</button>
+        <div class="modal-stage" id="modal-stage"></div>
+    </div>
+
+    <script>
+(function () {
+    const modal = document.getElementById('modal');
+    const stage = document.getElementById('modal-stage');
+    const closeBtn = document.getElementById('modal-close');
+    let lastFocus = null;
+
+    function open(node) {
+        lastFocus = document.activeElement;
+        stage.replaceChildren(node);
+        modal.classList.add('open');
+        document.body.classList.add('modal-open');
+        closeBtn.focus();
+    }
+
+    function close() {
+        modal.classList.remove('open');
+        document.body.classList.remove('modal-open');
+        stage.replaceChildren(); // removing the iframe stops playback
+        if (lastFocus) lastFocus.focus();
+    }
+
+    document.addEventListener('click', (e) => {
+        const video = e.target.closest('[data-video]');
+        const photo = e.target.closest('[data-photo]');
+        if (video) {
+            const [id, query] = video.dataset.video.split('?');
+            const frame = document.createElement('iframe');
+            frame.src = 'https://player.vimeo.com/video/' + id + '?' + (query ? query + '&' : '') + 'autoplay=1&title=0&byline=0&portrait=0';
+            frame.allow = 'autoplay; fullscreen; picture-in-picture';
+            frame.setAttribute('allowfullscreen', '');
+            frame.title = 'Film player';
+            open(frame);
+        } else if (photo) {
+            const img = document.createElement('img');
+            img.src = photo.dataset.photo;
+            img.alt = 'Behind the scenes';
+            open(img);
+        } else if (e.target === modal || e.target === stage) {
+            close();
+        }
+    });
+
+    closeBtn.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) close();
+    });
+
+    // Featured film: ambient muted preview fades in over the poster (desktop only)
+    const frame = document.getElementById('hero-frame');
+    if (frame && !window.matchMedia('(hover: none)').matches &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Vimeo shows a spinner until playback starts; keep the poster visible meanwhile
+        frame.addEventListener('load', () => setTimeout(() => frame.classList.add('is-ready'), 2500), { once: true });
+        frame.src = frame.dataset.src;
+    }
+})();
+    </script>
+</body>
+
+</html>
