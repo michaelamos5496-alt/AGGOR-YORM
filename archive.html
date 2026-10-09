@@ -243,11 +243,6 @@ main {
     aspect-ratio: 16 / 9;
 }
 
-.card.photo {
-    width: clamp(11rem, 20vw, 18rem);
-    aspect-ratio: 4 / 5;
-}
-
 .card img {
     width: 100%;
     height: 100%;
@@ -283,7 +278,7 @@ main {
     z-index: 2;
 }
 
-/* ── Modal (player / photo viewer) ── */
+/* ── Modal (film player) ── */
 .modal {
     position: fixed;
     inset: 0;
@@ -320,13 +315,6 @@ main {
     border: 0;
     border-radius: 14px;
     background: #000;
-}
-
-.modal-stage img {
-    max-width: 100%;
-    max-height: calc(100vh - 6rem);
-    border-radius: 14px;
-    object-fit: contain;
 }
 
 .modal-close {
@@ -431,28 +419,17 @@ footer {
                     <img src="assets/vimeo-1026432781.jpg" alt="" loading="lazy">
                     <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
                 </button>
+                <button class="card film" type="button" data-youtube="Tyat2z0aMII" aria-label="Play film">
+                    <img src="assets/youtube-Tyat2z0aMII.jpg" alt="" loading="lazy">
+                    <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
+                </button>
+                <button class="card film" type="button" data-youtube="rvXHNQqAfHM" aria-label="Play film">
+                    <img src="assets/youtube-rvXHNQqAfHM.jpg" alt="" loading="lazy">
+                    <span class="badge"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" /></svg></span>
+                </button>
             </div>
         </section>
 
-        <section class="shelf">
-            <h2>Behind the Scenes</h2>
-            <div class="row">
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4152.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4152.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4161.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4161.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4179.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4179.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4193.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4193.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4237.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4237.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4284.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4284.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4288.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4288.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4294.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4294.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4306.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4306.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4336.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4336.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4396.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4396.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4399.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4399.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4438.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4438.jpg" alt="Behind the scenes" loading="lazy"></button>
-                <button class="card photo" type="button" data-photo="assets/bts/JHOE4560.jpg" aria-label="View photo"><img src="assets/bts/thumbs/JHOE4560.jpg" alt="Behind the scenes" loading="lazy"></button>
-            </div>
-        </section>
     </main>
 
     <footer>&copy; Aggor Yorm</footer>
@@ -486,8 +463,15 @@ footer {
 
     document.addEventListener('click', (e) => {
         const video = e.target.closest('[data-video]');
-        const photo = e.target.closest('[data-photo]');
-        if (video) {
+        const yt = e.target.closest('[data-youtube]');
+        if (yt) {
+            const frame = document.createElement('iframe');
+            frame.src = 'https://www.youtube-nocookie.com/embed/' + yt.dataset.youtube + '?autoplay=1&rel=0&modestbranding=1';
+            frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+            frame.setAttribute('allowfullscreen', '');
+            frame.title = 'Film player';
+            open(frame);
+        } else if (video) {
             const [id, query] = video.dataset.video.split('?');
             const frame = document.createElement('iframe');
             frame.src = 'https://player.vimeo.com/video/' + id + '?' + (query ? query + '&' : '') + 'autoplay=1&title=0&byline=0&portrait=0';
@@ -495,11 +479,6 @@ footer {
             frame.setAttribute('allowfullscreen', '');
             frame.title = 'Film player';
             open(frame);
-        } else if (photo) {
-            const img = document.createElement('img');
-            img.src = photo.dataset.photo;
-            img.alt = 'Behind the scenes';
-            open(img);
         } else if (e.target === modal || e.target === stage) {
             close();
         }

@@ -1256,11 +1256,29 @@ html.js .reveal.active {
                     </div>
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/vimeo-1026432781.jpg" alt="Heavy Risks , An Africa Health Collaborative Documentary Film">
+                            <img src="assets/vimeo-1026432781.jpg" alt="Heavy Risks, An Africa Health Collaborative Documentary Film">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1026432781?h=84f55f4841&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-media">
+                            <img src="assets/youtube-Tyat2z0aMII.jpg" alt="Miss Malaika Ghana 2023 Finale, Behind the Scenes">
+                            <iframe title="youtube-player"
+                                data-src="https://www.youtube-nocookie.com/embed/Tyat2z0aMII?autoplay=1&mute=1&controls=0&loop=1&playlist=Tyat2z0aMII&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
+                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-media">
+                            <img src="assets/youtube-rvXHNQqAfHM.jpg" alt="TGMA 2024 Behind the Scenes">
+                            <iframe title="youtube-player"
+                                data-src="https://www.youtube-nocookie.com/embed/rvXHNQqAfHM?autoplay=1&mute=1&controls=0&loop=1&playlist=rvXHNQqAfHM&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
+                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+                                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
@@ -1486,6 +1504,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (r.top < window.innerHeight && r.bottom > 0) tryPlay();
             }, { once: true, passive: true });
         });
+    }
+
+    // ── Selected Works — show the films in a different order on every visit ───
+    const worksGrid = document.querySelector('.works-grid');
+    if (worksGrid) {
+        const items = Array.from(worksGrid.children);
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+        items.forEach(item => worksGrid.appendChild(item));
     }
 
     // ── Selected Works slider — arrow buttons scroll one card at a time ───────
