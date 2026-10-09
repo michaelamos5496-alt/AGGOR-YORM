@@ -523,14 +523,58 @@ p {
 /* ==========================================================================
    Work / Portfolio Section — Editorial Grid
    ========================================================================== */
+.works-slider {
+    position: relative;
+}
+
 .works-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem 2rem;
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.works-grid::-webkit-scrollbar {
+    display: none;
 }
 
 .work-card {
+    flex: 0 0 calc(50% - 1rem);
+    scroll-snap-align: start;
     cursor: pointer;
+}
+
+.slider-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: var(--spacing-md);
+}
+
+.slider-btn {
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--color-text);
+    background: transparent;
+    color: var(--color-text);
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.slider-btn:hover:not(:disabled) {
+    background: var(--color-text);
+    color: var(--color-bg);
+}
+
+.slider-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
 }
 
 .work-media {
@@ -775,10 +819,13 @@ html.js .reveal.active {
         margin-top: var(--spacing-md);
     }
 
-    /* Portfolio grid: two columns feel cramped on tablet, drop to one */
+    /* Portfolio slider: two cards feel cramped on tablet, show one with a peek of the next */
     .works-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
+        gap: 1.25rem;
+    }
+
+    .work-card {
+        flex-basis: 85%;
     }
 }
 
@@ -1124,8 +1171,9 @@ html.js .reveal.active {
         <section id="work" class="work section">
             <div class="container">
                 <h2 class="section-title">Selected Works</h2>
+                <div class="works-slider reveal">
                 <div class="works-grid">
-                    <div class="work-card reveal">
+                    <div class="work-card">
                         <div class="work-media">
                             <img src="assets/vimeo-1135942055.jpg" alt="Cinematic Campaign">
                             <iframe title="vimeo-player"
@@ -1134,7 +1182,7 @@ html.js .reveal.active {
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
-                    <div class="work-card reveal">
+                    <div class="work-card">
                         <div class="work-media">
                             <img src="assets/vimeo-1127082566.jpg" alt="Brand Narrative">
                             <iframe title="vimeo-player"
@@ -1143,7 +1191,7 @@ html.js .reveal.active {
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
-                    <div class="work-card reveal">
+                    <div class="work-card">
                         <div class="work-media">
                             <img src="assets/vimeo-1025899842.jpg" alt="Documentary Series">
                             <iframe title="vimeo-player"
@@ -1152,7 +1200,7 @@ html.js .reveal.active {
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
-                    <div class="work-card reveal">
+                    <div class="work-card">
                         <div class="work-media">
                             <img src="assets/vimeo-1072493289.jpg" alt="Music Video">
                             <iframe title="vimeo-player"
@@ -1161,6 +1209,11 @@ html.js .reveal.active {
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn" id="works-prev" type="button" aria-label="Previous work">&larr;</button>
+                    <button class="slider-btn" id="works-next" type="button" aria-label="Next work">&rarr;</button>
+                </div>
                 </div>
                 <div class="center-cta mt-4">
                     <a href="#contact" class="cta-link">View Full Archive &rarr;</a>
@@ -1379,6 +1432,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (r.top < window.innerHeight && r.bottom > 0) tryPlay();
             }, { once: true, passive: true });
         });
+    }
+
+    // ── Selected Works slider — arrow buttons scroll one card at a time ───────
+    const slider = document.querySelector('.works-grid');
+    const prevBtn = document.getElementById('works-prev');
+    const nextBtn = document.getElementById('works-next');
+
+    if (slider && prevBtn && nextBtn) {
+        const step = () => {
+            const card = slider.querySelector('.work-card');
+            return card.getBoundingClientRect().width + parseFloat(getComputedStyle(slider).columnGap || 0);
+        };
+        const updateButtons = () => {
+            prevBtn.disabled = slider.scrollLeft <= 2;
+            nextBtn.disabled = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 2;
+        };
+        prevBtn.addEventListener('click', () => slider.scrollBy({ left: -step(), behavior: 'smooth' }));
+        nextBtn.addEventListener('click', () => slider.scrollBy({ left: step(), behavior: 'smooth' }));
+        slider.addEventListener('scroll', updateButtons, { passive: true });
+        window.addEventListener('resize', updateButtons);
+        updateButtons();
     }
 
     // ── Portfolio Grid — lazy-load ambient video on hover/view ────────────────
