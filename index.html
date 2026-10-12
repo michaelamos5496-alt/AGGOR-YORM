@@ -832,6 +832,88 @@ html.js .reveal.active {
 }
 
 /* ==========================================================================
+   Cinematic layer (GSAP)
+   ========================================================================== */
+#intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
+
+.intro-panel {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50.3%;
+    background: #0A0A0A;
+}
+
+.intro-top { top: 0; }
+.intro-bottom { bottom: 0; }
+
+.intro-center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1.2rem;
+}
+
+.intro-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    opacity: 0;
+}
+
+.intro-line {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+#progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    transform: scaleX(0);
+    transform-origin: left center;
+    z-index: 1100;
+    pointer-events: none;
+}
+
+/* GSAP drives entrances once it is running, so switch off the CSS fade-ups */
+html.gsap-on .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* SplitText sets lines to start-aligned; keep centred blocks centred */
+.text-center .split .line,
+.text-center .split .line-mask {
+    text-align: center !important;
+}
+
+.image-block {
+    overflow: hidden;
+}
+
+/* ==========================================================================
    Media Queries
    ========================================================================== */
 /* ── Tablet (≤ 992px) ── */
@@ -1015,9 +1097,25 @@ html.js .reveal.active {
     }
 }
     </style>
+    <script>document.documentElement.classList.add('js');</script>
+    <noscript><style>#intro { display: none !important; }</style></noscript>
 </head>
 
 <body>
+
+    <!-- Cinematic intro: line draws, wordmark appears, screen splits open (removed by script) -->
+    <div id="intro" aria-hidden="true">
+        <div class="intro-panel intro-top"></div>
+        <div class="intro-panel intro-bottom"></div>
+        <div class="intro-center">
+            <span class="intro-mark">
+                <svg viewBox="0 0 24 24" width="16" height="16"><rect x="7.05" y="7.05" width="9.9" height="9.9" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(45 12 12)" /></svg>
+                AGGOR YORM
+            </span>
+        </div>
+        <div class="intro-line"></div>
+    </div>
+    <div id="progress" aria-hidden="true"></div>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -1070,7 +1168,7 @@ html.js .reveal.active {
         <section id="about" class="about section reveal">
             <div class="container split-layout">
                 <div class="text-block">
-                    <h2 class="section-title">About</h2>
+                    <h2 class="section-title split">About</h2>
                     <p class="split">Working where storytelling, culture, entertainment, and strategy meet, I am dedicated to shaping
                         ideas into unforgettable experiences.</p>
                     <p class="split">Whether producing a live television event, directing a documentary, building an original IP, or
@@ -1089,7 +1187,7 @@ html.js .reveal.active {
         <!-- Clientele & Projects -->
         <section id="clientele" class="clientele section reveal" style="background-color: #FAFAFA;">
             <div class="container">
-                <h2 class="section-title list-title">Clientele &amp; Notable Projects</h2>
+                <h2 class="section-title list-title split">Clientele &amp; Notable Projects</h2>
                 <div class="credit-rows">
                     <div class="credit-row credit-row--left">
                         <div class="credit-track">
@@ -1206,7 +1304,7 @@ html.js .reveal.active {
         <!-- Selected Work / Portfolio -->
         <section id="work" class="work section">
             <div class="container">
-                <h2 class="section-title">Selected Works</h2>
+                <h2 class="section-title split">Selected Works</h2>
                 <div class="works-slider reveal">
                 <div class="works-grid">
                     <div class="work-card">
@@ -1305,8 +1403,8 @@ html.js .reveal.active {
         <!-- Behind The Scenes -->
         <section id="bts" class="bts section reveal">
             <div class="container">
-                <h2 class="section-title">Behind The Scenes</h2>
-                <p class="bts-intro">A closer look at the sets, crews and quiet moments between takes that shape
+                <h2 class="section-title split">Behind The Scenes</h2>
+                <p class="bts-intro split">A closer look at the sets, crews and quiet moments between takes that shape
                     every finished frame.</p>
                 <div class="bts-strip">
                     <figure class="bts-frame">
@@ -1372,8 +1470,8 @@ html.js .reveal.active {
         <!-- Contact Section -->
         <section id="contact" class="contact section reveal">
             <div class="container text-center">
-                <h2 class="section-title">Let's Create</h2>
-                <p class="contact-text">Available for select projects and collaborations globally.</p>
+                <h2 class="section-title split">Let's Create</h2>
+                <p class="contact-text split">Available for select projects and collaborations globally.</p>
                 <a href="mailto:info@aggoryorm.com" class="email-link">info@aggoryorm.com</a>
 
                 <div class="social-links mt-4">
@@ -1393,41 +1491,180 @@ html.js .reveal.active {
     </footer>
 
     <!-- Scripts -->
+    <script>
+    // Safety net: never leave a visitor stuck behind the intro if a script is slow or blocked
+    setTimeout(function () {
+        var i = document.getElementById('intro'); if (i) i.remove();
+        document.documentElement.style.overflow = '';
+    }, 9000);
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
     <script>
-    // About text — line-by-line reveal when the section scrolls into view
+    // ── Cinematic motion layer ────────────────────────────────────────────────
     (function () {
-        const plain = () => document.querySelectorAll('.split').forEach(el => { el.style.opacity = 1; });
+        const intro = document.getElementById('intro');
+        const showAll = () => {
+            if (intro) intro.remove();
+            document.documentElement.style.overflow = '';
+            document.querySelectorAll('.split').forEach(el => { el.style.opacity = 1; });
+        };
 
         if (!window.gsap || !window.SplitText || !window.ScrollTrigger ||
             window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            plain();
+            showAll();
             return;
         }
 
         gsap.registerPlugin(SplitText, ScrollTrigger);
+        document.documentElement.classList.add('gsap-on');
+
+        const $ = (sel, root = document) => root.querySelector(sel);
+        const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+        // Links carry a CSS "transition: all" that would fight GSAP's per-frame transforms
+        const freeze = (els) => els.forEach(el => { el.style.transition = 'none'; });
+        const thaw = (els) => () => els.forEach(el => el.style.removeProperty('transition'));
+
+        // Arriving via an anchor link / mid-page reload: skip the opening sequence
+        const skipIntro = !!location.hash || window.scrollY > 40;
 
         document.fonts.ready.then(() => {
-            gsap.set('.split', { opacity: 1 });
-
-            SplitText.create('.split', {
-                type: 'words,lines',
-                linesClass: 'line',
-                autoSplit: true,
-                mask: 'lines',
-                onSplit: (self) => {
-                    return gsap.from(self.lines, {
-                        duration: 0.6,
-                        yPercent: 100,
-                        opacity: 0,
-                        stagger: 0.1,
-                        ease: 'expo.out',
-                        scrollTrigger: { trigger: '#about', start: 'top 75%', once: true }
-                    });
-                }
+            // 1. Headings & paragraphs: lines rise out of a mask as they scroll into view
+            $$('.split').forEach(el => {
+                SplitText.create(el, {
+                    type: 'lines',
+                    linesClass: 'line',
+                    autoSplit: true,
+                    mask: 'lines',
+                    onSplit: (self) => {
+                        gsap.set(el, { opacity: 1 });
+                        return gsap.from(self.lines, {
+                            duration: 1.2,
+                            yPercent: 110,
+                            skewY: 3,
+                            opacity: 0,
+                            stagger: 0.12,
+                            ease: 'expo.out',
+                            scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+                        });
+                    }
+                });
             });
+
+            // 2. Hero opening sequence
+            const nav = $('.navbar');
+            const heroLogo = $('.hero-logo');
+            const heroTagline = $('.hero-tagline');
+            const heroDots = $$('.hero-dots span');
+            const heroPhoto = $('.hero-photo');
+            const heroImg = $('.hero-photo img');
+
+            if (skipIntro) {
+                if (intro) intro.remove();
+            } else {
+                const heroSplit = SplitText.create('.hero .title', { type: 'lines', linesClass: 'line', mask: 'lines' });
+                const frozen = [nav, heroLogo];
+                freeze(frozen);
+
+                gsap.set(heroSplit.lines, { yPercent: 115 });
+                gsap.set(heroPhoto, { clipPath: 'inset(100% 0% 0% 0%)' });
+                gsap.set(heroImg, { scale: 1.95 });
+                gsap.set([heroLogo, heroTagline], { opacity: 0 });
+                gsap.set(heroDots, { scale: 0, opacity: 0 });
+                gsap.set(nav, { yPercent: -110 });
+                document.documentElement.style.overflow = 'hidden';
+
+                const tl = gsap.timeline({
+                    onComplete: () => {
+                        heroSplit.revert();
+                        gsap.set(heroPhoto, { clearProps: 'clipPath' });
+                        thaw(frozen)();
+                        document.documentElement.style.overflow = '';
+                        ScrollTrigger.refresh();
+                    }
+                });
+
+                tl.to('.intro-line', { scaleX: 1, duration: 1.1, ease: 'power3.inOut' })
+                  .fromTo('.intro-mark', { opacity: 0, letterSpacing: '0.7em' },
+                          { opacity: 1, letterSpacing: '0.32em', duration: 1.2, ease: 'power2.out' }, '-=0.7')
+                  .to('.intro-mark, .intro-line', { opacity: 0, duration: 0.45, ease: 'power1.in' }, '+=0.35')
+                  .to('.intro-top', { yPercent: -101, duration: 1.3, ease: 'expo.inOut' }, '<0.1')
+                  .to('.intro-bottom', { yPercent: 101, duration: 1.3, ease: 'expo.inOut',
+                        onComplete: () => intro && intro.remove() }, '<')
+                  .addLabel('open', '<0.45')
+                  .to(heroPhoto, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.7, ease: 'expo.inOut' }, 'open')
+                  .to(heroImg, { scale: 1.55, duration: 2.8, ease: 'expo.out' }, 'open')
+                  .to(heroSplit.lines, { yPercent: 0, duration: 1.4, stagger: 0.16, ease: 'expo.out' }, 'open+=0.5')
+                  .to(heroLogo, { opacity: 1, duration: 1.2, ease: 'power2.out' }, 'open+=0.3')
+                  .to(heroDots, { scale: 1, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'back.out(2.2)' }, 'open+=0.9')
+                  .fromTo(heroTagline, { opacity: 0, y: 18, letterSpacing: '0.3em' },
+                          { opacity: 1, y: 0, letterSpacing: '0.06em', duration: 1.6, ease: 'expo.out' }, 'open+=1.0')
+                  .to(nav, { yPercent: 0, duration: 1.3, ease: 'expo.out' }, 'open+=1.0');
+            }
+
+            // 3. Hero parallax as you scroll away
+            gsap.to(heroImg, {
+                yPercent: 14, ease: 'none',
+                scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+            });
+            gsap.to('.hero-title-group', {
+                y: -70, ease: 'none',
+                scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+            });
+
+            // 4. About video: wipes in left-to-right while the picture settles
+            gsap.from('#about .image-block', {
+                clipPath: 'inset(0% 100% 0% 0%)', duration: 1.8, ease: 'expo.inOut', clearProps: 'clipPath',
+                scrollTrigger: { trigger: '#about .image-block', start: 'top 82%', once: true }
+            });
+            gsap.from('#about .about-image', {
+                scale: 1.35, duration: 2.4, ease: 'expo.out', clearProps: 'transform',
+                scrollTrigger: { trigger: '#about .image-block', start: 'top 82%', once: true }
+            });
+
+            // 5. Selected Works: cards drop in one after another (order read at trigger time, after the shuffle)
+            ScrollTrigger.create({
+                trigger: '.works-slider', start: 'top 85%', once: true,
+                onEnter: () => gsap.from($$('.work-card'), {
+                    clipPath: 'inset(0% 0% 100% 0%)', y: 60, duration: 1.5, stagger: 0.16,
+                    ease: 'expo.out', clearProps: 'clipPath,transform'
+                })
+            });
+
+            // 6. Clientele rows slide in from opposite sides
+            gsap.from('.credit-row', {
+                opacity: 0, x: (i) => (i % 2 ? 160 : -160), duration: 1.6, stagger: 0.25, ease: 'expo.out',
+                clearProps: 'opacity,transform',
+                scrollTrigger: { trigger: '.credit-rows', start: 'top 88%', once: true }
+            });
+
+            // 7. Behind the scenes frames rise in a ripple
+            gsap.from('.bts-frame', {
+                opacity: 0, y: 80, duration: 1.4, stagger: 0.09, ease: 'expo.out', clearProps: 'opacity,transform',
+                scrollTrigger: { trigger: '.bts-strip', start: 'top 90%', once: true }
+            });
+
+            // 8. Call-to-action and contact details
+            const ctas = $$('.cta-link, .email-link, .social-link');
+            freeze(ctas);
+            const fadeUp = (targets, trigger, extra = {}) => gsap.from(targets, Object.assign({
+                opacity: 0, y: 40, duration: 1.3, stagger: 0.12, ease: 'expo.out',
+                clearProps: 'opacity,transform', onComplete: thaw(ctas),
+                scrollTrigger: { trigger, start: 'top 92%', once: true }
+            }, extra));
+            fadeUp('.cta-link', '.center-cta');
+            fadeUp('.email-link', '.email-link');
+            fadeUp('.social-link', '.social-links', { y: 30 });
+
+            // 9. Thin film-strip progress line along the top edge
+            gsap.to('#progress', {
+                scaleX: 1, ease: 'none',
+                scrollTrigger: { start: 0, end: 'max', scrub: 0.3 }
+            });
+
+            window.addEventListener('load', () => ScrollTrigger.refresh());
         });
     })();
     </script>
