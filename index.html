@@ -532,6 +532,15 @@ p {
     overflow: hidden;
 }
 
+/* About text: lines slide up from a mask (GSAP SplitText); script un-hides it */
+html.js .split {
+    opacity: 0;
+}
+
+.split .line {
+    will-change: transform;
+}
+
 .about-image {
     width: 100%;
     height: 100%;
@@ -1062,9 +1071,9 @@ html.js .reveal.active {
             <div class="container split-layout">
                 <div class="text-block">
                     <h2 class="section-title">About</h2>
-                    <p>Working where storytelling, culture, entertainment, and strategy meet, I am dedicated to shaping
+                    <p class="split">Working where storytelling, culture, entertainment, and strategy meet, I am dedicated to shaping
                         ideas into unforgettable experiences.</p>
-                    <p>Whether producing a live television event, directing a documentary, building an original IP, or
+                    <p class="split">Whether producing a live television event, directing a documentary, building an original IP, or
                         advising a brand, my mission is to shape African stories and creative businesses that influence
                         culture and leave a lasting legacy.</p>
                 </div>
@@ -1384,6 +1393,44 @@ html.js .reveal.active {
     </footer>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    <script>
+    // About text — line-by-line reveal when the section scrolls into view
+    (function () {
+        const plain = () => document.querySelectorAll('.split').forEach(el => { el.style.opacity = 1; });
+
+        if (!window.gsap || !window.SplitText || !window.ScrollTrigger ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            plain();
+            return;
+        }
+
+        gsap.registerPlugin(SplitText, ScrollTrigger);
+
+        document.fonts.ready.then(() => {
+            gsap.set('.split', { opacity: 1 });
+
+            SplitText.create('.split', {
+                type: 'words,lines',
+                linesClass: 'line',
+                autoSplit: true,
+                mask: 'lines',
+                onSplit: (self) => {
+                    return gsap.from(self.lines, {
+                        duration: 0.6,
+                        yPercent: 100,
+                        opacity: 0,
+                        stagger: 0.1,
+                        ease: 'expo.out',
+                        scrollTrigger: { trigger: '#about', start: 'top 75%', once: true }
+                    });
+                }
+            });
+        });
+    })();
+    </script>
     <script>
 document.documentElement.classList.add('js');
 
