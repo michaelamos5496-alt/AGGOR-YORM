@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.vimeocdn.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@200;300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Styles -->
@@ -145,61 +145,64 @@ p {
 }
 
 /* ==========================================================================
-   Navigation
+   Navigation — floats over the hero card: logo, centered pill, CTA
    ========================================================================== */
+:root {
+    --hero-bg: #e7e8eb;
+    --hero-ink: #16181b;
+    --hero-gap: 12px;
+    --font-serif: 'Lora', Georgia, serif;
+}
+
 .navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 2rem 0;
+    padding: calc(var(--hero-gap) + 10px) 0 0;
     z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    transition: var(--transition);
+    color: var(--hero-ink);
+    pointer-events: none; /* only the logo, pill and CTA catch clicks */
 }
 
-.navbar.scrolled {
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--color-border);
-}
-
-/* At the top of the page the nav floats transparently over the gray backdrop */
-.navbar:not(.scrolled) {
-    background-color: transparent;
-    backdrop-filter: none;
-}
-
-/* Whenever the hero shows as the three-panel card (desktop, and tablets in
-   landscape), it carries its own logo + menu button, so the fixed navbar
-   slides in only after scrolling (or while the overlay menu is open).
-   Stacked layouts (phones, portrait tablets) keep the navbar visible. */
-@media (min-width: 1201px), (min-width: 769px) and (orientation: landscape) {
-    .navbar {
-        transform: translateY(-100%);
-    }
-
-    .navbar.scrolled,
-    body.menu-open .navbar {
-        transform: translateY(0);
-    }
-}
+.navbar > .nav-container > * { pointer-events: auto; }
 
 .nav-container {
-    width: 90%;
-    max-width: 1400px;
+    width: calc(100% - var(--hero-gap) * 2 - 28px);
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    position: relative;
 }
 
 .logo {
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    position: relative;
+    z-index: 1001;
 }
 
-/* Fullscreen overlay menu — used at every screen size */
+.logo sup {
+    font-size: 0.55em;
+    margin-left: 1px;
+}
+
+.nav-cta {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    background: var(--hero-ink);
+    padding: 0.55rem 1.05rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1001;
+}
+
+.nav-cta:hover { background: #3a3d42; }
+
+/* Overlay menu — phones and tablets */
 .nav-links {
     position: fixed;
     top: 0;
@@ -207,7 +210,7 @@ p {
     height: 100vh;
     height: 100dvh;
     width: 100%;
-    background-color: var(--color-bg);
+    background-color: #FFFFFF;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -216,9 +219,7 @@ p {
     transition: right 0.5s ease-in-out;
 }
 
-.nav-links.active {
-    right: 0;
-}
+.nav-links.active { right: 0; }
 
 .nav-link {
     font-size: 1.5rem;
@@ -234,166 +235,264 @@ p {
     left: 0;
     width: 0;
     height: 1px;
-    background-color: var(--color-accent);
+    background-color: var(--hero-ink);
     transition: var(--transition);
 }
 
-.nav-link:hover::after {
-    width: 100%;
-}
+.nav-link:hover::after { width: 100%; }
 
 .menu-toggle {
     display: block;
     cursor: pointer;
     position: relative;
-    z-index: 1001; /* stays above the fullscreen nav overlay */
+    z-index: 1001;
     padding: 10px;
     margin-right: -10px;
 }
 
 .bar {
     display: block;
-    width: 25px;
+    width: 22px;
     height: 2px;
     margin: 5px auto;
-    background-color: var(--color-text);
+    background-color: var(--hero-ink);
     transition: var(--transition);
 }
 
-.menu-toggle.is-active .bar:nth-child(2) {
-    opacity: 0;
-}
+.menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+.menu-toggle.is-active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-.menu-toggle.is-active .bar:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-}
+/* The nav steps out of the way while Selected Works is on screen */
+.navbar { transition: translate 0.5s ease, opacity 0.4s ease; }
+.navbar.nav-hidden { translate: 0 -130%; opacity: 0; visibility: hidden; }
+body.menu-open .navbar.nav-hidden { translate: none; opacity: 1; visibility: visible; }
 
-.menu-toggle.is-active .bar:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+/* Over dark sections (Behind The Scenes) the floating bits flip to light */
+body:not(.menu-open) .navbar.on-dark { color: #FFFFFF; }
+body:not(.menu-open) .navbar.on-dark .bar { background-color: #FFFFFF; }
+body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(--hero-ink); }
+
+/* Mobile bar: logo left, hamburger right (CTA lives in the overlay area) */
+.nav-cta { display: none; }
+
+/* Desktop: white pill centered, hanging from the top edge of the card */
+@media (min-width: 993px) {
+    .menu-toggle { display: none; }
+    .nav-cta { display: inline-block; }
+
+    .nav-links {
+        position: absolute;
+        top: calc(-1 * (var(--hero-gap) + 10px));
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        height: auto;
+        width: auto;
+        flex-direction: row;
+        gap: 0.2rem;
+        background: #FFFFFF;
+        padding: calc(var(--hero-gap) + 4px) 1.4rem 0.75rem;
+        border-radius: 0 0 1.1rem 1.1rem;
+        transition: none;
+        pointer-events: auto;
+    }
+
+    .nav-link {
+        font-size: 0.78rem;
+        font-weight: 500;
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+    }
+
+    .nav-link::after { display: none; }
+    .nav-link:hover,
+    .nav-link.is-current { background: #EFEFF1; }
 }
 
 /* ==========================================================================
-   Hero Section — full-bleed three-panel editorial layout
+   Hero Section — rounded editorial card, giant wordmark, service accordion
    ========================================================================== */
 .hero {
     height: 100vh;
     height: 100svh; /* mobile browsers: ignore collapsing URL bar */
-    min-height: 560px;
+    min-height: 600px;
+    padding: var(--hero-gap);
 }
 
 .hero-card {
     position: relative;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 38% 62%;
     overflow: hidden;
+    border-radius: 1.5rem;
+    color: var(--hero-ink);
+    background:
+        linear-gradient(105deg, #eceded 0%, #e3e4e7 45%, #d5d6da 100%);
 }
 
-/* ── Left: white typography panel ── */
-.hero-left {
-    position: relative;
-    z-index: 2;
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 2.75rem 0 2.5rem clamp(2rem, 4.5vw, 4rem);
-}
-
-.hero-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    line-height: 1.4;
-}
-
-.hero-logo svg {
-    width: 19px;
-    height: 19px;
-    flex-shrink: 0;
-}
-
-/* White block extends past the panel edge so the title overlaps the photo */
-.hero-title-group {
-    background-color: #FFFFFF;
-    margin: auto -5rem auto 0;
-    padding: 2.75rem 2rem;
-    position: relative;
-    z-index: 2;
-    align-self: stretch;
-}
-
-.hero .title {
-    font-size: clamp(2.1rem, 3.7vw, 3.8rem);
-    line-height: 1.15;
-    margin-bottom: 0;
-}
-
-.hero .title strong {
-    font-weight: 700;
-}
-
-.hero-tagline {
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    color: var(--color-text-light);
-    margin: 1.5rem 0 0;
-    text-align: center;
-}
-
-.hero-dots {
-    position: absolute;
-    left: 1.1rem;
-    top: 42%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-}
-
-.hero-dots span {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background-color: #D5D5D5;
-}
-
-.hero-dots span:first-child {
-    background-color: var(--color-text);
-}
-
-/* ── Center: full-height portrait ── */
+/* Portrait on the left, its right edge dissolving into the card */
 .hero-photo {
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    background-color: #1A1A1A;
-}
-
-/* Black divider seam between the white text panel and the photo */
-.hero-photo::before {
-    content: '';
     position: absolute;
-    inset: 0 auto 0 0;
-    width: 10px;
-    background-color: #000000;
-    z-index: 2;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 56%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 78%, transparent 100%);
 }
 
-/* Tight close-up crop: zoom toward the face so the portrait fills the
-   frame like a studio shot rather than a wide environmental photo */
 .hero-photo img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 22%;
-    transform: scale(1.55);
-    transform-origin: 52% 26%;
+    object-position: 50% 30%;
+    transform: scale(1.05);
+    transform-origin: 40% 30%;
+}
+
+.hero-left {
+    position: absolute;
+    z-index: 2;
+    right: clamp(1.5rem, 4.5vw, 5rem);
+    top: 0;
+    bottom: 0;
+    width: 44%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 7rem; /* clear of the service cards */
+}
+
+.hero-blurb {
+    font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+    font-weight: 400;
+    line-height: 1.45;
+    color: #3b3e43;
+    max-width: 21rem;
+    margin: 0 0 clamp(2rem, 7vh, 5rem) clamp(0rem, 8vw, 9rem);
+}
+
+.hero-title-group { text-align: right; }
+
+.hero .title {
+    font-size: clamp(3.4rem, 7.4vw, 8.6rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    color: var(--hero-ink);
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.hero-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 2.1vw, 2.3rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--hero-ink);
+    margin: 0.7em 0.2em 0 0;
+    white-space: nowrap;
+}
+
+.hero-tagline .sep {
+    font-style: normal;
+    font-weight: 400;
+    opacity: 0.4;
+    margin: 0 0.25em;
+}
+
+/* ── Service cards along the bottom ── */
+.hero-services {
+    position: absolute;
+    z-index: 3;
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    align-items: end;
+}
+
+.service {
+    background: #FFFFFF;
+    border-radius: 0.9rem;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+}
+
+.service-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--hero-ink);
+    text-align: left;
+    cursor: pointer;
+}
+
+.service-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    border-radius: 999px;
+    background: var(--hero-ink);
+    color: #FFFFFF;
+    font-size: 0.55rem;
+    font-weight: 500;
+}
+
+.service-icon {
+    margin-left: auto;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.service-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.service-body > div { overflow: hidden; }
+
+.service.is-open .service-body { grid-template-rows: 1fr; }
+
+.service-body p {
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: #7a7d82;
+    margin: 1rem 0 0.9rem;
+}
+
+.service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding-bottom: 0.1rem;
+}
+
+.service-tags span {
+    font-size: 0.62rem;
+    background: #F1F1F3;
+    color: #55585d;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.35rem;
 }
 
 /* ==========================================================================
@@ -557,66 +656,119 @@ html.js .split {
 }
 
 /* ==========================================================================
-   Work / Portfolio Section — Editorial Grid
+   Work / Portfolio Section — black stage, big image cards, centered carousel
    ========================================================================== */
-.works-slider {
-    position: relative;
+.work {
+    --card-w: min(62vw, 58rem);
+    --card-gap: 1.5rem;
+    background: #FFFFFF;
+    color: #0a0a0a;
+    overflow: hidden;
+    padding-top: clamp(5rem, 8vw, 7rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
 }
 
+.work .container { width: 94%; max-width: none; }
+
+.work-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.work-pill {
+    display: inline-block;
+    font-family: 'Inter Tight', var(--font-main);
+    font-size: 0.72rem;
+    font-weight: 400;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #d6d6d8;
+    border-radius: 999px;
+    background: #F4F4F5;
+    margin-bottom: 1.6rem;
+}
+
+.work .section-title {
+    font-family: 'Inter Tight', var(--font-main);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 5.6vw, 5.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin-bottom: 0;
+    color: #0a0a0a;
+}
+
+.work .section-title em {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+}
+
+.work-side {
+    max-width: 22rem;
+    padding-top: 1.6rem;
+}
+
+.work-side p {
+    font-family: 'Inter Tight', var(--font-main);
+    font-size: 1rem;
+    line-height: 1.35;
+    font-weight: 400;
+    color: #3d4044;
+    margin: 0;
+}
+
+.works-slider {
+    position: relative;
+    margin: 0 calc(50% - 50vw);
+}
+
+/* Full-bleed track; side padding centers the first and last card */
 .works-grid {
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: var(--card-gap);
     overflow-x: auto;
+    padding: 1rem calc((100vw - var(--card-w)) / 2);
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    user-select: none;
 }
 
-.works-grid::-webkit-scrollbar {
-    display: none;
+.works-grid::-webkit-scrollbar { display: none; }
+
+.works-grid.is-dragging {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
 }
 
 .work-card {
-    flex: 0 0 calc(50% - 1rem);
-    scroll-snap-align: start;
-    cursor: pointer;
+    position: relative;
+    flex: 0 0 var(--card-w);
+    aspect-ratio: 3 / 2;
+    scroll-snap-align: center;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: #151515;
+    color: #FFFFFF;
+    transform: scale(0.84);
+    opacity: 0.5;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.7s ease;
 }
 
-.slider-controls {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    margin-top: var(--spacing-md);
-}
-
-.slider-btn {
-    width: 3rem;
-    height: 3rem;
-    border: 1px solid var(--color-text);
-    background: transparent;
-    color: var(--color-text);
-    font-family: var(--font-main);
-    font-size: 1.2rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.slider-btn:hover:not(:disabled) {
-    background: var(--color-text);
-    color: var(--color-bg);
-}
-
-.slider-btn:disabled {
-    opacity: 0.25;
-    cursor: default;
+.work-card.is-active {
+    transform: scale(1);
+    opacity: 1;
 }
 
 .work-media {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
+    position: absolute;
+    inset: 0;
     background-color: #0A0A0A;
 }
 
@@ -626,14 +778,10 @@ html.js .split {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
 }
 
-.work-card:hover .work-media img {
-    transform: scale(1.05);
-}
-
-/* Desktop ambient video: fades in over the poster once the player is ready */
+/* Ambient video: fades in over the poster once the player is ready */
 .work-media iframe {
     position: absolute;
     inset: 0;
@@ -646,26 +794,190 @@ html.js .split {
     transition: opacity 0.6s ease;
 }
 
-.work-media iframe.is-ready {
-    opacity: 1;
+.work-media iframe.is-ready { opacity: 1; }
+
+/* Soft fade at the bottom so the caption stays readable */
+.work-card::after {
+    content: '';
+    position: absolute;
+    inset: 40% 0 0 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+    pointer-events: none;
 }
 
-.work-info {
-    margin-top: 1.1rem;
+.work-caption {
+    position: absolute;
+    z-index: 2;
+    left: clamp(1.2rem, 2.6vw, 2.2rem);
+    right: clamp(1.2rem, 2.6vw, 2.2rem);
+    bottom: clamp(1.1rem, 2.4vw, 2rem);
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    font-family: 'Inter Tight', var(--font-main);
 }
 
-.work-info h3 {
-    font-size: 1.25rem;
+.work-title {
+    flex: 0 1 46%;
+    font-size: clamp(1.3rem, 2.4vw, 2.2rem);
     font-weight: 400;
-    margin-bottom: 0.25rem;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
 }
 
-.work-info p {
+.work-caption p {
+    flex: 1;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 0.35rem;
+    max-width: 20rem;
+}
+
+.work-view {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
     font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-text-light);
-    margin-bottom: 0;
+    padding: 0.35rem 0.4rem 0.35rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(6px);
+    color: #FFFFFF;
+    transition: var(--transition);
+}
+
+.work-view i {
+    font-style: normal;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    font-size: 0.9rem;
+}
+
+.work-view:hover { background: #FFFFFF; color: #0a0a0a; }
+.work-view:hover i { border-color: #0a0a0a; }
+
+/* Round arrows flank the active card */
+.slider-controls { display: contents; }
+
+.slider-btn {
+    position: absolute;
+    z-index: 5;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    border: 1px solid #d6d6d8;
+    background: #FFFFFF;
+    color: #0a0a0a;
+    font-family: var(--font-main);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#works-next {
+    top: 12%;
+    left: calc(50% + var(--card-w) / 2 + 1.4rem);
+}
+
+#works-prev {
+    bottom: 6%;
+    left: calc(50% - var(--card-w) / 2 - 4.6rem);
+}
+
+.slider-btn:hover:not(:disabled) { background: #0a0a0a; color: #FFFFFF; border-color: #0a0a0a; }
+
+.slider-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+/* In-page video player */
+.film-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 3rem);
+    background: rgba(5, 5, 5, 0.92);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.film-modal.is-open { opacity: 1; visibility: visible; }
+
+.film-modal-frame {
+    position: relative;
+    width: min(100%, 78rem);
+    aspect-ratio: 16 / 9;
+    max-height: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #000;
+    transform: scale(0.96);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.film-modal.is-open .film-modal-frame { transform: scale(1); }
+
+.film-modal-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.film-modal-close {
+    position: absolute;
+    top: clamp(0.8rem, 2vw, 1.6rem);
+    right: clamp(0.8rem, 2vw, 1.6rem);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: #121212;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.film-modal-close:hover { background: #FFFFFF; color: #0a0a0a; }
+
+.work .center-cta { margin-top: clamp(2rem, 4vw, 3rem); }
+
+.work .center-cta .cta-link {
+    color: #0a0a0a;
+    border-color: #0a0a0a;
+}
+
+.work .center-cta .cta-link:hover {
+    color: #77797d;
+    border-color: #77797d;
+}
+
+@media screen and (max-width: 992px) {
+    .work { --card-w: 82vw; --card-gap: 1rem; }
+    .work-head { flex-direction: column; gap: 1.2rem; }
+    .work-side { padding-top: 0; }
+    .work-card { aspect-ratio: 4 / 5; }
+    .work-caption { flex-wrap: wrap; gap: 0.8rem; }
+    .work-title { flex-basis: 100%; }
+    .work-caption p { display: none; }
+    .slider-btn { display: none; }
 }
 
 .center-cta {
@@ -942,86 +1254,46 @@ html.gsap-on .reveal {
         gap: 1.25rem;
     }
 
-    .work-card {
-        flex-basis: 85%;
-    }
 }
 
-/* ── Tablet landscape (769–992px): keep the full-page three-panel hero, tightened ── */
-@media screen and (min-width: 769px) and (max-width: 992px) and (orientation: landscape) {
-    .hero-card {
-        grid-template-columns: 42% 58%;
+/* ── Tablet & phone ── */
+@media screen and (max-width: 992px) {
+    .hero-photo {
+        width: 100%;
+        -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
     }
+
+    .hero-photo img { object-position: 50% 20%; }
 
     .hero-left {
-        padding-left: 1.75rem;
+        left: 1.5rem;
+        right: 1.5rem;
+        width: auto;
+        top: auto;
+        bottom: 1.75rem;
+        justify-content: flex-end;
+        padding-bottom: 0;
     }
 
-    .hero-title-group {
-        margin-right: -3.5rem;
+    .hero-blurb { display: none; }
+    .hero-title-group { text-align: left; }
+
+    .hero .title { font-size: clamp(3rem, 15vw, 7rem); }
+
+    .hero-tagline {
+        font-size: clamp(1rem, 4.6vw, 2rem);
+        margin: 0.6em 0 0 0.1em;
+        white-space: normal;
     }
 
-    .hero-dots {
-        display: none;
-    }
+    .hero-services { display: none; }
 }
 
 /* ── Short landscape screens (rotated phones): compress the hero vertically ── */
-@media screen and (min-width: 769px) and (orientation: landscape) and (max-height: 560px) {
-    .hero {
-        min-height: 480px;
-    }
-
-    .hero .title {
-        font-size: clamp(1.5rem, 3.2vw, 2.2rem);
-    }
-
-    .hero-left {
-        padding-top: 1.5rem;
-        padding-bottom: 1.5rem;
-    }
-
-    .hero-title-group {
-        padding: 1.5rem 1.5rem 1.5rem 0;
-        margin-right: -3rem;
-    }
-}
-
-/* ── Stacked hero: phones (any orientation) and portrait tablets ── */
-@media screen and (max-width: 768px), screen and (max-width: 1200px) and (orientation: portrait) {
-    .hero {
-        height: auto;
-        min-height: 0;
-    }
-
-    .hero-card {
-        display: block;
-        height: auto;
-    }
-
-    .hero-left {
-        padding: 6.5rem max(2.5rem, 6%) 2.5rem;
-    }
-
-    .hero-logo {
-        display: none; /* the fixed navbar logo covers this in stacked mode */
-    }
-
-    /* Keep the desktop's pagination dots on the panel's left edge */
-    .hero-dots {
-        left: 0.9rem;
-        top: 55%;
-    }
-
-    .hero-title-group {
-        margin: 0;
-        padding: 1.25rem 0 0;
-        align-self: auto;
-    }
-
-    .hero-photo {
-        height: clamp(260px, 45vh, 460px);
-    }
+@media screen and (min-width: 993px) and (max-height: 640px) {
+    .hero-services { display: none; }
+    .hero-left { padding-bottom: 0; }
 }
 
 /* ── Mobile (≤ 768px) ── */
@@ -1031,9 +1303,6 @@ html.gsap-on .reveal {
         --spacing-lg: 3rem;
     }
 
-    .work-info h3 {
-        font-size: 1.1rem;
-    }
 
     .contact-text {
         font-size: 1.15rem;
@@ -1098,6 +1367,22 @@ html.gsap-on .reveal {
 }
     </style>
     <script>document.documentElement.classList.add('js');</script>
+    <script>
+    // A refresh always starts at the top: no restored scroll position, no #section jump
+    (function () {
+        try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        var reloaded = (nav && nav.type === 'reload') || (performance.navigation && performance.navigation.type === 1);
+        if (reloaded) {
+            if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+            // 'instant' matters: the page has smooth scrolling on, which would let the old position win
+            var top = function () { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); };
+            top();
+            document.addEventListener('DOMContentLoaded', top);
+            window.addEventListener('load', function () { top(); setTimeout(top, 150); });
+        }
+    })();
+    </script>
     <noscript><style>#intro { display: none !important; }</style></noscript>
 </head>
 
@@ -1120,19 +1405,20 @@ html.gsap-on .reveal {
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">AGGOR YORM.</a>
+            <a href="#" class="logo">aggor yorm<sup>&reg;</sup></a>
+            <ul class="nav-links">
+                <li><a href="#work" class="nav-link">Work</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                                <li><a href="#bts" class="nav-link">Behind The Scenes</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <a href="#contact" class="nav-cta">Start Project</a>
             <div class="menu-toggle" id="mobile-menu" role="button" tabindex="0" aria-label="Toggle menu"
                 aria-expanded="false">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </div>
-            <ul class="nav-links">
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#work" class="nav-link">Selected Work</a></li>
-                <li><a href="#bts" class="nav-link">Behind The Scenes</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-            </ul>
         </div>
     </nav>
 
@@ -1140,26 +1426,48 @@ html.gsap-on .reveal {
         <!-- Hero Section -->
         <header class="hero reveal">
             <div class="hero-card">
-                <div class="hero-left">
-                    <a href="#" class="hero-logo">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="7.05" y="7.05" width="9.9" height="9.9" fill="none" stroke="currentColor"
-                                stroke-width="1.6" transform="rotate(45 12 12)" />
-                        </svg>
-                        <span>AGGOR<br>YORM</span>
-                    </a>
-                    <div class="hero-dots" aria-hidden="true">
-                        <span></span><span></span><span></span><span></span>
-                    </div>
-                    <div class="hero-title-group">
-                        <h1 class="title">Shaping ideas<br>into unforgettable<br><strong>experiences.</strong></h1>
-                        <p class="hero-tagline">CREATIVE STRATEGIST | PRODUCER | DIRECTOR</p>
-                    </div>
-                </div>
-
                 <div class="hero-photo">
                     <img src="assets/hero.JPG" alt="Aggor Yorm Editorial Portrait" fetchpriority="high"
                         decoding="async">
+                </div>
+
+                <div class="hero-left">
+                    <p class="hero-blurb">Shaping ideas into unforgettable experiences. Stories, culture and entertainment, produced and directed with purpose.</p>
+                    <div class="hero-title-group">
+                        <h1 class="title">aggor yorm</h1>
+                        <p class="hero-tagline">producer <span class="sep">|</span> director <span class="sep">|</span> creative consultant</p>
+                    </div>
+                </div>
+
+                <div class="hero-services">
+                    <div class="service is-open">
+                        <button class="service-head" aria-expanded="true"><span class="service-num">01</span>Producing<span class="service-icon">&minus;</span></button>
+                        <div class="service-body"><div>
+                            <p>Live television events, documentaries and original IP, taken from first idea to final delivery with a focus on African stories.</p>
+                            <div class="service-tags"><span>Live TV</span><span>Documentary</span><span>Original IP</span></div>
+                        </div></div>
+                    </div>
+                    <div class="service">
+                        <button class="service-head" aria-expanded="false"><span class="service-num">02</span>Directing<span class="service-icon">+</span></button>
+                        <div class="service-body"><div>
+                            <p>Visual storytelling with a clear point of view, guiding cast, crew and craft toward work that lingers.</p>
+                            <div class="service-tags"><span>Film</span><span>Television</span><span>Branded Content</span></div>
+                        </div></div>
+                    </div>
+                    <div class="service">
+                        <button class="service-head" aria-expanded="false"><span class="service-num">03</span>Creative Strategy<span class="service-icon">+</span></button>
+                        <div class="service-body"><div>
+                            <p>Building concepts and creative businesses that influence culture and leave a lasting legacy.</p>
+                            <div class="service-tags"><span>Concept Development</span><span>Creative Direction</span></div>
+                        </div></div>
+                    </div>
+                    <div class="service">
+                        <button class="service-head" aria-expanded="false"><span class="service-num">04</span>Brand Advisory<span class="service-icon">+</span></button>
+                        <div class="service-body"><div>
+                            <p>Advising brands on how to tell their story across screen, stage and culture.</p>
+                            <div class="service-tags"><span>Partnerships</span><span>Campaigns</span></div>
+                        </div></div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -1304,7 +1612,15 @@ html.gsap-on .reveal {
         <!-- Selected Work / Portfolio -->
         <section id="work" class="work section">
             <div class="container">
-                <h2 class="section-title split">Selected Works</h2>
+                <div class="work-head">
+                    <div>
+                        <span class="work-pill">Selected Works</span>
+                        <h2 class="section-title split">Stories that move<br><em>culture</em> forward</h2>
+                    </div>
+                    <div class="work-side">
+                        <p>Films, documentaries and live productions, shaped from first idea to final frame.</p>
+                    </div>
+                </div>
                 <div class="works-slider reveal">
                 <div class="works-grid">
                     <div class="work-card">
@@ -1315,6 +1631,11 @@ html.gsap-on .reveal {
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Cinematic Campaign</h3>
+                            <p>A cinematic campaign film, produced and directed with a clear visual point of view.</p>
+                            <a class="work-view" href="https://vimeo.com/1135942055/cafced5ff7" draggable="false">View <i>&#8250;</i></a>
+                        </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
@@ -1323,6 +1644,11 @@ html.gsap-on .reveal {
                                 data-src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Brand Narrative</h3>
+                            <p>A brand story built to connect, told through strong imagery and sound.</p>
+                            <a class="work-view" href="https://vimeo.com/1127082566/6c883e9ae6" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1333,6 +1659,11 @@ html.gsap-on .reveal {
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Documentary Series</h3>
+                            <p>Long-form documentary storytelling rooted in real people and places.</p>
+                            <a class="work-view" href="https://vimeo.com/1025899842" draggable="false">View <i>&#8250;</i></a>
+                        </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
@@ -1341,6 +1672,11 @@ html.gsap-on .reveal {
                                 data-src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Music Video</h3>
+                            <p>A music video shaped around rhythm, performance and visual style.</p>
+                            <a class="work-view" href="https://vimeo.com/1072493289" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1351,6 +1687,11 @@ html.gsap-on .reveal {
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Give to Gain: FanMilk Women Empowering West Africa</h3>
+                            <p>A FanMilk story of giving, growth and the women driving change.</p>
+                            <a class="work-view" href="https://vimeo.com/1171283937/6f9ab1bc2b" draggable="false">View <i>&#8250;</i></a>
+                        </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
@@ -1359,6 +1700,11 @@ html.gsap-on .reveal {
                                 data-src="https://player.vimeo.com/video/1095138816?h=04b3e8d83e&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">20 &amp; Evolving: The Hubtel Journey</h3>
+                            <p>Two decades of Hubtel, told through the people who built it.</p>
+                            <a class="work-view" href="https://vimeo.com/1095138816/04b3e8d83e" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1369,6 +1715,11 @@ html.gsap-on .reveal {
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Heavy Risks</h3>
+                            <p>An Africa Health Collaborative documentary film.</p>
+                            <a class="work-view" href="https://vimeo.com/1026432781/84f55f4841" draggable="false">View <i>&#8250;</i></a>
+                        </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
@@ -1377,6 +1728,11 @@ html.gsap-on .reveal {
                                 data-src="https://www.youtube-nocookie.com/embed/Tyat2z0aMII?autoplay=1&mute=1&controls=0&loop=1&playlist=Tyat2z0aMII&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">Miss Malaika Ghana 2023 Finale: Behind the Scenes</h3>
+                            <p>Behind the scenes of the Miss Malaika Ghana 2023 finale.</p>
+                            <a class="work-view" href="https://youtu.be/Tyat2z0aMII" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1387,11 +1743,16 @@ html.gsap-on .reveal {
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                         </div>
+                        <div class="work-caption">
+                            <h3 class="work-title">TGMA 2024: Behind the Scenes</h3>
+                            <p>Behind the scenes at the 2024 Telecel Ghana Music Awards.</p>
+                            <a class="work-view" href="https://youtu.be/rvXHNQqAfHM" draggable="false">View <i>&#8250;</i></a>
+                        </div>
                     </div>
                 </div>
                 <div class="slider-controls">
-                    <button class="slider-btn" id="works-prev" type="button" aria-label="Previous work">&larr;</button>
-                    <button class="slider-btn" id="works-next" type="button" aria-label="Next work">&rarr;</button>
+                    <button class="slider-btn" id="works-prev" type="button" aria-label="Previous work">&#8249;</button>
+                    <button class="slider-btn" id="works-next" type="button" aria-label="Next work">&#8250;</button>
                 </div>
                 </div>
                 <div class="center-cta mt-4">
@@ -1490,6 +1851,11 @@ html.gsap-on .reveal {
         </div>
     </footer>
 
+    <div class="film-modal" id="film-modal" role="dialog" aria-modal="true" aria-label="Film player" aria-hidden="true">
+        <button class="film-modal-close" id="film-close" type="button" aria-label="Close player">&times;</button>
+        <div class="film-modal-frame" id="film-frame"></div>
+    </div>
+
     <!-- Scripts -->
     <script>
     // Safety net: never leave a visitor stuck behind the intro if a script is slow or blocked
@@ -1555,9 +1921,7 @@ html.gsap-on .reveal {
 
             // 2. Hero opening sequence
             const nav = $('.navbar');
-            const heroLogo = $('.hero-logo');
             const heroTagline = $('.hero-tagline');
-            const heroDots = $$('.hero-dots span');
             const heroPhoto = $('.hero-photo');
             const heroImg = $('.hero-photo img');
 
@@ -1565,14 +1929,13 @@ html.gsap-on .reveal {
                 if (intro) intro.remove();
             } else {
                 const heroSplit = SplitText.create('.hero .title', { type: 'lines', linesClass: 'line', mask: 'lines' });
-                const frozen = [nav, heroLogo];
+                const frozen = [nav];
                 freeze(frozen);
 
                 gsap.set(heroSplit.lines, { yPercent: 115 });
                 gsap.set(heroPhoto, { clipPath: 'inset(100% 0% 0% 0%)' });
-                gsap.set(heroImg, { scale: 1.95 });
-                gsap.set([heroLogo, heroTagline], { opacity: 0 });
-                gsap.set(heroDots, { scale: 0, opacity: 0 });
+                gsap.set(heroImg, { scale: 1.5 });
+                gsap.set(heroTagline, { opacity: 0 });
                 gsap.set(nav, { yPercent: -110 });
                 document.documentElement.style.overflow = 'hidden';
 
@@ -1595,12 +1958,10 @@ html.gsap-on .reveal {
                         onComplete: () => intro && intro.remove() }, '<')
                   .addLabel('open', '<0.45')
                   .to(heroPhoto, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.7, ease: 'expo.inOut' }, 'open')
-                  .to(heroImg, { scale: 1.55, duration: 2.8, ease: 'expo.out' }, 'open')
+                  .to(heroImg, { scale: 1.12, duration: 2.8, ease: 'expo.out' }, 'open')
                   .to(heroSplit.lines, { yPercent: 0, duration: 1.4, stagger: 0.16, ease: 'expo.out' }, 'open+=0.5')
-                  .to(heroLogo, { opacity: 1, duration: 1.2, ease: 'power2.out' }, 'open+=0.3')
-                  .to(heroDots, { scale: 1, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'back.out(2.2)' }, 'open+=0.9')
-                  .fromTo(heroTagline, { opacity: 0, y: 18, letterSpacing: '0.3em' },
-                          { opacity: 1, y: 0, letterSpacing: '0.06em', duration: 1.6, ease: 'expo.out' }, 'open+=1.0')
+                  .fromTo(heroTagline, { opacity: 0, y: 18 },
+                          { opacity: 1, y: 0, duration: 1.6, ease: 'expo.out' }, 'open+=1.0')
                   .to(nav, { yPercent: 0, duration: 1.3, ease: 'expo.out' }, 'open+=1.0');
             }
 
@@ -1628,8 +1989,8 @@ html.gsap-on .reveal {
             ScrollTrigger.create({
                 trigger: '.works-slider', start: 'top 85%', once: true,
                 onEnter: () => gsap.from($$('.work-card'), {
-                    clipPath: 'inset(0% 0% 100% 0%)', y: 60, duration: 1.5, stagger: 0.16,
-                    ease: 'expo.out', clearProps: 'clipPath,transform'
+                    clipPath: 'inset(0% 0% 100% 0%)', duration: 1.5, stagger: 0.16,
+                    ease: 'expo.out', clearProps: 'clipPath'
                 })
             });
 
@@ -1722,10 +2083,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ── Hero service accordion (one open at a time) ──────────────────────────
+    const services = document.querySelectorAll('.service');
+    services.forEach(card => {
+        card.addEventListener('click', () => {
+            const open = !card.classList.contains('is-open');
+            services.forEach(c => {
+                c.classList.remove('is-open');
+                c.querySelector('.service-head').setAttribute('aria-expanded', 'false');
+                c.querySelector('.service-icon').textContent = '+';
+            });
+            if (open) {
+                card.classList.add('is-open');
+                card.querySelector('.service-head').setAttribute('aria-expanded', 'true');
+                card.querySelector('.service-icon').textContent = '\u2212';
+            }
+        });
+    });
+
     // ── Navbar Scrolled State ─────────────────────────────────────────────────
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
         navbar.classList.toggle('scrolled', window.scrollY > 50);
+        const under = (sel) => Array.from(document.querySelectorAll(sel)).some(el => {
+            const r = el.getBoundingClientRect();
+            return r.top < 50 && r.bottom > 50;
+        });
+        navbar.classList.toggle('on-dark', under('.bts'));
+        navbar.classList.toggle('nav-hidden', under('.work'));
     }, { passive: true });
 
     // ── Scroll Reveal Animations ──────────────────────────────────────────────
@@ -1809,9 +2194,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (slider && prevBtn && nextBtn) {
         const step = () => {
             const card = slider.querySelector('.work-card');
-            return card.getBoundingClientRect().width + parseFloat(getComputedStyle(slider).columnGap || 0);
+            return card.offsetWidth + parseFloat(getComputedStyle(slider).columnGap || 0);
+        };
+        const cards = Array.from(slider.querySelectorAll('.work-card'));
+        const markActive = () => {
+            const mid = slider.getBoundingClientRect().left + slider.clientWidth / 2;
+            let best = null, bestD = Infinity;
+            cards.forEach(c => {
+                const r = c.getBoundingClientRect();
+                const d = Math.abs(r.left + r.width / 2 - mid);
+                if (d < bestD) { bestD = d; best = c; }
+            });
+            cards.forEach(c => c.classList.toggle('is-active', c === best));
+            if (best && window.loadWorkFrames) window.loadWorkFrames(best);
         };
         const updateButtons = () => {
+            markActive();
             prevBtn.disabled = slider.scrollLeft <= 2;
             nextBtn.disabled = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 2;
         };
@@ -1820,17 +2218,88 @@ document.addEventListener('DOMContentLoaded', () => {
         slider.addEventListener('scroll', updateButtons, { passive: true });
         window.addEventListener('resize', updateButtons);
         updateButtons();
+        window.addEventListener('load', markActive);
     }
+
+    // ── Selected Works — mouse drag to scroll (touch uses native swipe) ───────
+    (function () {
+        const track = document.querySelector('.works-grid');
+        if (!track || window.matchMedia('(hover: none)').matches) return;
+        let down = false, moved = false, startX = 0, startLeft = 0;
+
+        track.addEventListener('pointerdown', (e) => {
+            if (e.button !== 0) return;
+            down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
+        });
+        window.addEventListener('pointermove', (e) => {
+            if (!down) return;
+            const dx = e.clientX - startX;
+            if (!moved && Math.abs(dx) > 5) { moved = true; track.classList.add('is-dragging'); }
+            if (moved) track.scrollLeft = startLeft - dx;
+        });
+        window.addEventListener('pointerup', () => {
+            if (!down) return;
+            down = false;
+            track.classList.remove('is-dragging');
+        });
+        // A drag must not open the "View" link it happened to start on
+        track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+        track.addEventListener('dragstart', (e) => e.preventDefault());
+    })();
+
+    // ── Selected Works — "View" plays the film in a lightbox, on this page ────
+    (function () {
+        const modal = document.getElementById('film-modal');
+        const frame = document.getElementById('film-frame');
+        const closeBtn = document.getElementById('film-close');
+        if (!modal || !frame) return;
+        let opener = null;
+
+        const embedUrl = (href) => {
+            let m = href.match(/vimeo\.com\/(\d+)(?:\/([0-9a-f]+))?/);
+            if (m) return 'https://player.vimeo.com/video/' + m[1] + '?' + (m[2] ? 'h=' + m[2] + '&' : '') + 'autoplay=1&title=0&byline=0&portrait=0';
+            m = href.match(/youtu\.be\/([\w-]+)/);
+            if (m) return 'https://www.youtube-nocookie.com/embed/' + m[1] + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+            return null;
+        };
+
+        const close = () => {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            setTimeout(() => { if (!modal.classList.contains('is-open')) frame.innerHTML = ''; }, 400);
+            if (opener) opener.focus();
+        };
+
+        document.querySelectorAll('.work-view').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const url = embedUrl(link.getAttribute('href'));
+                if (!url) return; // unknown host: fall back to the normal link
+                e.preventDefault();
+                opener = link;
+                frame.innerHTML = '<iframe src="' + url + '" title="Film player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                closeBtn.focus();
+            });
+        });
+
+        closeBtn.addEventListener('click', close);
+        modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
+    })();
 
     // ── Portfolio Grid — lazy-load ambient video on hover/view ────────────────
     // Each card shows a static poster by default; the Vimeo player loads only
     // once the card is near the viewport, then fades in over the poster.
-    const workCards = document.querySelectorAll('.work-card');
+    const workCards = Array.from(document.querySelectorAll('.work-card'));
 
     if (workCards.length) {
         const touchDevice = window.matchMedia('(hover: none)').matches;
 
         const loadFrame = (card) => {
+            if (!card) return;
             const frame = card.querySelector('iframe[data-src]');
             if (!frame || touchDevice) return; // touch devices keep the static poster
             frame.addEventListener('load', () => frame.classList.add('is-ready'), { once: true });
@@ -1838,19 +2307,12 @@ document.addEventListener('DOMContentLoaded', () => {
             frame.removeAttribute('data-src');
         };
 
-        if ('IntersectionObserver' in window) {
-            const cardObserver = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        loadFrame(entry.target);
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { rootMargin: '400px 0px' });
-            workCards.forEach(card => cardObserver.observe(card));
-        } else {
-            workCards.forEach(loadFrame);
-        }
+        // The carousel calls this whenever the centered card changes
+        window.loadWorkFrames = (active) => {
+            const k = workCards.indexOf(active);
+            [k - 1, k, k + 1].forEach(n => loadFrame(workCards[n]));
+        };
+        window.loadWorkFrames(document.querySelector('.work-card.is-active') || workCards[0]);
     }
 });
 
