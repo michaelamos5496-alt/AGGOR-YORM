@@ -20,9 +20,11 @@
     <!-- Google Fonts: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" as="image" href="assets/hero.JPG" fetchpriority="high">
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.vimeocdn.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@200;300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Lora:ital@1&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Styles -->
@@ -818,8 +820,18 @@ html.js .split {
     font-family: 'Inter Tight', var(--font-main);
 }
 
+.work-heading { flex: 0 1 46%; }
+
+.work-cat {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.7rem;
+}
+
 .work-title {
-    flex: 0 1 46%;
     font-size: clamp(1.3rem, 2.4vw, 2.2rem);
     font-weight: 400;
     line-height: 1.12;
@@ -976,7 +988,7 @@ html.js .split {
     .work-side { padding-top: 0; }
     .work-card { aspect-ratio: 4 / 5; }
     .work-caption { flex-wrap: wrap; gap: 0.8rem; }
-    .work-title { flex-basis: 100%; }
+    .work-heading { flex-basis: 100%; }
     .work-caption p { display: none; }
     .slider-btn { display: none; }
 }
@@ -1485,7 +1497,7 @@ html.gsap-on .reveal {
                         culture and leave a lasting legacy.</p>
                 </div>
                 <div class="image-block">
-                    <video src="assets/about-video.mp4" poster="assets/about-video-poster.jpg"
+                    <video src="assets/about-video.mp4"
                         class="about-image" loop muted playsinline autoplay
                         preload="metadata" disablepictureinpicture
                         controlslist="nodownload nofullscreen noremoteplayback"></video>
@@ -1626,57 +1638,57 @@ html.gsap-on .reveal {
                 <div class="works-grid">
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/vimeo-1135942055.jpg" alt="Cinematic Campaign">
+                            <img src="assets/vimeo-1135942055.jpg" alt="One More Ride">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="work-caption">
-                            <h3 class="work-title">Cinematic Campaign</h3>
-                            <p>A cinematic campaign film, produced and directed with a clear visual point of view.</p>
+                            <div class="work-heading"><span class="work-cat">TVC &middot; Fiesta Condoms</span><h3 class="work-title">One More Ride</h3></div>
+                            <p>Fiesta Condoms TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
                             <a class="work-view" href="https://vimeo.com/1135942055/cafced5ff7" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/vimeo-1127082566.jpg" alt="Brand Narrative">
+                            <img src="assets/vimeo-1127082566.jpg" alt="Choices">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="work-caption">
-                            <h3 class="work-title">Brand Narrative</h3>
-                            <p>A brand story built to connect, told through strong imagery and sound.</p>
+                            <div class="work-heading"><span class="work-cat">TVC &middot; Lydia Contraceptives</span><h3 class="work-title">Choices</h3></div>
+                            <p>Lydia Contraceptives TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
                             <a class="work-view" href="https://vimeo.com/1127082566/6c883e9ae6" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/vimeo-1025899842.jpg" alt="Documentary Series">
+                            <img src="assets/vimeo-1025899842.jpg" alt="Overstayed Guests">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1025899842?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="work-caption">
-                            <h3 class="work-title">Documentary Series</h3>
-                            <p>Long-form documentary storytelling rooted in real people and places.</p>
+                            <div class="work-heading"><span class="work-cat">TVC &middot; DStv Ghana</span><h3 class="work-title">Overstayed Guests</h3></div>
+                            <p>DStv Ghana TVC. Directed by Kwesi Apenteng-Mensah, line produced by Aggor Yorm.</p>
                             <a class="work-view" href="https://vimeo.com/1025899842" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/vimeo-1072493289.jpg" alt="Music Video">
+                            <img src="assets/vimeo-1072493289.jpg" alt="Atena Didi Daa">
                             <iframe title="vimeo-player"
                                 data-src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="work-caption">
-                            <h3 class="work-title">Music Video</h3>
-                            <p>A music video shaped around rhythm, performance and visual style.</p>
+                            <div class="work-heading"><span class="work-cat">TVC &middot; Atena Games</span><h3 class="work-title">Atena Didi Daa</h3></div>
+                            <p>TVC for Atena Games. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
                             <a class="work-view" href="https://vimeo.com/1072493289" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
@@ -1684,29 +1696,29 @@ html.gsap-on .reveal {
 
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/youtube-Tyat2z0aMII.jpg" alt="Miss Malaika Ghana 2023 Finale, Behind the Scenes">
+                            <img src="assets/youtube-Tyat2z0aMII.jpg" alt="Miss Malaika Ghana 2023 Finale">
                             <iframe title="youtube-player"
                                 data-src="https://www.youtube-nocookie.com/embed/Tyat2z0aMII?autoplay=1&mute=1&controls=0&loop=1&playlist=Tyat2z0aMII&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="work-caption">
-                            <h3 class="work-title">Miss Malaika Ghana 2023 Finale: Behind the Scenes</h3>
+                            <div class="work-heading"><span class="work-cat">Behind the Scenes &middot; Miss Malaika Ghana</span><h3 class="work-title">Miss Malaika Ghana 2023 Finale</h3></div>
                             <p>Behind the scenes of the Miss Malaika Ghana 2023 finale.</p>
                             <a class="work-view" href="https://youtu.be/Tyat2z0aMII" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
                         <div class="work-media">
-                            <img src="assets/youtube-rvXHNQqAfHM.jpg" alt="TGMA 2024 Behind the Scenes">
+                            <img src="assets/youtube-rvXHNQqAfHM.jpg" alt="TGMA 2024">
                             <iframe title="youtube-player"
                                 data-src="https://www.youtube-nocookie.com/embed/rvXHNQqAfHM?autoplay=1&mute=1&controls=0&loop=1&playlist=rvXHNQqAfHM&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
                                 frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
                                 allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="work-caption">
-                            <h3 class="work-title">TGMA 2024: Behind the Scenes</h3>
-                            <p>Behind the scenes at the 2024 Telecel Ghana Music Awards.</p>
+                            <div class="work-heading"><span class="work-cat">Behind the Scenes &middot; TGMA</span><h3 class="work-title">TGMA 2024</h3></div>
+                            <p>Behind the scenes of the 2024 Telecel Ghana Music Awards.</p>
                             <a class="work-view" href="https://youtu.be/rvXHNQqAfHM" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
@@ -1730,59 +1742,59 @@ html.gsap-on .reveal {
                     every finished frame.</p>
                 <div class="bts-strip">
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4152.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4152.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 01</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4161.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4161.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 02</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4179.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4179.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 03</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4193.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4193.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 04</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4237.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4237.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 05</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4284.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4284.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 06</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4288.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4288.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 07</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4294.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4294.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 08</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4306.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4306.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 09</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4336.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4336.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 10</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4396.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4396.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 11</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4399.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4399.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 12</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4438.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4438.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 13</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/JHOE4560.jpg" alt="Behind the scenes" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4560.jpg" alt="Behind the scenes" loading="lazy">
                         <figcaption>On Set &middot; 14</figcaption>
                     </figure>
                 </div>
@@ -1924,6 +1936,7 @@ html.gsap-on .reveal {
                   .fromTo(heroTagline, { opacity: 0, y: 18 },
                           { opacity: 1, y: 0, duration: 1.6, ease: 'expo.out' }, 'open+=1.0')
                   .to(nav, { yPercent: 0, duration: 1.3, ease: 'expo.out' }, 'open+=1.0');
+                tl.timeScale(1.7); // snappier first impression
             }
 
             // 3. Hero parallax as you scroll away
