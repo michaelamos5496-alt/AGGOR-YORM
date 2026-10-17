@@ -567,13 +567,44 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     text-align: center;
     gap: 0.9rem;
     padding: 2rem 1rem;
-    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
     background-color: #FFFFFF;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
     transition: var(--transition);
 }
 
 .credit-card:hover {
-    border-color: var(--color-text);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Clientele — same rounded grey stage as the hero and About cards */
+.clientele.section {
+    padding: var(--hero-gap);
+}
+
+.clientele-card {
+    overflow: hidden;
+    border-radius: 1.5rem;
+    color: var(--hero-ink);
+    background: linear-gradient(105deg, #eceded 0%, #e3e4e7 45%, #d5d6da 100%);
+    padding: clamp(4rem, 8vw, 7rem) 0;
+}
+
+.clientele-card > .about-pill,
+.clientele-card > .list-title {
+    margin-left: clamp(1.5rem, 4.5vw, 5rem);
+    margin-right: clamp(1.5rem, 4.5vw, 5rem);
+}
+
+.clientele-card .list-title {
+    font-size: clamp(2.6rem, 6vw, 6.4rem);
+    font-weight: 400;
+    line-height: 1.08; /* room for descenders inside the split-text mask */
+    letter-spacing: -0.05em;
+    color: var(--hero-ink);
+    max-width: 14ch;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
 }
 
 .credit-mark {
@@ -1435,8 +1466,8 @@ html.gsap-on .reveal {
         font-size: 1rem;
     }
 
-    .list-title {
-        font-size: 1.5rem;
+    .clientele-card .list-title {
+        font-size: clamp(2.4rem, 11vw, 4rem);
     }
 
     .credit-card {
@@ -1601,8 +1632,9 @@ html.gsap-on .reveal {
         </section>
 
         <!-- Clientele & Projects -->
-        <section id="clientele" class="clientele section reveal" style="background-color: #FAFAFA;">
-            <div class="container">
+        <section id="clientele" class="clientele section reveal">
+            <div class="clientele-card">
+                <span class="about-pill">Selected credits</span>
                 <h2 class="section-title list-title split">Clientele &amp; Notable Projects</h2>
                 <div class="credit-rows">
                     <div class="credit-row credit-row--left">
