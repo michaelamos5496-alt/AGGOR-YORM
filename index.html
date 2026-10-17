@@ -551,11 +551,11 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 
 @keyframes credit-scroll-left {
     from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    to { transform: translateX(calc(-1 * var(--loop, 50%))); }
 }
 
 @keyframes credit-scroll-right {
-    from { transform: translateX(-50%); }
+    from { transform: translateX(calc(-1 * var(--loop, 50%))); }
     to { transform: translateX(0); }
 }
 
@@ -2276,6 +2276,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── Clientele marquee — repeat each row until it can never run dry ────────
+    // Cards are cloned so the track is at least (row width + one set) wide, and the
+    // keyframes move by exactly one set, so the wrap-around is seamless at any width.
+    (function () {
+        const tracks = Array.from(document.querySelectorAll('.credit-track'));
+        if (!tracks.length) return;
+        const build = (track) => {
+            const originals = track.__orig || (track.__orig = Array.from(track.children).filter(c => !c.hasAttribute('aria-hidden')));
+            Array.from(track.children).forEach(c => { if (c.hasAttribute('aria-hidden')) c.remove(); });
+            const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+            const setW = originals.reduce((w, c) => w + c.offsetWidth + gap, 0);
+            if (!setW) return;
+            const need = Math.ceil((track.parentElement.clientWidth + setW) / setW) - 1;
+            for (let i = 0; i < Math.max(need, 1); i++) {
+                originals.forEach(c => {
+                    const k = c.cloneNode(true);
+                    k.setAttribute('aria-hidden', 'true');
+                    track.appendChild(k);
+                });
+            }
+            track.style.setProperty('--loop', setW + 'px');
+        };
+        const run = () => tracks.forEach(build);
+        run();
+        window.addEventListener('load', run);
+        let t;
+        window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 200); });
+    })();
+
     // ── Selected Works — show the films in a different order on every visit ───
     const worksGrid = document.querySelector('.works-grid');
     if (worksGrid) {
@@ -2285,6 +2314,21 @@ document.addEventListener('DOMContentLoaded', () => {
             [items[i], items[j]] = [items[j], items[i]];
         }
         items.forEach(item => worksGrid.appendChild(item));
+
+        // Infinite loop: [clones | originals | clones]. The slider re-centres on the
+        // originals whenever it settles inside a clone set (see the slider below).
+        const mkClone = (el) => {
+            const c = el.cloneNode(true);
+            c.setAttribute('aria-hidden', 'true');
+            c.querySelectorAll('a, button').forEach(a => a.setAttribute('tabindex', '-1'));
+            return c;
+        };
+        const before = document.createDocumentFragment();
+        const after = document.createDocumentFragment();
+        items.forEach(it => { before.appendChild(mkClone(it)); after.appendChild(mkClone(it)); });
+        worksGrid.insertBefore(before, worksGrid.firstChild);
+        worksGrid.appendChild(after);
+        worksGrid.dataset.loop = String(items.length);
     }
 
     // ── Selected Works slider — arrow buttons scroll one card at a time ───────
@@ -2309,15 +2353,53 @@ document.addEventListener('DOMContentLoaded', () => {
             cards.forEach(c => c.classList.toggle('is-active', c === best));
             if (best && window.loadWorkFrames) window.loadWorkFrames(best);
         };
+        const N = parseInt(slider.dataset.loop || '0', 10);
+        const jump = (dx) => {
+            slider.style.scrollBehavior = 'auto';
+            slider.style.scrollSnapType = 'none';
+            slider.scrollLeft += dx;
+            slider.getBoundingClientRect(); // flush before restoring
+            slider.style.scrollBehavior = '';
+            slider.style.scrollSnapType = '';
+        };
+        // Once scrolling settles inside a clone set, hop one set over: clones are
+        // identical, so the swap is invisible and the track never runs out.
+        let settle;
+        const recenter = () => {
+            if (!N || slider.classList.contains('is-dragging')) return;
+            const setW = N * step();
+            if (slider.scrollLeft < setW - step() / 2) jump(setW);
+            else if (slider.scrollLeft > 2 * setW - step() / 2) jump(-setW);
+        };
         const updateButtons = () => {
             markActive();
-            prevBtn.disabled = slider.scrollLeft <= 2;
-            nextBtn.disabled = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 2;
+            if (!N) {
+                prevBtn.disabled = slider.scrollLeft <= 2;
+                nextBtn.disabled = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 2;
+                return;
+            }
+            clearTimeout(settle);
+            settle = setTimeout(recenter, 140);
         };
         prevBtn.addEventListener('click', () => slider.scrollBy({ left: -step(), behavior: 'smooth' }));
         nextBtn.addEventListener('click', () => slider.scrollBy({ left: step(), behavior: 'smooth' }));
         slider.addEventListener('scroll', updateButtons, { passive: true });
-        window.addEventListener('resize', updateButtons);
+        slider.addEventListener('pointerup', () => { clearTimeout(settle); settle = setTimeout(recenter, 400); });
+        window.addEventListener('resize', () => {
+            if (N) {
+                const idx = cards.findIndex(c => c.classList.contains('is-active'));
+                slider.style.scrollBehavior = 'auto';
+                slider.scrollLeft = (N + (Math.max(idx, 0) % N)) * step();
+                slider.style.scrollBehavior = '';
+            }
+            updateButtons();
+        });
+        if (N) {
+            // Start on the first original card
+            slider.style.scrollBehavior = 'auto';
+            slider.scrollLeft = N * step();
+            slider.style.scrollBehavior = '';
+        }
         updateButtons();
         window.addEventListener('load', markActive);
     }
