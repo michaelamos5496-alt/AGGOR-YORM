@@ -628,10 +628,86 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     color: var(--color-text-light);
 }
 
-/* About Section — always-visible split layout */
-#about .image-block {
-    aspect-ratio: 4 / 5;
+/* About Section — mirrors the hero card: rounded grey stage, video dissolving in from the right */
+.about.section {
+    padding: var(--hero-gap);
+}
+
+.about-card {
+    position: relative;
     overflow: hidden;
+    min-height: min(100svh, 56rem);
+    border-radius: 1.5rem;
+    color: var(--hero-ink);
+    background: linear-gradient(255deg, #eceded 0%, #e3e4e7 45%, #d5d6da 100%);
+    display: flex;
+    align-items: center;
+}
+
+#about .image-block {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 52%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to left, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 78%, transparent 100%);
+}
+
+#about .text-block {
+    position: relative;
+    z-index: 2;
+    width: 44%;
+    padding: clamp(5rem, 9vw, 8rem) 0 clamp(5rem, 9vw, 8rem) clamp(1.5rem, 4.5vw, 5rem);
+}
+
+.about-pill {
+    display: inline-block;
+    font-family: 'Inter Tight', var(--font-main);
+    font-size: 0.72rem;
+    font-weight: 400;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #c9cacd;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    margin-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+
+#about .section-title {
+    font-size: clamp(3.4rem, 7.4vw, 8.6rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    color: var(--hero-ink);
+    margin-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+
+#about .text-block p {
+    font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+    font-weight: 400;
+    line-height: 1.45;
+    color: #3b3e43;
+    max-width: 29rem;
+    margin-bottom: 1.25rem;
+}
+
+#about .text-block p:last-child { margin-bottom: 0; }
+
+#about .about-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.1vw, 2.3rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--hero-ink);
+    margin-top: clamp(1.5rem, 4vh, 3rem);
+}
+
+#about .about-tagline .sep {
+    font-style: normal;
+    opacity: 0.4;
+    margin: 0 0.25em;
 }
 
 /* About text: lines slide up from a mask (GSAP SplitText); script un-hides it */
@@ -1256,11 +1332,28 @@ html.gsap-on .reveal {
         padding-right: 0;
     }
 
-    /* About: image drops below the text and widens to fill the column */
-    #about .image-block {
-        aspect-ratio: 16 / 10;
-        margin-top: var(--spacing-md);
+    /* About: video becomes a top band that dissolves down into the card */
+    .about-card {
+        display: block;
+        min-height: 0;
     }
+
+    #about .image-block {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+    }
+
+    #about .text-block {
+        width: auto;
+        padding: 0 1.5rem 2.5rem;
+        margin-top: -1rem;
+    }
+
+    #about .section-title { font-size: clamp(3rem, 15vw, 7rem); }
+    #about .about-tagline { font-size: clamp(1rem, 4.6vw, 2rem); }
 
     /* Portfolio slider: two cards feel cramped on tablet, show one with a peek of the next */
     .works-grid {
@@ -1487,20 +1580,22 @@ html.gsap-on .reveal {
 
         <!-- About Section -->
         <section id="about" class="about section reveal">
-            <div class="container split-layout">
+            <div class="about-card">
+                <div class="image-block">
+                    <video src="assets/about-video.mp4"
+                        class="about-image" loop muted playsinline autoplay
+                        preload="metadata" disablepictureinpicture
+                        controlslist="nodownload nofullscreen noremoteplayback"></video>
+                </div>
                 <div class="text-block">
+                    <span class="about-pill">Who I am</span>
                     <h2 class="section-title split">About</h2>
                     <p class="split">Working where storytelling, culture, entertainment, and strategy meet, I am dedicated to shaping
                         ideas into unforgettable experiences.</p>
                     <p class="split">Whether producing a live television event, directing a documentary, building an original IP, or
                         advising a brand, my mission is to shape African stories and creative businesses that influence
                         culture and leave a lasting legacy.</p>
-                </div>
-                <div class="image-block">
-                    <video src="assets/about-video.mp4"
-                        class="about-image" loop muted playsinline autoplay
-                        preload="metadata" disablepictureinpicture
-                        controlslist="nodownload nofullscreen noremoteplayback"></video>
+                    <p class="about-tagline">producer <span class="sep">|</span> director <span class="sep">|</span> creative strategist</p>
                 </div>
             </div>
         </section>
