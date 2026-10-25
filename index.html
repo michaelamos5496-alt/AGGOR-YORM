@@ -205,12 +205,22 @@ p {
     z-index: 1001;
 }
 
-.logo sup {
-    font-size: 0.5em;
-    font-weight: 500;
-    margin-left: 2px;
-    vertical-align: 0.9em;
+/* Logo: YORM wordmark image (dark and light versions) */
+.logo { display: block; }
+
+.logo-img {
+    display: block;
+    width: clamp(92px, 8vw, 124px);
+    height: auto;
 }
+
+.logo-img--light { display: none; }
+
+/* Over dark sections, and on the open mobile menu, the white-lettered version shows */
+.navbar.on-dark .logo-img--dark,
+body.menu-open .navbar .logo-img--dark { display: none; }
+.navbar.on-dark .logo-img--light,
+body.menu-open .navbar .logo-img--light { display: block; }
 
 .nav-cta {
     display: inline-flex;
@@ -2363,14 +2373,8 @@ button.btn-pill { border: 0; font-family: inherit; cursor: pointer; }
     gap: 0.75rem 2rem;
 }
 
-.footer-mark {
-    font-size: 1.3rem;
-    font-weight: 600;
-    letter-spacing: -0.04em;
-    color: #FFFFFF;
-}
-
-.footer-mark sup { font-size: 0.5em; margin-left: 2px; }
+.footer-mark { display: block; }
+.footer-mark .logo-img { width: 104px; }
 
 .footer p {
     font-size: 0.8rem;
@@ -3067,7 +3071,7 @@ html.gsap-on .reveal {
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo" aria-label="Aggor Yorm, back to top">aggor yorm<sup>&reg;</sup></a>
+            <a href="#" class="logo" aria-label="Aggor Yorm, back to top"><img class="logo-img logo-img--dark" src="assets/brand/yorm@1x.png" srcset="assets/brand/yorm@1x.png 1x, assets/brand/yorm.png 2x" width="360" height="83" alt=""><img class="logo-img logo-img--light" src="assets/brand/yorm-light@1x.png" srcset="assets/brand/yorm-light@1x.png 1x, assets/brand/yorm-light.png 2x" width="360" height="83" alt=""></a>
             <ul class="nav-links">
                 <li><a href="#work" class="nav-link">Work</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -3503,7 +3507,7 @@ html.gsap-on .reveal {
 
     <footer class="footer">
         <div class="footer-inner">
-            <a href="#" class="footer-mark" aria-label="Aggor Yorm, back to top">aggor yorm<sup>&reg;</sup></a>
+            <a href="#" class="footer-mark" aria-label="Aggor Yorm, back to top"><img class="logo-img" src="assets/brand/yorm-light@1x.png" srcset="assets/brand/yorm-light@1x.png 1x, assets/brand/yorm-light.png 2x" width="360" height="83" alt=""></a>
             <p>&copy; 2026 Aggor Yorm. All rights reserved.</p>
             <p>Developed by <a href="https://theimagedept.vercel.app/" target="_blank" rel="noopener">TheImageDept</a> <span class="footer-ver">&middot; v20.6</span></p>
         </div>
