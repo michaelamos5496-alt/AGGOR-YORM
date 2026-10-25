@@ -21,10 +21,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preload" as="image" href="assets/hero.JPG" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/hero-portrait-640.webp" type="image/webp"
+        imagesrcset="assets/hero-portrait-480.webp 480w, assets/hero-portrait-640.webp 640w"
+        imagesizes="(max-width: 860px) 78vw, 42vw" fetchpriority="high">
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.vimeocdn.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Lora:ital@1&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;900&family=Lora:ital@1&family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Script face for the hero annotation only: subset to the glyphs it uses -->
+    <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap&text=Stories%20People%20Remember.%20where%20it%20all%20meets"
         rel="stylesheet">
 
     <!-- Styles -->
@@ -147,29 +152,43 @@ p {
 }
 
 /* ==========================================================================
-   Navigation — floats over the hero card: logo, centered pill, CTA
+   Navigation — floats over the hero: wordmark, centered links, CTA
    ========================================================================== */
 :root {
     --hero-bg: #e7e8eb;
     --hero-ink: #16181b;
     --hero-gap: 12px;
     --font-serif: 'Lora', Georgia, serif;
+
+    /* Hero palette — lavender stage, electric purple accents */
+    --ay-bg: #F8EEFF;
+    --ay-purple: #7028F5;
+    --ay-violet: #8F46F5;
+    --ay-lilac: #B66BFA;
+    --ay-loop: #BC8DFA;
+    --ay-ink: #08070B;
+    --ay-muted: #716A7B;
+    --font-display: 'Inter Tight', 'Montserrat', sans-serif;
+    --font-script: 'Mrs Saint Delafield', 'Snell Roundhand', 'Segoe Script', cursive;
+    --hero-pad: clamp(1.25rem, 6vw, 6rem);
+    --nav-pad: clamp(1.25rem, 5vw, 4.5rem);
 }
 
 .navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: calc(var(--hero-gap) + 10px) 0 0;
+    padding: clamp(1rem, 3svh, 1.75rem) 0 0;
     z-index: 1000;
-    color: var(--hero-ink);
-    pointer-events: none; /* only the logo, pill and CTA catch clicks */
+    color: var(--ay-ink);
+    font-family: var(--font-display);
+    pointer-events: none; /* only the logo, links and CTA catch clicks */
 }
 
 .navbar > .nav-container > * { pointer-events: auto; }
 
 .nav-container {
-    width: calc(100% - var(--hero-gap) * 2 - 28px);
+    width: calc(100% - var(--nav-pad) * 2);
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -178,31 +197,48 @@ p {
 }
 
 .logo {
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
+    font-size: clamp(1.2rem, 1.9vw, 1.8rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
     position: relative;
     z-index: 1001;
 }
 
 .logo sup {
-    font-size: 0.55em;
-    margin-left: 1px;
+    font-size: 0.5em;
+    font-weight: 500;
+    margin-left: 2px;
+    vertical-align: 0.9em;
 }
 
 .nav-cta {
-    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
     font-weight: 500;
     color: #FFFFFF;
-    background: var(--hero-ink);
-    padding: 0.55rem 1.05rem;
+    background: var(--ay-ink);
+    padding: 0.85rem 1.15rem 0.85rem 1.6rem;
     border-radius: 999px;
     white-space: nowrap;
     position: relative;
     z-index: 1001;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.nav-cta:hover { background: #3a3d42; }
+.nav-cta svg,
+.btn-pill svg {
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+    transition: translate 0.3s ease;
+}
+
+.nav-cta:hover { background: var(--ay-purple); }
+.nav-cta:hover svg,
+.btn-pill:hover svg { translate: 2px -2px; }
 
 /* Overlay menu — phones and tablets */
 .nav-links {
@@ -279,223 +315,644 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 /* Mobile bar: logo left, hamburger right (CTA lives in the overlay area) */
 .nav-cta { display: none; }
 
-/* Desktop: white pill centered, hanging from the top edge of the card */
+/* Desktop: plain centered links over the hero; they gain a frosted pill once scrolled */
 @media (min-width: 993px) {
     .menu-toggle { display: none; }
-    .nav-cta { display: inline-block; }
+    .nav-cta { display: inline-flex; }
 
     .nav-links {
         position: absolute;
-        top: calc(-1 * (var(--hero-gap) + 10px));
+        top: 50%;
         left: 50%;
         right: auto;
-        transform: translateX(-50%);
+        transform: translate(-50%, -50%);
         height: auto;
         width: auto;
         flex-direction: row;
-        gap: 0.2rem;
-        background: #FFFFFF;
-        padding: calc(var(--hero-gap) + 4px) 1.4rem 0.75rem;
-        border-radius: 0 0 1.1rem 1.1rem;
-        transition: none;
+        gap: clamp(0rem, 1vw, 1.25rem);
+        background: transparent;
+        padding: 0.3rem;
+        border-radius: 999px;
+        transition: background-color 0.4s ease, box-shadow 0.4s ease;
         pointer-events: auto;
     }
 
+    .navbar.scrolled .nav-links {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+    }
+
     .nav-link {
-        font-size: 0.78rem;
-        font-weight: 500;
-        padding: 0.35rem 0.8rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        padding: 0.45rem 0.85rem;
         border-radius: 999px;
+        white-space: nowrap;
     }
 
     .nav-link::after { display: none; }
     .nav-link:hover,
-    .nav-link.is-current { background: #EFEFF1; }
+    .nav-link.is-current { background: rgba(112, 40, 245, 0.08); }
+}
+
+@media (min-width: 993px) and (max-width: 1180px) {
+    .nav-link { font-size: 0.85rem; padding: 0.4rem 0.6rem; }
+    .nav-cta { font-size: 0.85rem; padding: 0.75rem 1rem 0.75rem 1.3rem; }
 }
 
 /* ==========================================================================
-   Hero Section — rounded editorial card, giant wordmark, service accordion
+   Hero — "Why not me?": lavender stage, portrait arch, purple loops and wave
+   Layers (back → front): glow · loops · portrait · front loop · wave · UI
    ========================================================================== */
 .hero {
-    height: 100vh;
-    height: 100svh; /* mobile browsers: ignore collapsing URL bar */
-    min-height: 600px;
-    padding: var(--hero-gap);
-}
-
-.hero-card {
     position: relative;
-    width: 100%;
-    height: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 680px;
     overflow: hidden;
-    border-radius: 1.5rem;
-    color: var(--hero-ink);
+    isolation: isolate;
+    color: var(--ay-ink);
+    font-family: var(--font-display);
     background:
-        linear-gradient(105deg, #eceded 0%, #e3e4e7 45%, #d5d6da 100%);
+        radial-gradient(55% 60% at 76% 42%, #EFDDFF 0%, rgba(239, 221, 255, 0) 70%),
+        radial-gradient(40% 45% at 6% 8%, #FFFFFF 0%, rgba(255, 255, 255, 0) 70%),
+        var(--ay-bg);
 }
 
-/* Portrait on the left, its right edge dissolving into the card */
-.hero-photo {
+/* ── Headline block ── */
+.hero-copy {
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 56%;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, #000 78%, transparent 100%);
-    mask-image: linear-gradient(to right, #000 78%, transparent 100%);
-}
-
-.hero-photo img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 30%;
-    transform: scale(1.05);
-    transform-origin: 40% 30%;
-}
-
-.hero-left {
-    position: absolute;
-    z-index: 2;
-    right: clamp(1.5rem, 4.5vw, 5rem);
+    z-index: 6;
+    left: var(--hero-pad);
     top: 0;
     bottom: 0;
-    width: 44%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-bottom: 7rem; /* clear of the service cards */
+    padding: 6rem 0 7.5rem; /* clear of the nav and the bottom row */
 }
 
-.hero-blurb {
-    font-size: clamp(0.9rem, 1.15vw, 1.1rem);
-    font-weight: 400;
-    line-height: 1.45;
-    color: #3b3e43;
-    max-width: 21rem;
-    margin: 0 0 clamp(2rem, 7vh, 5rem) clamp(0rem, 8vw, 9rem);
+.hero-eyebrow {
+    font-size: clamp(0.66rem, 0.85vw, 0.8rem);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ay-purple);
+    margin: 0 0 clamp(0.8rem, 2svh, 1.4rem);
 }
 
-.hero-title-group { text-align: right; }
+.hero-eyebrow span { margin: 0 0.7em; }
 
-.hero .title {
-    font-size: clamp(3.4rem, 7.4vw, 8.6rem);
-    font-weight: 400;
-    line-height: 0.95;
-    letter-spacing: -0.055em;
-    color: var(--hero-ink);
-    margin-bottom: 0;
+.hero-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: min(9vw, 15.5svh);
+    line-height: 0.84;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
     white-space: nowrap;
+    margin: 0 0 0 -0.045em; /* heavy caps carry side bearing: pull flush with the eyebrow */
+    color: var(--ay-ink);
 }
 
-.hero-tagline {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(1.1rem, 2.1vw, 2.3rem);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    color: var(--hero-ink);
-    margin: 0.7em 0.2em 0 0;
-    white-space: nowrap;
-}
+.hero-title-line { display: block; }
+.hero-title-line--accent { color: var(--ay-purple); }
 
-.hero-tagline .sep {
-    font-style: normal;
-    font-weight: 400;
-    opacity: 0.4;
-    margin: 0 0.25em;
-}
-
-/* ── Service cards along the bottom ── */
-.hero-services {
+.sr-only {
     position: absolute;
-    z-index: 3;
-    left: 1.25rem;
-    right: 1.25rem;
-    bottom: 1.25rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
-    align-items: end;
-}
-
-.service {
-    background: #FFFFFF;
-    border-radius: 0.9rem;
-    padding: 1rem 1.1rem;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
-    cursor: pointer;
-}
-
-.service-head {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    width: 100%;
-    background: none;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
     border: 0;
-    font: inherit;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--hero-ink);
-    text-align: left;
-    cursor: pointer;
 }
 
-.service-num {
+.hero .hero-lede {
+    font-size: clamp(1.1rem, 1.95vw, 1.9rem);
+    font-weight: 400;
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    color: var(--ay-muted);
+    margin: clamp(1rem, 3svh, 1.8rem) 0 0;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem clamp(1.25rem, 2.4vw, 2.25rem);
+    margin-top: clamp(1.4rem, 4svh, 2.4rem);
+}
+
+.btn-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 1.1rem 1.4rem 1.1rem 2.1rem;
+    border-radius: 999px;
+    background: var(--ay-ink);
+    color: #FFFFFF;
+    font-size: clamp(0.95rem, 1.2vw, 1.12rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    transition: background-color 0.3s ease, translate 0.3s ease;
+}
+
+.btn-pill:hover { background: var(--ay-purple); translate: 0 -2px; }
+
+.hero-reel {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ay-ink);
+    font: inherit;
+    font-size: clamp(0.95rem, 1.2vw, 1.12rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.hero-reel-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.55rem;
-    height: 1.55rem;
+    width: 3.6em;
+    height: 3.6em;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0 10px 30px -10px rgba(70, 20, 150, 0.35);
+    transition: background-color 0.3s ease, color 0.3s ease, scale 0.3s ease;
+}
+
+.hero-reel-icon svg { width: 1.1em; height: 1.1em; margin-left: 0.15em; }
+.hero-reel:hover .hero-reel-icon { background: var(--ay-purple); color: #FFFFFF; scale: 1.06; }
+
+.btn-pill:focus-visible,
+.hero-reel:focus-visible,
+.hero-pill:focus-visible,
+.hero-markers a:focus-visible,
+.nav-cta:focus-visible,
+.nav-link:focus-visible,
+.logo:focus-visible {
+    outline: 2px solid var(--ay-purple);
+    outline-offset: 4px;
+}
+
+/* ── Portrait stage: everything here is sized from the 4:5 portrait arch.
+      No z-index or transform on the stage itself, so its children layer with the wave;
+      scroll parallax moves them through --drift instead. ── */
+.hero-visual {
+    position: absolute;
+    right: 8vw;
+    bottom: 0;
+    height: min(84%, 54vw);
+    aspect-ratio: 4 / 5;
+}
+
+.hero-visual > * { translate: 0 var(--drift, 0px); }
+
+.hero-loops {
+    position: absolute;
+    left: -55%;
+    top: -12%;
+    width: 195%;
+    height: 120%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.hero-loops path {
+    fill: none;
+    stroke: url(#hero-loop-ink);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 34;
+}
+
+.hero-loops--front { z-index: 2; }
+
+.hero-frame-ring {
+    position: absolute;
+    inset: -1.1rem 1.1rem 0 -1.1rem;
+    border: 1.5px solid rgba(112, 40, 245, 0.3);
+    border-bottom: 0;
+    border-radius: 999px 999px 0 0;
+    pointer-events: none;
+}
+
+.hero-frame {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 999px 999px 0 0;
+    background: linear-gradient(#E4E5EA, #F7F7F9); /* studio backdrop tone while the photo loads */
+    box-shadow: 0 50px 90px -40px rgba(80, 30, 160, 0.45);
+}
+
+.hero-frame img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover; /* frame and photo are both 4:5, so nothing is cropped */
+    object-position: 50% 0;
+}
+
+/* A genuine transparent cutout can drop the arch: <figure class="hero-frame is-cutout"> */
+.hero-frame.is-cutout { background: none; box-shadow: none; border-radius: 0; overflow: visible; }
+.hero-frame.is-cutout img { object-fit: contain; object-position: 50% 100%; }
+
+/* ── Apple-style frosted glass: translucent tint, blur + saturation, specular rim ── */
+.glass {
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.4));
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.3),
+        0 20px 44px -18px rgba(70, 20, 150, 0.45),
+        0 2px 8px rgba(70, 20, 150, 0.08);
+}
+
+/* Glass sheen: a soft highlight across the top half */
+.glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 55%);
+    pointer-events: none;
+}
+
+/* ── Floating service pills ── */
+.hero-pill {
+    position: absolute;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.45rem 0.5rem 0.45rem 0.45rem;
     border-radius: 999px;
-    background: var(--hero-ink);
-    color: #FFFFFF;
-    font-size: 0.55rem;
+    color: var(--ay-ink);
+    font-size: clamp(0.85rem, 1.15vw, 1.1rem);
     font-weight: 500;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    rotate: var(--tilt, 0deg);
+    transition: translate 0.35s ease, box-shadow 0.35s ease;
 }
 
-.service-icon {
-    margin-left: auto;
-    font-size: 1.1rem;
-    font-weight: 300;
-    line-height: 1;
+.hero-pill:hover {
+    translate: 0 calc(var(--drift, 0px) - 4px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.3),
+        0 26px 52px -18px rgba(70, 20, 150, 0.55),
+        0 2px 8px rgba(70, 20, 150, 0.1);
 }
 
-.service-body {
+.hero-pill-icon,
+.hero-pill-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex: none;
+}
+
+.hero-pill-icon {
+    width: 2.8em;
+    height: 2.8em;
+    background: linear-gradient(140deg, var(--ay-violet), var(--ay-purple));
+    color: #FFFFFF;
+}
+
+.hero-pill-icon svg { width: 1.25em; height: 1.25em; }
+
+.hero-pill-label { padding-right: 1.4em; }
+
+.hero-pill-arrow {
+    width: 2.1em;
+    height: 2.1em;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 0 0 1px rgba(112, 40, 245, 0.12);
+    color: var(--ay-purple);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.hero-pill-arrow svg { width: 0.95em; height: 0.95em; }
+.hero-pill:hover .hero-pill-arrow { background: var(--ay-purple); color: #FFFFFF; }
+
+.hero-pill--producing { left: -27%; top: 15%; --tilt: 4deg; }
+.hero-pill--directing { right: -12%; top: 37%; --tilt: 3deg; }
+.hero-pill--strategy  { right: -9%;  top: 63%; --tilt: -6deg; }
+
+/* ── Handwritten annotation + accent strokes ── */
+.hero .hero-note {
+    position: absolute;
+    z-index: 4;
+    left: 74%;
+    top: -9%;
+    margin: 0;
+    font-family: var(--font-script);
+    font-size: clamp(2rem, 3.4vw, 3.5rem);
+    font-weight: 400;
+    line-height: 0.92;
+    color: #8B7F9B;
+    rotate: -13deg;
+    white-space: nowrap;
+}
+
+.hero-note span { display: block; }
+.hero-note span:nth-child(2) { padding-left: 0.85em; }
+.hero-note span:nth-child(3) { padding-left: 1.3em; }
+
+.hero-note svg {
+    display: block;
+    width: 3.3em;
+    height: 0.45em;
+    margin: -0.05em 0 0 1.9em;
+    overflow: visible;
+}
+
+.hero-note path,
+.hero-spark path {
+    fill: none;
+    stroke-linecap: round;
+}
+
+.hero-note path { stroke: currentColor; stroke-width: 1.6; }
+
+.hero-spark {
+    position: absolute;
+    z-index: 3;
+    left: 63%;
+    top: -12%;
+    width: 9%;
+    overflow: visible;
+}
+
+.hero-spark path { stroke: var(--ay-purple); stroke-width: 9; }
+
+/* ── Foreground wave ── */
+.hero-wave {
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: clamp(150px, 27%, 300px);
+    pointer-events: none;
+}
+
+/* ── Bottom row: scroll cue + numbered services ── */
+.hero-scroll {
+    position: absolute;
+    z-index: 6;
+    left: var(--hero-pad);
+    bottom: clamp(1.75rem, 6svh, 3.5rem);
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    line-height: 1.75;
+    text-transform: uppercase;
+    color: #4C4655;
+    transition: color 0.3s ease; /* not "all": GSAP animates its opacity */
+}
+
+.hero-scroll-line {
+    position: relative;
+    width: 1px;
+    height: 4.2rem;
+    background: rgba(8, 7, 11, 0.45);
+}
+
+.hero-scroll-line::after {
+    content: '';
+    position: absolute;
+    left: -3px;
+    bottom: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ay-ink);
+}
+
+.hero-markers {
+    position: absolute;
+    z-index: 6;
+    right: var(--nav-pad);
+    bottom: clamp(1.25rem, 4svh, 2.5rem);
+    display: flex;
+}
+
+.hero-markers a {
+    display: block;
+    min-width: 9.5rem;
+    padding: 0.2rem 1.6rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.hero-markers a:hover { color: #FFFFFF; }
+.hero-markers b { display: block; font-weight: 400; font-size: 0.85rem; letter-spacing: 0.08em; }
+
+/* ── Tablet landscape: tighter stage ── */
+@media (max-width: 1180px) and (min-width: 861px) {
+    .hero-visual { right: 6vw; height: min(80%, 50vw); }
+    .hero-pill { font-size: 0.82rem; gap: 0.6rem; }
+    .hero-pill-label { padding-right: 0.8em; }
+    .hero-pill--producing { left: -16%; top: 6%; }
+    .hero-markers a { min-width: 0; padding: 0.2rem 1.1rem; }
+}
+
+/* ── Tablet portrait & phones: stack copy above the portrait ── */
+@media (max-width: 860px) {
+    .hero {
+        height: auto;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        padding-top: clamp(5.5rem, 14vw, 7.5rem);
+    }
+
+    .hero-copy {
+        position: relative;
+        inset: auto;
+        padding: 0 var(--hero-pad);
+    }
+
+    .hero-eyebrow span { margin: 0 0.45em; }
+    .hero-title { font-size: clamp(3.4rem, 18.5vw, 9.5rem); }
+    .hero .hero-lede { font-size: clamp(1.1rem, 4.6vw, 1.6rem); }
+
+    .hero-visual {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        height: auto;
+        width: min(74vw, 440px);
+        margin: clamp(3rem, 12vw, 5rem) 10vw 0 auto;
+    }
+
+    .hero-loops path { stroke-width: 40; }
+    .hero-frame-ring { inset: -0.75rem 0.75rem 0 -0.75rem; }
+
+    .hero-pill { font-size: clamp(0.72rem, 2.6vw, 0.9rem); gap: 0.5rem; padding: 0.3rem 0.4rem 0.3rem 0.3rem; }
+    .hero-pill-arrow { display: none; }
+    .hero-pill-label { padding-right: 0.7em; }
+    .hero-pill--producing { left: -12%; top: 44%; }
+    .hero-pill--directing { right: -10%; top: 28%; }
+    .hero-pill--strategy  { left: -8%; right: auto; top: 62%; }
+
+    .hero .hero-note { left: auto; right: 90%; top: 6%; font-size: clamp(1.6rem, 6vw, 2.6rem); rotate: -10deg; }
+    .hero-spark { left: 70%; top: -9%; width: 10%; }
+
+    .hero-wave { height: clamp(70px, 20vw, 170px); }
+
+    .hero-scroll,
+    .hero-markers { display: none; }
+}
+
+/* Phones: the note moves above the arch, clear of her face */
+@media (max-width: 560px) {
+    .hero-eyebrow { letter-spacing: 0.18em; font-size: 0.62rem; }
+    .hero-visual { margin-top: clamp(5.5rem, 26vw, 7rem); }
+    .hero .hero-note { right: 46%; top: -21%; font-size: 1.55rem; rotate: -8deg; }
+}
+
+@media (max-width: 420px) {
+    .btn-pill { padding: 1rem 1.2rem 1rem 1.6rem; gap: 1rem; }
+    .hero-reel-icon { width: 3.1em; height: 3.1em; }
+}
+
+/* ── What I do: continues the About page below the reel ── */
+.about-services {
+    width: calc(100% - var(--hero-pad) * 2);
+    max-width: 92rem;
+    margin: clamp(7rem, 13vw, 11rem) auto 0;
+    scroll-margin-top: 6rem;
+}
+
+.services-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.services-head .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 6vw, 5.4rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    color: var(--ay-ink);
+    margin: 0;
+}
+
+.services-head .section-title em { font-style: normal; color: var(--ay-purple); }
+
+.services-head p {
+    max-width: 24rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ay-muted);
+}
+
+.services-grid {
     display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
 }
 
-.service-body > div { overflow: hidden; }
+.service-card {
+    scroll-margin-top: 7rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem 1.5rem 1.75rem;
+    border-radius: 1.4rem;
+    background: #FFFFFF;
+    border: 1px solid rgba(112, 40, 245, 0.1);
+    box-shadow: 0 24px 50px -36px rgba(70, 20, 150, 0.45);
+    font-family: var(--font-display);
+}
 
-.service.is-open .service-body { grid-template-rows: 1fr; }
+.service-card:target { border-color: var(--ay-purple); }
 
-.service-body p {
+.service-num {
     font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--ay-purple);
+}
+
+.service-card h4 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    color: var(--ay-ink);
+    margin: 2.5rem 0 0.75rem;
+}
+
+.service-card p {
+    font-size: 0.9rem;
+    font-weight: 400;
     line-height: 1.55;
-    color: #7a7d82;
-    margin: 1rem 0 0.9rem;
+    color: var(--ay-muted);
+    margin-bottom: 1.25rem;
 }
 
 .service-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
-    padding-bottom: 0.1rem;
+    margin-top: auto;
 }
 
 .service-tags span {
-    font-size: 0.62rem;
-    background: #F1F1F3;
-    color: #55585d;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.35rem;
+    font-size: 0.68rem;
+    background: #F4ECFF;
+    color: #4B2A86;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+}
+
+@media (max-width: 992px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card h4 { margin-top: 1.5rem; }
 }
 
 /* ==========================================================================
@@ -514,11 +971,6 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 
 .image-block {
     flex: 1;
-}
-
-.list-title {
-    margin-bottom: 2rem;
-    font-size: 2rem;
 }
 
 /* ── Clientele & Notable Projects: two auto-scrolling marquee rows ── */
@@ -560,58 +1012,54 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 }
 
 .credit-card {
-    flex: 0 0 clamp(160px, 18vw, 200px);
+    flex: 0 0 clamp(160px, 18vw, 210px);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 0.9rem;
     padding: 2rem 1rem;
-    border-radius: 0.9rem;
-    background-color: #FFFFFF;
-    color: var(--hero-ink);
-    box-shadow: none;
-    transition: var(--transition);
+    border-radius: 1.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: linear-gradient(160deg, #FFFFFF 0%, #FFFFFF 55%, #F4ECFF 100%);
+    color: var(--ay-ink);
+    font-family: var(--font-display);
+    box-shadow: inset 0 1px 0 #FFFFFF, 0 24px 50px -30px rgba(112, 40, 245, 0.7);
+    transition: translate 0.4s ease, box-shadow 0.4s ease;
 }
 
 .credit-card:hover {
-    transform: translateY(-4px);
+    translate: 0 -4px;
+    box-shadow: inset 0 1px 0 #FFFFFF, 0 30px 60px -28px rgba(140, 70, 245, 0.9);
 }
 
-/* Clientele — full-bleed black stage, like Behind The Scenes */
+/* Clientele — deep violet stage between the lavender pages */
 .clientele.section {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     padding: 0;
-    background-color: #0A0A0A;
     color: #FFFFFF;
+    background:
+        radial-gradient(45% 60% at 85% 10%, rgba(143, 70, 245, 0.45) 0%, rgba(143, 70, 245, 0) 70%),
+        radial-gradient(40% 50% at 5% 100%, rgba(112, 40, 245, 0.35) 0%, rgba(112, 40, 245, 0) 70%),
+        linear-gradient(180deg, #140A28 0%, #0B0714 100%);
 }
 
 .clientele-card {
+    position: relative;
+    z-index: 1;
     overflow: hidden;
     color: #FFFFFF;
     padding: clamp(5rem, 9vw, 8rem) 0;
 }
 
-.clientele-card > .about-pill,
-.clientele-card > .list-title {
-    margin-left: clamp(1.5rem, 4.5vw, 5rem);
-    margin-right: clamp(1.5rem, 4.5vw, 5rem);
+.clientele-card > .sec-head {
+    margin: 0 var(--hero-pad) clamp(2.5rem, 5vw, 4.5rem);
 }
 
-.clientele-card .about-pill {
-    color: #FFFFFF;
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.22);
-}
-
-.clientele-card .list-title {
-    font-size: clamp(2.6rem, 6vw, 6.4rem);
-    font-weight: 400;
-    line-height: 1.08; /* room for descenders inside the split-text mask */
-    letter-spacing: -0.05em;
-    color: #FFFFFF;
-    max-width: 14ch;
-    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
-}
+.sec-loop--clientele { right: -6%; top: -10%; width: min(46vw, 640px); }
+.sec-loop--clientele path { stroke: rgba(182, 107, 250, 0.35); stroke-width: 30; }
 
 .credit-mark {
     display: flex;
@@ -619,8 +1067,9 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     justify-content: center;
     width: 56px;
     height: 56px;
-    border: 1px solid var(--color-text);
+    border: 1.5px solid var(--ay-purple);
     border-radius: 50%;
+    color: var(--ay-purple);
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.05em;
@@ -660,91 +1109,259 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 
 .credit-tag {
     font-size: 0.65rem;
-    letter-spacing: 0.15em;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--color-text-light);
+    color: var(--ay-purple);
 }
 
-/* About Section — mirrors the hero card: rounded grey stage, video dissolving in from the right */
-.about.section {
-    padding: var(--hero-gap);
+/* ── Section headings: the hero's type system for every page section ── */
+.sec-eyebrow {
+    font-family: var(--font-display);
+    font-size: clamp(0.66rem, 0.85vw, 0.8rem);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    line-height: 1.6;
+    text-transform: uppercase;
+    color: var(--ay-purple);
+    margin: 0 0 clamp(0.8rem, 2svh, 1.4rem);
 }
 
-.about-card {
-    position: relative;
-    overflow: hidden;
-    min-height: min(100svh, 56rem);
-    border-radius: 1.5rem;
-    color: var(--hero-ink);
-    background: linear-gradient(255deg, #eceded 0%, #e3e4e7 45%, #d5d6da 100%);
-    display: flex;
-    align-items: center;
-}
-
-#about .image-block {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 52%;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to left, #000 78%, transparent 100%);
-    mask-image: linear-gradient(to left, #000 78%, transparent 100%);
-}
-
-#about .text-block {
-    position: relative;
-    z-index: 2;
-    width: 44%;
-    padding: clamp(5rem, 9vw, 8rem) 0 clamp(5rem, 9vw, 8rem) clamp(1.5rem, 4.5vw, 5rem);
-}
-
-.about-pill {
-    display: inline-block;
-    font-family: 'Inter Tight', var(--font-main);
-    font-size: 0.72rem;
-    font-weight: 400;
-    padding: 0.4rem 0.9rem;
-    border: 1px solid #c9cacd;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.55);
-    margin-bottom: clamp(1.5rem, 4vh, 3rem);
-}
-
-#about .section-title {
-    font-size: clamp(3.4rem, 7.4vw, 8.6rem);
-    font-weight: 400;
-    line-height: 0.95;
+.sec-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2.4rem, 6.6vw, 7.4rem);
+    line-height: 0.86;
     letter-spacing: -0.055em;
-    color: var(--hero-ink);
-    margin-bottom: clamp(1.5rem, 4vh, 3rem);
+    text-transform: uppercase;
+    color: var(--ay-ink);
+    margin: 0 0 0 -0.04em;
 }
 
-#about .text-block p {
-    font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+.sec-title span { display: block; }
+.sec-title .accent { color: var(--ay-purple); }
+
+/* Dark stages: lilac accents, white type */
+.clientele .sec-eyebrow,
+.bts .sec-eyebrow { color: #B98CFF; }
+.clientele .sec-title,
+.bts .sec-title { color: #FFFFFF; }
+.clientele .sec-title .accent,
+.bts .sec-title .accent { color: #B98CFF; }
+
+/* Frosted glass for dark or saturated backgrounds */
+.glass-dark {
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 16px 36px -18px rgba(0, 0, 0, 0.5);
+}
+
+/* Decorative loop strokes behind section content */
+.sec-loop {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.sec-loop path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* About Section — the hero's lavender stage continued: purple ribbon, framed reel, glass chips */
+.about.section {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding: clamp(8rem, 13vw, 12rem) 0 clamp(5rem, 9vw, 8rem);
+    color: var(--ay-ink);
+    font-family: var(--font-display);
+    background:
+        radial-gradient(50% 55% at 74% 52%, #EFDDFF 0%, rgba(239, 221, 255, 0) 70%),
+        radial-gradient(35% 40% at 4% 90%, #FFFFFF 0%, rgba(255, 255, 255, 0) 70%),
+        var(--ay-bg);
+}
+
+/* Picks up the hero's wave at the seam (same gradient) and lets it taper away */
+.about-ribbon {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: clamp(60px, 9vw, 140px);
+    pointer-events: none;
+}
+
+.about-stage {
+    width: calc(100% - var(--hero-pad) * 2);
+    max-width: 92rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 7rem);
+}
+
+#about .about-copy .about-eyebrow {
+    font-size: clamp(0.66rem, 0.85vw, 0.8rem);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ay-purple);
+    line-height: 1.6;
+    max-width: none;
+    margin: 0 0 clamp(0.8rem, 2svh, 1.4rem);
+}
+
+.about-eyebrow span { margin: 0 0.7em; }
+
+.about-title {
+    font-weight: 900;
+    font-size: clamp(3.4rem, 8.2vw, 9.5rem);
+    line-height: 0.84;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0 0 clamp(1.5rem, 4svh, 2.5rem) -0.045em;
+    color: var(--ay-ink);
+}
+
+.about-title span { display: block; }
+.about-title .accent { color: var(--ay-purple); }
+
+#about .about-copy p {
+    font-size: clamp(1rem, 1.25vw, 1.18rem);
     font-weight: 400;
-    line-height: 1.45;
-    color: #3b3e43;
-    max-width: 29rem;
-    margin-bottom: 1.25rem;
-}
-
-#about .text-block p:last-child { margin-bottom: 0; }
-
-#about .about-tagline {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: clamp(1.1rem, 2.1vw, 2.3rem);
-    line-height: 1.2;
+    line-height: 1.5;
     letter-spacing: -0.01em;
-    color: var(--hero-ink);
-    margin-top: clamp(1.5rem, 4vh, 3rem);
+    color: var(--ay-muted);
+    max-width: 31rem;
+    margin-bottom: 1.1rem;
 }
 
-#about .about-tagline .sep {
-    font-style: normal;
-    opacity: 0.4;
-    margin: 0 0.25em;
+#about .about-copy p strong { font-weight: 500; color: var(--ay-ink); }
+
+.about-copy .btn-pill { margin-top: clamp(0.8rem, 2svh, 1.5rem); }
+
+/* ── Reel stage: frame, loops, ring, chips are all sized from the 16:9 frame ── */
+.about-visual {
+    position: relative;
+    aspect-ratio: 16 / 9;
+}
+
+.about-loops {
+    position: absolute;
+    left: -18%;
+    top: -30%;
+    width: 128%;
+    height: 166%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.about-loops path {
+    fill: none;
+    stroke: url(#about-loop-ink);
+    stroke-linecap: round;
+    stroke-width: 30;
+}
+
+.about-frame-ring,
+.about-frame {
+    border-radius: clamp(3.5rem, 9vw, 9rem) 1.5rem clamp(3.5rem, 9vw, 9rem) 1.5rem;
+}
+
+.about-frame-ring {
+    position: absolute;
+    inset: -1.1rem -1.1rem 1.1rem 1.1rem;
+    border: 1.5px solid rgba(112, 40, 245, 0.3);
+    pointer-events: none;
+}
+
+.about-frame {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    overflow: hidden;
+    background: #1A1622; /* holds the shape while the reel loads */
+    box-shadow: 0 50px 90px -40px rgba(80, 30, 160, 0.5);
+}
+
+.about-chips {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    margin: 0;
+    pointer-events: none;
+}
+
+.about-chip {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.1rem 0.6rem 0.75rem;
+    border-radius: 999px;
+    font-size: clamp(0.8rem, 1.05vw, 1rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--ay-ink);
+    rotate: var(--tilt, 0deg);
+}
+
+.about-chip::after {
+    content: '';
+    order: -1;
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--ay-violet), var(--ay-purple));
+    box-shadow: 0 0 0 4px rgba(112, 40, 245, 0.14);
+}
+
+.about-chip:nth-child(1) { left: 6%;   top: -7%;    --tilt: -4deg; }
+.about-chip:nth-child(2) { right: -5%; top: 16%;    --tilt: 5deg; }
+.about-chip:nth-child(3) { left: -7%;  bottom: 18%; --tilt: 3deg; }
+.about-chip:nth-child(4) { right: 12%; bottom: -6%; --tilt: -5deg; }
+
+#about .about-note {
+    position: absolute;
+    z-index: 3;
+    right: -2%;
+    top: calc(100% + 2.2rem);
+    margin: 0;
+    font-family: var(--font-script);
+    font-size: clamp(1.9rem, 3vw, 3.1rem);
+    font-weight: 400;
+    line-height: 1;
+    color: #8B7F9B;
+    rotate: -6deg;
+    white-space: nowrap;
+}
+
+.about-note svg {
+    display: block;
+    width: 3.6em;
+    height: 0.4em;
+    margin: 0.05em 0 0 0.6em;
+    overflow: visible;
+}
+
+.about-note path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+
+@media (max-width: 860px) {
+    .about.section { padding-top: clamp(6rem, 20vw, 8rem); }
+    .about-stage { grid-template-columns: 1fr; gap: clamp(3.5rem, 12vw, 5rem); }
+    .about-title { font-size: clamp(3.4rem, 18.5vw, 9.5rem); }
+    .about-visual { width: calc(100% - 1rem); margin-left: 1rem; }
+    .about-frame-ring { inset: -0.7rem -0.7rem 0.7rem 0.7rem; }
+    .about-loops path { stroke-width: 36; }
+    .about-chip { font-size: clamp(0.7rem, 2.8vw, 0.9rem); padding: 0.45rem 0.85rem 0.45rem 0.6rem; }
+    .about-chip:nth-child(3) { left: -4%; }
+    .about-chip:nth-child(2) { right: -3%; }
+    #about .about-note { top: calc(100% + 1.6rem); right: 2%; font-size: clamp(1.6rem, 7vw, 2.4rem); }
+    .about-copy { padding-bottom: 0; }
 }
 
 /* About text: lines slide up from a mask (GSAP SplitText); script un-hides it */
@@ -777,63 +1394,40 @@ html.js .split {
 .work {
     --card-w: min(62vw, 58rem);
     --card-gap: 1.5rem;
-    background: #FFFFFF;
-    color: #0a0a0a;
+    position: relative;
+    isolation: isolate;
+    background:
+        radial-gradient(50% 45% at 50% 62%, #EBD7FF 0%, rgba(235, 215, 255, 0) 70%),
+        var(--ay-bg);
+    color: var(--ay-ink);
+    font-family: var(--font-display);
     overflow: hidden;
-    padding-top: clamp(5rem, 8vw, 7rem);
-    padding-bottom: clamp(4rem, 8vw, 7rem);
+    padding-top: clamp(6rem, 9vw, 8rem);
+    padding-bottom: clamp(5rem, 8vw, 7rem);
 }
 
-.work .container { width: 94%; max-width: none; }
+.work .container { width: calc(100% - var(--hero-pad) * 2); max-width: none; }
+
+.work .sec-title { font-size: clamp(2.4rem, 5.4vw, 6.2rem); }
 
 .work-head {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 2rem;
-    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.work-pill {
-    display: inline-block;
-    font-family: 'Inter Tight', var(--font-main);
-    font-size: 0.72rem;
-    font-weight: 400;
-    padding: 0.4rem 0.9rem;
-    border: 1px solid #d6d6d8;
-    border-radius: 999px;
-    background: #F4F4F5;
-    margin-bottom: 1.6rem;
-}
-
-.work .section-title {
-    font-family: 'Inter Tight', var(--font-main);
-    font-weight: 400;
-    font-size: clamp(2.6rem, 5.6vw, 5.4rem);
-    line-height: 1.02;
-    letter-spacing: -0.035em;
-    margin-bottom: 0;
-    color: #0a0a0a;
-}
-
-.work .section-title em {
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
 }
 
 .work-side {
     max-width: 22rem;
-    padding-top: 1.6rem;
+    padding-bottom: 0.4rem;
 }
 
 .work-side p {
-    font-family: 'Inter Tight', var(--font-main);
-    font-size: 1rem;
-    line-height: 1.35;
+    font-size: 1.05rem;
+    line-height: 1.45;
     font-weight: 400;
-    color: #3d4044;
+    color: var(--ay-muted);
     margin: 0;
 }
 
@@ -868,9 +1462,10 @@ html.js .split {
     flex: 0 0 var(--card-w);
     aspect-ratio: 3 / 2;
     scroll-snap-align: center;
-    border-radius: 1.5rem;
+    border-radius: clamp(3rem, 7vw, 7rem) 1.5rem clamp(3rem, 7vw, 7rem) 1.5rem;
     overflow: hidden;
-    background: #151515;
+    background: #1A1622;
+    box-shadow: 0 50px 90px -45px rgba(80, 30, 160, 0.6);
     color: #FFFFFF;
     transform: scale(0.84);
     opacity: 0.5;
@@ -917,7 +1512,7 @@ html.js .split {
     content: '';
     position: absolute;
     inset: 40% 0 0 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+    background: linear-gradient(to top, rgba(14, 6, 32, 0.8), rgba(14, 6, 32, 0));
     pointer-events: none;
 }
 
@@ -937,18 +1532,20 @@ html.js .split {
 
 .work-cat {
     display: block;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
+    color: #CBA8FF;
     margin-bottom: 0.7rem;
 }
 
 .work-title {
-    font-size: clamp(1.3rem, 2.4vw, 2.2rem);
-    font-weight: 400;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.4rem, 2.6vw, 2.5rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
 }
 
 .work-caption p {
@@ -961,18 +1558,17 @@ html.js .split {
 }
 
 .work-view {
+    position: relative;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
-    font-size: 0.8rem;
-    padding: 0.35rem 0.4rem 0.35rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.55);
+    gap: 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.35rem 0.4rem 0.35rem 1.1rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(6px);
     color: #FFFFFF;
-    transition: var(--transition);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .work-view i {
@@ -980,15 +1576,16 @@ html.js .split {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 1.9rem;
+    height: 1.9rem;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    font-size: 0.9rem;
+    background: var(--ay-purple);
+    color: #FFFFFF;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.work-view:hover { background: #FFFFFF; color: #0a0a0a; }
-.work-view:hover i { border-color: #0a0a0a; }
+.work-view:hover { background: #FFFFFF; color: var(--ay-ink); }
 
 /* Round arrows flank the active card */
 .slider-controls { display: contents; }
@@ -996,17 +1593,15 @@ html.js .split {
 .slider-btn {
     position: absolute;
     z-index: 5;
-    width: 3.2rem;
-    height: 3.2rem;
+    width: 3.4rem;
+    height: 3.4rem;
     border-radius: 50%;
-    border: 1px solid #d6d6d8;
-    background: #FFFFFF;
-    color: #0a0a0a;
-    font-family: var(--font-main);
-    font-size: 1.4rem;
+    color: var(--ay-purple);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
-    transition: var(--transition);
+    transition: background-color 0.3s ease, color 0.3s ease, translate 0.3s ease;
 }
 
 #works-next {
@@ -1019,7 +1614,7 @@ html.js .split {
     left: calc(50% - var(--card-w) / 2 - 4.6rem);
 }
 
-.slider-btn:hover:not(:disabled) { background: #0a0a0a; color: #FFFFFF; border-color: #0a0a0a; }
+.slider-btn:hover:not(:disabled) { background: var(--ay-purple); color: #FFFFFF; translate: 0 -2px; }
 
 .slider-btn:disabled {
     opacity: 0.25;
@@ -1083,22 +1678,12 @@ html.js .split {
 
 .film-modal-close:hover { background: #FFFFFF; color: #0a0a0a; }
 
-.work .center-cta { margin-top: clamp(2rem, 4vw, 3rem); }
-
-.work .center-cta .cta-link {
-    color: #0a0a0a;
-    border-color: #0a0a0a;
-}
-
-.work .center-cta .cta-link:hover {
-    color: #77797d;
-    border-color: #77797d;
-}
+.work .center-cta { margin-top: clamp(2.5rem, 5vw, 4rem); }
 
 @media screen and (max-width: 992px) {
     .work { --card-w: 82vw; --card-gap: 1rem; }
-    .work-head { flex-direction: column; gap: 1.2rem; }
-    .work-side { padding-top: 0; }
+    .work-head { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+    .work-side { padding: 0; }
     .work-card { aspect-ratio: 4 / 5; }
     .work-caption { flex-wrap: wrap; gap: 0.8rem; }
     .work-heading { flex-basis: 100%; }
@@ -1110,61 +1695,69 @@ html.js .split {
     text-align: center;
 }
 
-.cta-link {
-    font-size: 1.1rem;
-    font-weight: 500;
-    border-bottom: 1px solid var(--color-text);
-    padding-bottom: 4px;
-}
-
-.cta-link:hover {
-    color: var(--color-text-light);
-    border-color: var(--color-text-light);
-}
 
 /* ==========================================================================
-   Behind The Scenes Section
+   Behind The Scenes Section — ink stage, arch-topped frames like the hero portrait
    ========================================================================== */
 .bts {
-    background-color: #0A0A0A;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     color: #FFFFFF;
+    font-family: var(--font-display);
+    background:
+        radial-gradient(40% 50% at 92% 90%, rgba(112, 40, 245, 0.4) 0%, rgba(112, 40, 245, 0) 70%),
+        radial-gradient(35% 45% at 0% 0%, rgba(143, 70, 245, 0.25) 0%, rgba(143, 70, 245, 0) 70%),
+        #0B0714;
 }
 
-.bts .section-title {
-    color: #FFFFFF;
+.bts .container { position: relative; z-index: 1; width: calc(100% - var(--hero-pad) * 2); max-width: none; }
+
+.bts-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
 }
 
-.bts-intro {
-    color: rgba(255, 255, 255, 0.55);
-    max-width: 480px;
+.bts .bts-intro {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(236, 226, 255, 0.62);
+    max-width: 26rem;
+    margin: 0;
 }
 
 .bts-strip {
     display: flex;
     gap: 1.25rem;
-    margin-top: var(--spacing-lg);
+    margin: clamp(2.5rem, 5vw, 4rem) calc(-1 * var(--hero-pad)) 0;
+    padding: 0 var(--hero-pad) 1rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--hero-pad);
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.5rem;
+    scrollbar-color: rgba(185, 140, 255, 0.5) transparent;
 }
 
-.bts-strip::-webkit-scrollbar {
-    height: 4px;
-}
-
-.bts-strip::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-}
+.bts-strip::-webkit-scrollbar { height: 4px; }
+.bts-strip::-webkit-scrollbar-thumb { background-color: rgba(185, 140, 255, 0.5); border-radius: 4px; }
 
 .bts-frame {
     position: relative;
-    flex: 0 0 clamp(220px, 26vw, 340px);
+    flex: 0 0 clamp(220px, 24vw, 330px);
     aspect-ratio: 3 / 4;
+    margin: 0;
     overflow: hidden;
+    border-radius: 999px 999px 1.25rem 1.25rem;
     scroll-snap-align: start;
-    background-color: #1A1A1A;
+    background-color: #1A1426;
 }
+
+/* Every other frame sits a little lower: a contact sheet, not a grid */
+.bts-frame:nth-child(even) { margin-top: 2.5rem; }
 
 .bts-frame img {
     position: absolute;
@@ -1183,76 +1776,138 @@ html.js .split {
 
 .bts-frame figcaption {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 1.1rem;
-    font-size: 0.7rem;
+    left: 0.9rem;
+    bottom: 0.9rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #FFFFFF;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
 }
 
 /* ==========================================================================
-   Contact Section & Footer
+   Contact Section & Footer — electric purple close, ink footer
    ========================================================================== */
-.contact-text {
-    font-size: 1.5rem;
+.contact.section {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding: clamp(7rem, 12vw, 10rem) 0;
+    color: #FFFFFF;
+    font-family: var(--font-display);
+    background:
+        radial-gradient(45% 55% at 50% 40%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 70%),
+        linear-gradient(135deg, #9C5DF8 0%, #7B36F6 50%, #5E16E2 100%);
+}
+
+.contact .container { position: relative; z-index: 1; }
+
+.sec-loop--contact { left: -8%; top: -18%; width: 116%; height: 136%; }
+.sec-loop--contact path { stroke: rgba(255, 255, 255, 0.14); stroke-width: 34; }
+
+.contact .sec-eyebrow { color: rgba(255, 255, 255, 0.8); }
+.contact .sec-title { color: #FFFFFF; font-size: clamp(3.2rem, 11vw, 11rem); margin-left: 0; }
+.contact .sec-title .accent { color: var(--ay-ink); }
+
+.contact .contact-text {
+    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: rgba(255, 255, 255, 0.82);
     max-width: 600px;
-    margin: 0 auto 3rem;
+    margin: clamp(1.5rem, 3vw, 2.2rem) auto clamp(2rem, 4vw, 3rem);
 }
 
 .email-link {
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 300;
     position: relative;
     display: inline-block;
+    font-size: clamp(1.8rem, 5vw, 4.4rem);
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    color: #FFFFFF;
 }
 
 .email-link::after {
     content: '';
     position: absolute;
-    bottom: 5px;
+    bottom: 0.02em;
     left: 0;
     width: 100%;
-    height: 2px;
-    background-color: var(--color-text);
-    transform: scaleX(0);
-    transform-origin: right;
+    height: 3px;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+    transform: scaleX(0.25);
+    transform-origin: left;
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.email-link:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-}
+.email-link:hover::after { transform: scaleX(1); }
 
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 0.9rem;
 }
 
 .social-link {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0.75rem 0.7rem 1.3rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+    transition: background-color 0.3s ease, color 0.3s ease, translate 0.3s ease;
 }
 
-.social-link:hover {
-    color: var(--color-text-light);
-}
+.social-link svg { width: 1em; height: 1em; transition: translate 0.3s ease; }
+.social-link:hover { background: #FFFFFF; color: var(--ay-purple); translate: 0 -2px; }
+.social-link:hover svg { translate: 2px -2px; }
 
 .footer {
-    padding: 2rem 0;
-    border-top: 1px solid var(--color-border);
+    background: var(--ay-ink);
+    color: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-display);
+    padding: 1.75rem 0;
 }
+
+.footer-inner {
+    width: calc(100% - var(--nav-pad) * 2);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+}
+
+.footer-mark {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+}
+
+.footer-mark sup { font-size: 0.5em; margin-left: 2px; }
 
 .footer p {
     font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
     margin-bottom: 0;
+}
+
+.footer p a { color: #FFFFFF; }
+.footer p a:hover { color: #CBA8FF; }
+.footer-ver { opacity: 0.45; }
+
+@media (max-width: 640px) {
+    .footer-inner { flex-direction: column; text-align: center; }
+    .bts-frame:nth-child(even) { margin-top: 1.5rem; }
 }
 
 /* ==========================================================================
@@ -1327,7 +1982,7 @@ html.js .reveal.active {
     left: 0;
     width: 100%;
     height: 2px;
-    background: var(--color-text);
+    background: linear-gradient(90deg, var(--ay-violet), var(--ay-purple));
     transform: scaleX(0);
     transform-origin: left center;
     z-index: 1100;
@@ -1369,74 +2024,11 @@ html.gsap-on .reveal {
         padding-right: 0;
     }
 
-    /* About: video becomes a top band that dissolves down into the card */
-    .about-card {
-        display: block;
-        min-height: 0;
-    }
-
-    #about .image-block {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
-        mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
-    }
-
-    #about .text-block {
-        width: auto;
-        padding: 0 1.5rem 2.5rem;
-        margin-top: -1rem;
-    }
-
-    #about .section-title { font-size: clamp(3rem, 15vw, 7rem); }
-    #about .about-tagline { font-size: clamp(1rem, 4.6vw, 2rem); }
-
     /* Portfolio slider: two cards feel cramped on tablet, show one with a peek of the next */
     .works-grid {
         gap: 1.25rem;
     }
 
-}
-
-/* ── Tablet & phone ── */
-@media screen and (max-width: 992px) {
-    .hero-photo {
-        width: 100%;
-        -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
-        mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
-    }
-
-    .hero-photo img { object-position: 50% 20%; }
-
-    .hero-left {
-        left: 1.5rem;
-        right: 1.5rem;
-        width: auto;
-        top: auto;
-        bottom: 1.75rem;
-        justify-content: flex-end;
-        padding-bottom: 0;
-    }
-
-    .hero-blurb { display: none; }
-    .hero-title-group { text-align: left; }
-
-    .hero .title { font-size: clamp(3rem, 15vw, 7rem); }
-
-    .hero-tagline {
-        font-size: clamp(1rem, 4.6vw, 2rem);
-        margin: 0.6em 0 0 0.1em;
-        white-space: normal;
-    }
-
-    .hero-services { display: none; }
-}
-
-/* ── Short landscape screens (rotated phones): compress the hero vertically ── */
-@media screen and (min-width: 993px) and (max-height: 640px) {
-    .hero-services { display: none; }
-    .hero-left { padding-bottom: 0; }
 }
 
 /* ── Mobile (≤ 768px) ── */
@@ -1447,19 +2039,11 @@ html.gsap-on .reveal {
     }
 
 
-    .contact-text {
-        font-size: 1.15rem;
-        margin-bottom: 2rem;
-    }
-
     .social-links {
         flex-wrap: wrap;
         gap: 1rem 2rem;
     }
 
-    .social-link {
-        padding: 0.5rem 0; /* comfortable tap target */
-    }
 
     .bts-frame {
         flex-basis: 68vw;
@@ -1470,10 +2054,6 @@ html.gsap-on .reveal {
 @media screen and (max-width: 480px) {
     p {
         font-size: 1rem;
-    }
-
-    .clientele-card .list-title {
-        font-size: clamp(2.4rem, 11vw, 4rem);
     }
 
     .credit-card {
@@ -1548,14 +2128,16 @@ html.gsap-on .reveal {
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">aggor yorm<sup>&reg;</sup></a>
+            <a href="#" class="logo" aria-label="Aggor Yorm, back to top">aggor yorm<sup>&reg;</sup></a>
             <ul class="nav-links">
                 <li><a href="#work" class="nav-link">Work</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                                <li><a href="#bts" class="nav-link">Behind The Scenes</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#bts" class="nav-link">Behind The Scenes</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <a href="#contact" class="nav-cta">Start Project</a>
+            <a href="#contact" class="nav-cta">Start a Project
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
             <div class="menu-toggle" id="mobile-menu" role="button" tabindex="0" aria-label="Toggle menu"
                 aria-expanded="false">
                 <span class="bar"></span>
@@ -1567,81 +2149,194 @@ html.gsap-on .reveal {
 
     <main>
         <!-- Hero Section -->
-        <header class="hero reveal">
-            <div class="hero-card">
-                <div class="hero-photo">
-                    <img src="assets/hero.JPG" alt="Aggor Yorm Editorial Portrait" fetchpriority="high"
-                        decoding="async">
-                </div>
-
-                <div class="hero-left">
-                    <p class="hero-blurb">Shaping ideas into unforgettable experiences. Stories, culture and entertainment, produced and directed with purpose.</p>
-                    <div class="hero-title-group">
-                        <h1 class="title">aggor yorm</h1>
-                        <p class="hero-tagline">producer <span class="sep">|</span> director <span class="sep">|</span> creative strategist</p>
-                    </div>
-                </div>
-
-                <div class="hero-services">
-                    <div class="service is-open">
-                        <button class="service-head" aria-expanded="true"><span class="service-num">01</span>Producing<span class="service-icon">&minus;</span></button>
-                        <div class="service-body"><div>
-                            <p>Live television events, documentaries and original IP, taken from first idea to final delivery with a focus on African stories.</p>
-                            <div class="service-tags"><span>Live TV</span><span>Documentary</span><span>Original IP</span></div>
-                        </div></div>
-                    </div>
-                    <div class="service">
-                        <button class="service-head" aria-expanded="false"><span class="service-num">02</span>Directing<span class="service-icon">+</span></button>
-                        <div class="service-body"><div>
-                            <p>Visual storytelling with a clear point of view, guiding cast, crew and craft toward work that lingers.</p>
-                            <div class="service-tags"><span>Film</span><span>Television</span><span>Branded Content</span></div>
-                        </div></div>
-                    </div>
-                    <div class="service">
-                        <button class="service-head" aria-expanded="false"><span class="service-num">03</span>Creative Strategy<span class="service-icon">+</span></button>
-                        <div class="service-body"><div>
-                            <p>Building concepts and creative businesses that influence culture and leave a lasting legacy.</p>
-                            <div class="service-tags"><span>Concept Development</span><span>Creative Direction</span></div>
-                        </div></div>
-                    </div>
-                    <div class="service">
-                        <button class="service-head" aria-expanded="false"><span class="service-num">04</span>Brand Advisory<span class="service-icon">+</span></button>
-                        <div class="service-body"><div>
-                            <p>Advising brands on how to tell their story across screen, stage and culture.</p>
-                            <div class="service-tags"><span>Partnerships</span><span>Campaigns</span></div>
-                        </div></div>
-                    </div>
+        <header class="hero" id="top">
+            <div class="hero-copy">
+                <p class="hero-eyebrow">Producer<span aria-hidden="true">&bull;</span>Director<span aria-hidden="true">&bull;</span>Creative Strategist</p>
+                <h1 class="hero-title">
+                    <span class="sr-only">Aggor Yorm: </span>
+                    <span class="hero-title-line">Why</span>
+                    <span class="hero-title-line hero-title-line--accent">Not me?</span>
+                </h1>
+                <p class="hero-lede">Big ideas. Bold storytelling.<br>Unforgettable execution.</p>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn-pill">Let's Work Together
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                    <!-- SHOWREEL: paste the reel's Vimeo or YouTube link into data-showreel to play it in the
+                         on-page film player. While it is empty, this link scrolls to Selected Works instead. -->
+                    <a href="#work" class="hero-reel" data-showreel="">
+                        <span class="hero-reel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 4.5v15l12-7.5z"/></svg></span>
+                        Watch Showreel
+                    </a>
                 </div>
             </div>
+
+            <div class="hero-visual">
+                <svg class="hero-loops hero-loops--back" viewBox="0 0 1170 900" aria-hidden="true" focusable="false">
+                    <defs>
+                        <linearGradient id="hero-loop-ink" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#C9A2FB"/>
+                            <stop offset="0.55" stop-color="#B27BF9"/>
+                            <stop offset="1" stop-color="#9E5EF8"/>
+                        </linearGradient>
+                    </defs>
+                    <path pathLength="1" d="M150 920C60 760 70 560 190 470C300 390 420 430 400 520C380 610 250 600 250 500C250 330 380 150 560 90C700 45 820 80 830 160C840 240 740 250 735 180C730 90 880 40 980 110C1080 180 1110 330 1050 430C1000 510 930 470 960 400C1000 310 1140 330 1170 420"/>
+                </svg>
+                <span class="hero-frame-ring" aria-hidden="true"></span>
+                <figure class="hero-frame">
+                    <picture>
+                        <source type="image/webp" srcset="assets/hero-portrait-480.webp 480w, assets/hero-portrait-640.webp 640w"
+                            sizes="(max-width: 860px) 74vw, 42vw">
+                        <img src="assets/hero-portrait-640.jpg" srcset="assets/hero-portrait-480.jpg 480w, assets/hero-portrait-640.jpg 640w"
+                            sizes="(max-width: 860px) 74vw, 42vw" width="640" height="800" fetchpriority="high" decoding="async"
+                            alt="Aggor Yorm smiling at the camera, holding a silver camcorder beside her face, dressed in black satin with a gold necklace">
+                    </picture>
+                </figure>
+                <svg class="hero-loops hero-loops--front" viewBox="0 0 1170 900" aria-hidden="true" focusable="false">
+                    <path pathLength="1" d="M170 690C290 630 420 650 470 750C500 815 480 870 450 930"/>
+                </svg>
+
+                <a class="hero-pill glass hero-pill--producing" href="#producing">
+                    <span class="hero-pill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="12.5" cy="6.5" r="2.5"/><rect x="3" y="10" width="13" height="9" rx="2"/><path d="m16 13.5 5-3v8l-5-3"/></svg></span>
+                    <span class="hero-pill-label">Producing</span>
+                    <span class="hero-pill-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+                </a>
+                <a class="hero-pill glass hero-pill--directing" href="#directing">
+                    <span class="hero-pill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v5.5H6z"/><path d="M6 8.5V12M18 8.5V12M4 12h16"/><path d="m7 12 10 9M17 12 7 21"/></svg></span>
+                    <span class="hero-pill-label">Directing</span>
+                    <span class="hero-pill-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+                </a>
+                <a class="hero-pill glass hero-pill--strategy" href="#creative-strategy">
+                    <span class="hero-pill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></svg></span>
+                    <span class="hero-pill-label">Creative Strategy</span>
+                    <span class="hero-pill-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+                </a>
+
+                <svg class="hero-spark" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path d="M30 4 18 26M26 44l24-8"/></svg>
+                <p class="hero-note"><span>Stories</span><span>People</span><span>Remember.</span>
+                    <svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 11C30 6 64 3 98 1"/></svg></p>
+            </div>
+
+            <svg class="hero-wave" viewBox="0 0 1440 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="hero-wave-ink" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0" stop-color="#9C5DF8"/>
+                        <stop offset="0.55" stop-color="#7B36F6"/>
+                        <stop offset="1" stop-color="#6A22EE"/>
+                    </linearGradient>
+                </defs>
+                <path fill="#C7A1FB" opacity="0.5" d="M0 300V270C220 252 420 194 640 154C860 114 1060 72 1250 34C1330 18 1400 10 1440 10V300Z"/>
+                <path fill="url(#hero-wave-ink)" d="M0 300V296C210 288 420 238 620 192C800 152 960 134 1130 98C1260 70 1370 54 1440 52V300Z"/>
+            </svg>
+
+            <a href="#about" class="hero-scroll"><span class="hero-scroll-line" aria-hidden="true"></span><span>Scroll<br>to explore</span></a>
+
+            <nav class="hero-markers" aria-label="Services">
+                <a href="#producing"><b>01</b>Producing</a>
+                <a href="#directing"><b>02</b>Directing</a>
+                <a href="#creative-strategy"><b>03</b>Creative<br>Strategy</a>
+            </nav>
         </header>
 
         <!-- About Section -->
-        <section id="about" class="about section reveal">
-            <div class="about-card">
-                <div class="image-block">
-                    <video src="assets/about-video.mp4"
-                        class="about-image" loop muted playsinline autoplay
-                        preload="metadata" disablepictureinpicture
-                        controlslist="nodownload nofullscreen noremoteplayback"></video>
-                </div>
-                <div class="text-block">
-                    <span class="about-pill">Who I am</span>
-                    <h2 class="section-title split">About</h2>
-                    <p class="split">Working where storytelling, culture, entertainment, and strategy meet, I am dedicated to shaping
+        <section id="about" class="about section">
+            <svg class="about-ribbon" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="about-ribbon-ink" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0" stop-color="#9C5DF8"/>
+                        <stop offset="0.55" stop-color="#7B36F6"/>
+                        <stop offset="1" stop-color="#6A22EE"/>
+                    </linearGradient>
+                </defs>
+                <path fill="#C7A1FB" opacity="0.5" d="M0 0H1440V112C1210 128 960 104 720 72C470 38 230 18 0 22Z"/>
+                <path fill="url(#about-ribbon-ink)" d="M0 0H1440V84C1220 96 980 80 740 52C500 24 250 8 0 6Z"/>
+            </svg>
+
+            <div class="about-stage">
+                <div class="about-copy">
+                    <p class="about-eyebrow">About<span aria-hidden="true">&bull;</span>Who I am</p>
+                    <h2 class="about-title"><span>Who</span><span class="accent">I am.</span></h2>
+                    <p class="split">Working where <strong>storytelling, culture, entertainment, and strategy</strong> meet, I am dedicated to shaping
                         ideas into unforgettable experiences.</p>
                     <p class="split">Whether producing a live television event, directing a documentary, building an original IP, or
                         advising a brand, my mission is to shape African stories and creative businesses that influence
                         culture and leave a lasting legacy.</p>
-                    <p class="about-tagline">producer <span class="sep">|</span> director <span class="sep">|</span> creative strategist</p>
+                    <a href="#work" class="btn-pill">See Selected Works
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+
+                <div class="about-visual">
+                    <svg class="about-loops" viewBox="0 0 1360 980" aria-hidden="true" focusable="false">
+                        <defs>
+                            <linearGradient id="about-loop-ink" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="#C9A2FB"/>
+                                <stop offset="0.55" stop-color="#B27BF9"/>
+                                <stop offset="1" stop-color="#9E5EF8"/>
+                            </linearGradient>
+                        </defs>
+                        <path pathLength="1" d="M20 820C90 700 230 690 250 790C268 880 150 900 140 800C125 640 300 560 420 470M940 360C1060 250 1140 120 1250 110C1360 100 1370 230 1280 250C1190 270 1180 160 1260 90C1300 55 1330 30 1350 10"/>
+                    </svg>
+                    <span class="about-frame-ring" aria-hidden="true"></span>
+                    <div class="about-frame">
+                        <video src="assets/about-video.mp4"
+                            class="about-image" loop muted playsinline autoplay
+                            preload="metadata" disablepictureinpicture aria-label="Behind-the-scenes reel of Aggor Yorm at work on set"
+                            controlslist="nodownload nofullscreen noremoteplayback"></video>
+                    </div>
+                    <ul class="about-chips" aria-label="Where my work sits">
+                        <li class="about-chip glass">Storytelling</li>
+                        <li class="about-chip glass">Culture</li>
+                        <li class="about-chip glass">Entertainment</li>
+                        <li class="about-chip glass">Strategy</li>
+                    </ul>
+                    <p class="about-note">where it all meets
+                        <svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 10C30 5 64 3 98 2"/></svg></p>
+                </div>
+            </div>
+            <!-- What I do: the detail behind the hero pills, part of the About page -->
+            <div class="about-services" id="services">
+                <div class="services-head">
+                    <h3 class="section-title">What I <em>do</em></h3>
+                    <p>From first idea to final delivery: stories, culture and entertainment, produced and directed with purpose.</p>
+                </div>
+                <div class="services-grid">
+                    <article class="service-card" id="producing">
+                        <span class="service-num">01</span>
+                        <h4>Producing</h4>
+                        <p>Live television events, documentaries and original IP, taken from first idea to final delivery with a focus on African stories.</p>
+                        <div class="service-tags"><span>Live TV</span><span>Documentary</span><span>Original IP</span></div>
+                    </article>
+                    <article class="service-card" id="directing">
+                        <span class="service-num">02</span>
+                        <h4>Directing</h4>
+                        <p>Visual storytelling with a clear point of view, guiding cast, crew and craft toward work that lingers.</p>
+                        <div class="service-tags"><span>Film</span><span>Television</span><span>Branded Content</span></div>
+                    </article>
+                    <article class="service-card" id="creative-strategy">
+                        <span class="service-num">03</span>
+                        <h4>Creative Strategy</h4>
+                        <p>Building concepts and creative businesses that influence culture and leave a lasting legacy.</p>
+                        <div class="service-tags"><span>Concept Development</span><span>Creative Direction</span></div>
+                    </article>
+                    <article class="service-card" id="brand-advisory">
+                        <span class="service-num">04</span>
+                        <h4>Brand Advisory</h4>
+                        <p>Advising brands on how to tell their story across screen, stage and culture.</p>
+                        <div class="service-tags"><span>Partnerships</span><span>Campaigns</span></div>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- Clientele & Projects -->
         <section id="clientele" class="clientele section reveal">
+            <svg class="sec-loop sec-loop--clientele" viewBox="0 0 640 520" aria-hidden="true" focusable="false">
+                <path pathLength="1" d="M640 40C520 10 380 40 330 140C290 220 360 300 430 260C500 220 470 120 380 110C250 96 150 210 120 330C95 430 40 480 -20 500"/>
+            </svg>
             <div class="clientele-card">
-                <span class="about-pill">Selected credits</span>
-                <h2 class="section-title list-title split">Clientele &amp; Notable Projects</h2>
+                <div class="sec-head">
+                    <p class="sec-eyebrow">Selected credits</p>
+                    <h2 class="sec-title"><span>Clientele &amp;</span><span class="accent">Notable Projects.</span></h2>
+                </div>
                 <div class="credit-rows">
                     <div class="credit-row credit-row--left">
                         <div class="credit-track">
@@ -1760,8 +2455,8 @@ html.gsap-on .reveal {
             <div class="container">
                 <div class="work-head">
                     <div>
-                        <span class="work-pill">Selected Works</span>
-                        <h2 class="section-title split">Stories that move<br><em>culture</em> forward</h2>
+                        <p class="sec-eyebrow">Selected Works</p>
+                        <h2 class="sec-title"><span>Stories that move</span><span class="accent">culture forward.</span></h2>
                     </div>
                     <div class="work-side">
                         <p>Films, documentaries and live productions, shaped from first idea to final frame.</p>
@@ -1780,7 +2475,7 @@ html.gsap-on .reveal {
                         <div class="work-caption">
                             <div class="work-heading"><span class="work-cat">TVC &middot; Fiesta Condoms</span><h3 class="work-title">One More Ride</h3></div>
                             <p>Fiesta Condoms TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
-                            <a class="work-view" href="https://vimeo.com/1135942055/cafced5ff7" draggable="false">View <i>&#8250;</i></a>
+                            <a class="work-view glass-dark" href="https://vimeo.com/1135942055/cafced5ff7" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1794,7 +2489,7 @@ html.gsap-on .reveal {
                         <div class="work-caption">
                             <div class="work-heading"><span class="work-cat">TVC &middot; Lydia Contraceptives</span><h3 class="work-title">Choices</h3></div>
                             <p>Lydia Contraceptives TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
-                            <a class="work-view" href="https://vimeo.com/1127082566/6c883e9ae6" draggable="false">View <i>&#8250;</i></a>
+                            <a class="work-view glass-dark" href="https://vimeo.com/1127082566/6c883e9ae6" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1808,7 +2503,7 @@ html.gsap-on .reveal {
                         <div class="work-caption">
                             <div class="work-heading"><span class="work-cat">TVC &middot; DStv Ghana</span><h3 class="work-title">Overstayed Guests</h3></div>
                             <p>DStv Ghana TVC. Directed by Kwesi Apenteng-Mensah, line produced by Aggor Yorm.</p>
-                            <a class="work-view" href="https://vimeo.com/1025899842" draggable="false">View <i>&#8250;</i></a>
+                            <a class="work-view glass-dark" href="https://vimeo.com/1025899842" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1822,7 +2517,7 @@ html.gsap-on .reveal {
                         <div class="work-caption">
                             <div class="work-heading"><span class="work-cat">TVC &middot; Atena Games</span><h3 class="work-title">Atena Didi Daa</h3></div>
                             <p>TVC for Atena Games. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
-                            <a class="work-view" href="https://vimeo.com/1072493289" draggable="false">View <i>&#8250;</i></a>
+                            <a class="work-view glass-dark" href="https://vimeo.com/1072493289" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
 
@@ -1838,7 +2533,7 @@ html.gsap-on .reveal {
                         <div class="work-caption">
                             <div class="work-heading"><span class="work-cat">Behind the Scenes &middot; Miss Malaika Ghana</span><h3 class="work-title">Miss Malaika Ghana 2023 Finale</h3></div>
                             <p>Behind the scenes of the Miss Malaika Ghana 2023 finale.</p>
-                            <a class="work-view" href="https://youtu.be/Tyat2z0aMII" draggable="false">View <i>&#8250;</i></a>
+                            <a class="work-view glass-dark" href="https://youtu.be/Tyat2z0aMII" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                     <div class="work-card">
@@ -1852,17 +2547,18 @@ html.gsap-on .reveal {
                         <div class="work-caption">
                             <div class="work-heading"><span class="work-cat">Behind the Scenes &middot; TGMA</span><h3 class="work-title">TGMA 2024</h3></div>
                             <p>Behind the scenes of the 2024 Telecel Ghana Music Awards.</p>
-                            <a class="work-view" href="https://youtu.be/rvXHNQqAfHM" draggable="false">View <i>&#8250;</i></a>
+                            <a class="work-view glass-dark" href="https://youtu.be/rvXHNQqAfHM" draggable="false">View <i>&#8250;</i></a>
                         </div>
                     </div>
                 </div>
                 <div class="slider-controls">
-                    <button class="slider-btn" id="works-prev" type="button" aria-label="Previous work">&#8249;</button>
-                    <button class="slider-btn" id="works-next" type="button" aria-label="Next work">&#8250;</button>
+                    <button class="slider-btn glass" id="works-prev" type="button" aria-label="Previous work">&#8249;</button>
+                    <button class="slider-btn glass" id="works-next" type="button" aria-label="Next work">&#8250;</button>
                 </div>
                 </div>
                 <div class="center-cta mt-4">
-                    <a href="archive.html" class="cta-link">View Full Archive &rarr;</a>
+                    <a href="archive.html" class="btn-pill">View Full Archive
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
             </div>
         </section>
@@ -1870,65 +2566,70 @@ html.gsap-on .reveal {
         <!-- Behind The Scenes -->
         <section id="bts" class="bts section reveal">
             <div class="container">
-                <h2 class="section-title split">Behind The Scenes</h2>
-                <p class="bts-intro split">A closer look at the sets, crews and quiet moments between takes that shape
-                    every finished frame.</p>
+                <div class="bts-head">
+                    <div>
+                        <p class="sec-eyebrow">On set</p>
+                        <h2 class="sec-title"><span>Behind</span><span class="accent">the scenes.</span></h2>
+                    </div>
+                    <p class="bts-intro split">A closer look at the sets, crews and quiet moments between takes that shape
+                        every finished frame.</p>
+                </div>
                 <div class="bts-strip">
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4152.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 01</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4152.jpg" alt="Aggor Yorm on set, behind the scenes (01)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 01</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4161.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 02</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4161.jpg" alt="Aggor Yorm on set, behind the scenes (02)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 02</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4179.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 03</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4179.jpg" alt="Aggor Yorm on set, behind the scenes (03)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 03</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4193.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 04</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4193.jpg" alt="Aggor Yorm on set, behind the scenes (04)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 04</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4237.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 05</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4237.jpg" alt="Aggor Yorm on set, behind the scenes (05)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 05</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4284.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 06</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4284.jpg" alt="Aggor Yorm on set, behind the scenes (06)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 06</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4288.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 07</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4288.jpg" alt="Aggor Yorm on set, behind the scenes (07)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 07</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4294.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 08</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4294.jpg" alt="Aggor Yorm on set, behind the scenes (08)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 08</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4306.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 09</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4306.jpg" alt="Aggor Yorm on set, behind the scenes (09)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 09</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4336.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 10</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4336.jpg" alt="Aggor Yorm on set, behind the scenes (10)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 10</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4396.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 11</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4396.jpg" alt="Aggor Yorm on set, behind the scenes (11)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 11</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4399.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 12</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4399.jpg" alt="Aggor Yorm on set, behind the scenes (12)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 12</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4438.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 13</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4438.jpg" alt="Aggor Yorm on set, behind the scenes (13)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 13</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4560.jpg" alt="Behind the scenes" loading="lazy">
-                        <figcaption>On Set &middot; 14</figcaption>
+                        <img src="assets/bts/thumbs/JHOE4560.jpg" alt="Aggor Yorm on set, behind the scenes (14)" loading="lazy">
+                        <figcaption class="glass-dark">On Set &middot; 14</figcaption>
                     </figure>
                 </div>
             </div>
@@ -1936,24 +2637,29 @@ html.gsap-on .reveal {
 
         <!-- Contact Section -->
         <section id="contact" class="contact section reveal">
+            <svg class="sec-loop sec-loop--contact" viewBox="0 0 1440 700" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path pathLength="1" d="M-40 560C120 420 300 470 300 580C300 680 160 660 180 540C210 360 420 260 600 300M900 120C1060 40 1240 80 1250 200C1260 300 1140 320 1130 230C1120 130 1260 60 1480 110"/>
+            </svg>
             <div class="container text-center">
-                <h2 class="section-title split">Let's Create</h2>
+                <p class="sec-eyebrow">Contact</p>
+                <h2 class="sec-title"><span>Let's</span><span class="accent">create.</span></h2>
                 <p class="contact-text split">Available for select projects and collaborations globally.</p>
                 <a href="mailto:info@aggoryorm.com" class="email-link">info@aggoryorm.com</a>
 
                 <div class="social-links mt-4">
-                    <a href="#" class="social-link">Instagram</a>
-                    <a href="#" class="social-link">Vimeo</a>
-                    <a href="#" class="social-link">LinkedIn</a>
+                    <a href="#" class="social-link glass-dark">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                    <a href="#" class="social-link glass-dark">Vimeo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                    <a href="#" class="social-link glass-dark">LinkedIn <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="footer">
-        <div class="container text-center">
+        <div class="footer-inner">
+            <a href="#" class="footer-mark" aria-label="Aggor Yorm, back to top">aggor yorm<sup>&reg;</sup></a>
             <p>&copy; 2026 Aggor Yorm. All rights reserved.</p>
-            <p>Developed by <a href="https://theimagedept.vercel.app/" target="_blank" rel="noopener">TheImageDept</a> <span style="opacity:0.35">&middot; v20.6</span></p>
+            <p>Developed by <a href="https://theimagedept.vercel.app/" target="_blank" rel="noopener">TheImageDept</a> <span class="footer-ver">&middot; v20.6</span></p>
         </div>
     </footer>
 
@@ -2025,30 +2731,55 @@ html.gsap-on .reveal {
                 });
             });
 
-            // 2. Hero opening sequence
+            // 2. Hero opening sequence: nav, headline, loops, portrait, pills, wave
             const nav = $('.navbar');
-            const heroTagline = $('.hero-tagline');
-            const heroPhoto = $('.hero-photo');
-            const heroImg = $('.hero-photo img');
+            const heroParts = '.hero-eyebrow, .hero-title-line, .hero-lede, .hero-actions, .hero-frame, .hero-frame-ring, ' +
+                              '.hero-pill, .hero-note, .hero-spark, .hero-wave, .hero-scroll, .hero-markers';
+
+            const heroIn = () => {
+                const loops = $$('.hero-loops path');
+                const underline = $$('.hero-note path');
+                gsap.set([...loops, ...underline], { strokeDasharray: 1, strokeDashoffset: 1 });
+
+                return gsap.timeline({ defaults: { ease: 'expo.out' } })
+                    .from(nav, { y: -24, opacity: 0, duration: 1.1 }, 0)
+                    .from('.hero-eyebrow', { y: 14, opacity: 0, duration: 1 }, 0.1)
+                    .from('.hero-title-line', { yPercent: 45, opacity: 0, duration: 1.2, stagger: 0.12 }, 0.2)
+                    .from('.hero-lede, .hero-actions', { y: 20, opacity: 0, duration: 1.1, stagger: 0.1 }, 0.55)
+                    .to(loops, { strokeDashoffset: 0, duration: 1.9, stagger: 0.3, ease: 'power2.inOut' }, 0.35)
+                    .from('.hero-frame, .hero-frame-ring', { y: 60, opacity: 0, duration: 1.5, stagger: 0.08 }, 0.45)
+                    .from('.hero-wave', { yPercent: 35, duration: 1.6 }, 0.5)
+                    .from('.hero-pill', { y: 16, scale: 0.94, opacity: 0, duration: 1, stagger: 0.12, ease: 'back.out(1.3)' }, 1.0)
+                    .from('.hero-note, .hero-spark', { y: 10, opacity: 0, duration: 1 }, 1.15)
+                    .to(underline, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 1.5)
+                    .from('.hero-scroll, .hero-markers', { opacity: 0, duration: 1 }, 1.3)
+                    .timeScale(0.75); // the intro timeline runs at 1.7×; keep the hero itself unhurried
+            };
+
+            // Glass pills hang in the air: slow bob and sway, each on its own rhythm; paused off-screen
+            const floatPills = (sel = '.hero-pill', trigger = '.hero') => {
+                const bobs = $$(sel).flatMap((pill, i) => [
+                    gsap.to(pill, { y: -9 + i * 1.5, duration: 3.1 + i * 0.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * 0.45 }),
+                    gsap.fromTo(pill, { rotation: -1.2 }, { rotation: 1.2, duration: 4.4 + i * 0.7, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * 0.3 })
+                ]);
+                ScrollTrigger.create({
+                    trigger, start: 'top bottom', end: 'bottom top',
+                    onToggle: (self) => bobs.forEach(t => (self.isActive ? t.resume() : t.pause()))
+                });
+            };
 
             if (skipIntro) {
                 if (intro) intro.remove();
+                floatPills();
             } else {
-                const heroSplit = SplitText.create('.hero .title', { type: 'lines', linesClass: 'line', mask: 'lines' });
                 const frozen = [nav];
                 freeze(frozen);
-
-                gsap.set(heroSplit.lines, { yPercent: 115 });
-                gsap.set(heroPhoto, { clipPath: 'inset(100% 0% 0% 0%)' });
-                gsap.set(heroImg, { scale: 1.5 });
-                gsap.set(heroTagline, { opacity: 0 });
-                gsap.set(nav, { yPercent: -110 });
                 document.documentElement.style.overflow = 'hidden';
 
                 const tl = gsap.timeline({
                     onComplete: () => {
-                        heroSplit.revert();
-                        gsap.set(heroPhoto, { clearProps: 'clipPath' });
+                        gsap.set(heroParts, { clearProps: 'transform,opacity' });
+                        floatPills();
                         thaw(frozen)();
                         document.documentElement.style.overflow = '';
                         ScrollTrigger.refresh();
@@ -2063,33 +2794,50 @@ html.gsap-on .reveal {
                   .to('.intro-bottom', { yPercent: 101, duration: 1.3, ease: 'expo.inOut',
                         onComplete: () => intro && intro.remove() }, '<')
                   .addLabel('open', '<0.45')
-                  .to(heroPhoto, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.7, ease: 'expo.inOut' }, 'open')
-                  .to(heroImg, { scale: 1.12, duration: 2.8, ease: 'expo.out' }, 'open')
-                  .to(heroSplit.lines, { yPercent: 0, duration: 1.4, stagger: 0.16, ease: 'expo.out' }, 'open+=0.5')
-                  .fromTo(heroTagline, { opacity: 0, y: 18 },
-                          { opacity: 1, y: 0, duration: 1.6, ease: 'expo.out' }, 'open+=1.0')
-                  .to(nav, { yPercent: 0, duration: 1.3, ease: 'expo.out' }, 'open+=1.0');
+                  .add(heroIn(), 'open');
                 tl.timeScale(1.7); // snappier first impression
             }
 
-            // 3. Hero parallax as you scroll away
-            gsap.to(heroImg, {
-                yPercent: 14, ease: 'none',
-                scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-            });
-            gsap.to('.hero-title-group', {
-                y: -70, ease: 'none',
-                scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+            // 3. Hero drifts apart as you scroll away (side-by-side layouts only)
+            gsap.matchMedia().add('(min-width: 861px)', () => {
+                const drift = (sel, vars) => gsap.to(sel, {
+                    ...vars, ease: 'none',
+                    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+                });
+                drift('.hero-copy', { y: -70 });
+                drift('.hero-visual', { '--drift': '50px' });
             });
 
-            // 4. About video: wipes in left-to-right while the picture settles
-            gsap.from('#about .image-block', {
-                clipPath: 'inset(0% 100% 0% 0%)', duration: 1.8, ease: 'expo.inOut', clearProps: 'clipPath',
-                scrollTrigger: { trigger: '#about .image-block', start: 'top 82%', once: true }
+            // 4. About: headline rises, the reel wipes open, loops draw, chips settle and then float
+            gsap.from('#about .about-title span', {
+                yPercent: 45, opacity: 0, duration: 1.2, stagger: 0.12, ease: 'expo.out', clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: '#about .about-title', start: 'top 85%', once: true }
             });
-            gsap.from('#about .about-image', {
-                scale: 1.35, duration: 2.4, ease: 'expo.out', clearProps: 'transform',
-                scrollTrigger: { trigger: '#about .image-block', start: 'top 82%', once: true }
+            gsap.set('#about .about-loops path, #about .about-note path', { strokeDasharray: 1, strokeDashoffset: 1 });
+            gsap.timeline({
+                defaults: { ease: 'expo.out' },
+                scrollTrigger: { trigger: '#about .about-visual', start: 'top 80%', once: true }
+            })
+                .from('#about .about-frame', { clipPath: 'inset(0% 100% 0% 0%)', duration: 1.6, ease: 'expo.inOut', clearProps: 'clipPath' }, 0)
+                .from('#about .about-image', { scale: 1.3, duration: 2.2, clearProps: 'transform' }, 0)
+                .from('#about .about-frame-ring', { opacity: 0, duration: 1.2 }, 0.6)
+                .to('#about .about-loops path', { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' }, 0.2)
+                .from('#about .about-chip', { y: 16, scale: 0.94, opacity: 0, duration: 1, stagger: 0.1, ease: 'back.out(1.3)', clearProps: 'transform,opacity' }, 0.8)
+                .from('#about .about-note', { y: 10, opacity: 0, duration: 1 }, 1.1)
+                .to('#about .about-note path', { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 1.4)
+                .add(() => floatPills('#about .about-chip', '#about'));
+
+            // 4b. Section headings: lines rise in as each section arrives
+            $$('.sec-title').forEach(title => gsap.from(title.children, {
+                yPercent: 45, opacity: 0, duration: 1.2, stagger: 0.12, ease: 'expo.out', clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: title, start: 'top 88%', once: true }
+            }));
+            $$('.sec-loop path').forEach(path => {
+                gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
+                gsap.to(path, {
+                    strokeDashoffset: 0, duration: 2.2, ease: 'power2.inOut',
+                    scrollTrigger: { trigger: path.closest('section'), start: 'top 75%', once: true }
+                });
             });
 
             // 5. Selected Works: cards drop in one after another (order read at trigger time, after the shuffle)
@@ -2115,14 +2863,14 @@ html.gsap-on .reveal {
             });
 
             // 8. Call-to-action and contact details
-            const ctas = $$('.cta-link, .email-link, .social-link');
+            const ctas = $$('.center-cta .btn-pill, .email-link, .social-link');
             freeze(ctas);
             const fadeUp = (targets, trigger, extra = {}) => gsap.from(targets, Object.assign({
                 opacity: 0, y: 40, duration: 1.3, stagger: 0.12, ease: 'expo.out',
                 clearProps: 'opacity,transform', onComplete: thaw(ctas),
                 scrollTrigger: { trigger, start: 'top 92%', once: true }
             }, extra));
-            fadeUp('.cta-link', '.center-cta');
+            fadeUp('.center-cta .btn-pill', '.center-cta');
             fadeUp('.email-link', '.email-link');
             fadeUp('.social-link', '.social-links', { y: 30 });
 
@@ -2190,24 +2938,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── Hero service accordion (one open at a time) ──────────────────────────
-    const services = document.querySelectorAll('.service');
-    services.forEach(card => {
-        card.addEventListener('click', () => {
-            const open = !card.classList.contains('is-open');
-            services.forEach(c => {
-                c.classList.remove('is-open');
-                c.querySelector('.service-head').setAttribute('aria-expanded', 'false');
-                c.querySelector('.service-icon').textContent = '+';
-            });
-            if (open) {
-                card.classList.add('is-open');
-                card.querySelector('.service-head').setAttribute('aria-expanded', 'true');
-                card.querySelector('.service-icon').textContent = '\u2212';
-            }
-        });
-    });
-
     // ── Navbar Scrolled State ─────────────────────────────────────────────────
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
@@ -2216,7 +2946,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const r = el.getBoundingClientRect();
             return r.top < 50 && r.bottom > 50;
         });
-        navbar.classList.toggle('on-dark', under('.bts') || under('.clientele'));
+        navbar.classList.toggle('on-dark', under('.bts') || under('.clientele') || under('.contact') || under('.footer'));
         navbar.classList.toggle('nav-hidden', under('.work'));
     }, { passive: true });
 
@@ -2447,7 +3177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const embedUrl = (href) => {
             let m = href.match(/vimeo\.com\/(\d+)(?:\/([0-9a-f]+))?/);
             if (m) return 'https://player.vimeo.com/video/' + m[1] + '?' + (m[2] ? 'h=' + m[2] + '&' : '') + 'autoplay=1&title=0&byline=0&portrait=0';
-            m = href.match(/youtu\.be\/([\w-]+)/);
+            m = href.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]+)/);
             if (m) return 'https://www.youtube-nocookie.com/embed/' + m[1] + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
             return null;
         };
@@ -2460,9 +3190,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (opener) opener.focus();
         };
 
-        document.querySelectorAll('.work-view').forEach(link => {
+        // Work cards play their own link; the hero showreel plays its data-showreel link (if set)
+        document.querySelectorAll('.work-view, .hero-reel').forEach(link => {
             link.addEventListener('click', (e) => {
-                const url = embedUrl(link.getAttribute('href'));
+                const src = link.classList.contains('hero-reel') ? link.dataset.showreel : link.getAttribute('href');
+                const url = src && embedUrl(src);
                 if (!url) return; // unknown host: fall back to the normal link
                 e.preventDefault();
                 opener = link;
