@@ -29,7 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;900&family=Lora:ital@1&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- Script face for the hero annotation only: subset to the glyphs it uses -->
-    <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap&text=Stories%20People%20Remember.%20where%20it%20all%20meets"
+    <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap&text=Stories%20People%20Remember.%20Creative%20Build%20Brighter%20Futures%20Real%20Moments%20Aggor%20Yorm%20Why%20Not%20Me%3F"
         rel="stylesheet">
 
     <!-- Styles -->
@@ -853,66 +853,63 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 .about-services {
     width: calc(100% - var(--hero-pad) * 2);
     max-width: 92rem;
-    margin: clamp(7rem, 13vw, 11rem) auto 0;
+    margin: clamp(7rem, 12vw, 10rem) auto 0;
     scroll-margin-top: 6rem;
-}
-
-.services-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1.5rem 3rem;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.services-head .section-title {
+    display: grid;
+    grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4.5rem);
     font-family: var(--font-display);
-    font-size: clamp(2.6rem, 6vw, 5.4rem);
-    font-weight: 900;
-    line-height: 0.9;
-    letter-spacing: -0.055em;
-    text-transform: uppercase;
-    color: var(--ay-ink);
-    margin: 0;
 }
 
-.services-head .section-title em { font-style: normal; color: var(--ay-purple); }
+.services-intro .sec-title { font-size: clamp(2.6rem, 5vw, 5.6rem); }
 
-.services-head p {
-    max-width: 24rem;
-    margin: 0;
-    font-family: var(--font-display);
+.services-intro p:not(.sec-eyebrow) {
     font-size: 1rem;
     font-weight: 400;
+    line-height: 1.5;
     color: var(--ay-muted);
+    max-width: 22rem;
+    margin: clamp(1.2rem, 3vw, 1.6rem) 0 0.9rem;
 }
+
+.services-intro .services-also { font-size: 0.88rem; margin: 0 0 clamp(1.5rem, 3vw, 2rem); }
+.services-also strong { font-weight: 600; color: var(--ay-ink); }
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.1rem;
 }
 
 .service-card {
+    position: relative;
     scroll-margin-top: 7rem;
     display: flex;
     flex-direction: column;
-    padding: 1.6rem 1.5rem 1.75rem;
+    padding: 1.6rem 1.5rem 1.6rem;
     border-radius: 1.4rem;
-    background: #FFFFFF;
+    background: linear-gradient(160deg, #FFFFFF 0%, #FFFFFF 60%, #F7F0FF 100%);
     border: 1px solid rgba(112, 40, 245, 0.1);
     box-shadow: 0 24px 50px -36px rgba(70, 20, 150, 0.45);
-    font-family: var(--font-display);
+    transition: translate 0.4s ease, box-shadow 0.4s ease;
 }
 
+.service-card:hover { translate: 0 -4px; box-shadow: 0 34px 60px -34px rgba(112, 40, 245, 0.6); }
 .service-card:target { border-color: var(--ay-purple); }
+
+.service-icon {
+    width: 3rem;
+    height: 3rem;
+    color: var(--ay-purple);
+    margin-bottom: 2.2rem;
+}
 
 .service-num {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.24em;
-    color: var(--ay-purple);
+    color: var(--ay-muted);
 }
 
 .service-card h4 {
@@ -920,11 +917,11 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     font-weight: 600;
     letter-spacing: -0.035em;
     color: var(--ay-ink);
-    margin: 2.5rem 0 0.75rem;
+    margin: 0.4rem 0 0.75rem;
 }
 
 .service-card p {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 400;
     line-height: 1.55;
     color: var(--ay-muted);
@@ -936,23 +933,40 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     flex-wrap: wrap;
     gap: 0.4rem;
     margin-top: auto;
+    padding-right: 3rem; /* clear of the arrow */
 }
 
 .service-tags span {
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     background: #F4ECFF;
     color: #4B2A86;
     padding: 0.3rem 0.65rem;
     border-radius: 999px;
 }
 
-@media (max-width: 992px) {
-    .services-grid { grid-template-columns: repeat(2, 1fr); }
+.service-link {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    color: var(--ay-purple);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@media (max-width: 560px) {
+.service-link svg { width: 0.95rem; height: 0.95rem; }
+.service-link:hover { background: var(--ay-purple); color: #FFFFFF; }
+
+@media (max-width: 1100px) {
+    .about-services { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
     .services-grid { grid-template-columns: 1fr; }
-    .service-card h4 { margin-top: 1.5rem; }
+    .service-icon { margin-bottom: 1.2rem; }
 }
 
 /* ==========================================================================
@@ -1173,7 +1187,7 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    padding: clamp(8rem, 13vw, 12rem) 0 clamp(5rem, 9vw, 8rem);
+    padding: clamp(5rem, 9vw, 8rem) 0 clamp(5rem, 9vw, 8rem);
     color: var(--ay-ink);
     font-family: var(--font-display);
     background:
@@ -1197,7 +1211,7 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     max-width: 92rem;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     align-items: center;
     gap: clamp(2.5rem, 6vw, 7rem);
 }
@@ -1217,11 +1231,10 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 
 .about-title {
     font-weight: 900;
-    font-size: clamp(3.4rem, 8.2vw, 9.5rem);
-    line-height: 0.84;
-    letter-spacing: -0.06em;
+    font-size: clamp(2.6rem, 4.6vw, 5.6rem);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
     text-transform: uppercase;
-    white-space: nowrap;
     margin: 0 0 clamp(1.5rem, 4svh, 2.5rem) -0.045em;
     color: var(--ay-ink);
 }
@@ -1328,41 +1341,85 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
 #about .about-note {
     position: absolute;
     z-index: 3;
-    right: -2%;
-    top: calc(100% + 2.2rem);
+    right: -7%;
+    top: -30%;
     margin: 0;
     font-family: var(--font-script);
-    font-size: clamp(1.9rem, 3vw, 3.1rem);
+    font-size: clamp(1.5rem, 2.1vw, 2.3rem);
     font-weight: 400;
-    line-height: 1;
+    line-height: 0.9;
     color: #8B7F9B;
-    rotate: -6deg;
+    rotate: -8deg;
     white-space: nowrap;
 }
 
-.about-note svg {
-    display: block;
-    width: 3.6em;
-    height: 0.4em;
-    margin: 0.05em 0 0 0.6em;
-    overflow: visible;
-}
+#about .about-note span { display: block; }
+#about .about-note span:nth-child(even) { padding-left: 0.6em; }
 
-.about-note path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 
 @media (max-width: 860px) {
-    .about.section { padding-top: clamp(6rem, 20vw, 8rem); }
+    .about.section { padding-top: clamp(4rem, 14vw, 6rem); }
+    .work { padding-top: clamp(6rem, 20vw, 8rem); }
     .about-stage { grid-template-columns: 1fr; gap: clamp(3.5rem, 12vw, 5rem); }
-    .about-title { font-size: clamp(3.4rem, 18.5vw, 9.5rem); }
+    .about-title { font-size: clamp(2.6rem, 12vw, 6rem); }
     .about-visual { width: calc(100% - 1rem); margin-left: 1rem; }
     .about-frame-ring { inset: -0.7rem -0.7rem 0.7rem 0.7rem; }
     .about-loops path { stroke-width: 36; }
     .about-chip { font-size: clamp(0.7rem, 2.8vw, 0.9rem); padding: 0.45rem 0.85rem 0.45rem 0.6rem; }
     .about-chip:nth-child(3) { left: -4%; }
     .about-chip:nth-child(2) { right: -3%; }
-    #about .about-note { top: calc(100% + 1.6rem); right: 2%; font-size: clamp(1.6rem, 7vw, 2.4rem); }
+    #about .about-note { top: -18%; right: 0; font-size: clamp(1.2rem, 4.6vw, 1.8rem); }
+    #about .about-note { display: none; } /* too tight beside the crown on phones */
+    .about-stats dd { font-size: 2rem; }
     .about-copy { padding-bottom: 0; }
 }
+
+/* Mockup mix: image left, crown doodle, script note, honest stats */
+.about-crown {
+    position: absolute;
+    z-index: 3;
+    left: 4%;
+    top: -17%;
+    width: clamp(3rem, 5vw, 4.6rem);
+    rotate: -10deg;
+    overflow: visible;
+}
+
+.about-crown path { fill: none; stroke: var(--ay-purple); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+
+.about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem clamp(1.5rem, 3vw, 2.5rem);
+    margin-top: clamp(0.8rem, 2svh, 1.5rem);
+}
+
+.about-actions .btn-pill { margin-top: 0; }
+
+.about-stats {
+    display: flex;
+    gap: clamp(1.25rem, 2.6vw, 2.5rem);
+    margin: 0;
+}
+
+.about-stats div { display: flex; flex-direction: column-reverse; }
+
+.about-stats dd {
+    font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: var(--ay-ink);
+}
+
+.about-stats dt {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--ay-muted);
+    margin-top: 0.4rem;
+}
+
 
 /* About text: lines slide up from a mask (GSAP SplitText); script un-hides it */
 html.js .split {
@@ -1392,233 +1449,192 @@ html.js .split {
    Work / Portfolio Section — black stage, big image cards, centered carousel
    ========================================================================== */
 .work {
-    --card-w: min(62vw, 58rem);
-    --card-gap: 1.5rem;
     position: relative;
     isolation: isolate;
+    overflow: hidden;
     background:
-        radial-gradient(50% 45% at 50% 62%, #EBD7FF 0%, rgba(235, 215, 255, 0) 70%),
+        radial-gradient(45% 55% at 70% 50%, #EBD7FF 0%, rgba(235, 215, 255, 0) 70%),
         var(--ay-bg);
     color: var(--ay-ink);
     font-family: var(--font-display);
-    overflow: hidden;
-    padding-top: clamp(6rem, 9vw, 8rem);
-    padding-bottom: clamp(5rem, 8vw, 7rem);
+    padding: clamp(8rem, 13vw, 11rem) 0 clamp(5rem, 9vw, 8rem);
 }
 
-.work .container { width: calc(100% - var(--hero-pad) * 2); max-width: none; }
-
-.work .sec-title { font-size: clamp(2.4rem, 5.4vw, 6.2rem); }
-
-.work-head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: clamp(2rem, 4vw, 3.5rem);
-}
-
-.work-side {
-    max-width: 22rem;
-    padding-bottom: 0.4rem;
-}
-
-.work-side p {
-    font-size: 1.05rem;
-    line-height: 1.45;
-    font-weight: 400;
-    color: var(--ay-muted);
-    margin: 0;
-}
-
-.works-slider {
-    position: relative;
-    margin: 0 calc(50% - 50vw);
-}
-
-/* Full-bleed track; side padding centers the first and last card */
-.works-grid {
-    display: flex;
+.work-wrap {
+    width: calc(100% - var(--hero-pad) * 2);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
     align-items: center;
-    gap: var(--card-gap);
-    overflow-x: auto;
-    padding: 1rem calc((100vw - var(--card-w)) / 2);
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    user-select: none;
+    gap: clamp(2rem, 4vw, 4.5rem);
 }
 
-.works-grid::-webkit-scrollbar { display: none; }
+.work .sec-title { font-size: clamp(2.8rem, 5.8vw, 6.6rem); }
 
-.works-grid.is-dragging {
-    scroll-snap-type: none;
-    scroll-behavior: auto;
+.work .work-lede {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ay-muted);
+    max-width: 20rem;
+    margin: clamp(1.2rem, 3vw, 1.8rem) 0 clamp(1.5rem, 3vw, 2.2rem);
 }
 
-.work-card {
+/* One lead film, three supporting tiles */
+.feature-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.6rem, 1vw, 1rem);
+    height: clamp(360px, 36vw, 600px);
+}
+
+.work-tile {
     position: relative;
-    flex: 0 0 var(--card-w);
-    aspect-ratio: 3 / 2;
-    scroll-snap-align: center;
-    border-radius: clamp(3rem, 7vw, 7rem) 1.5rem clamp(3rem, 7vw, 7rem) 1.5rem;
+    isolation: isolate;
+    display: block;
     overflow: hidden;
+    border-radius: 1.25rem;
     background: #1A1622;
-    box-shadow: 0 50px 90px -45px rgba(80, 30, 160, 0.6);
     color: #FFFFFF;
-    transform: scale(0.84);
-    opacity: 0.5;
-    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.7s ease;
+    box-shadow: 0 30px 60px -36px rgba(80, 30, 160, 0.65);
+    transition: translate 0.4s ease, box-shadow 0.4s ease;
 }
 
-.work-card.is-active {
-    transform: scale(1);
-    opacity: 1;
+.work-tile--main {
+    grid-row: 1 / span 3;
+    border-radius: clamp(2.5rem, 5vw, 5rem) 1.25rem clamp(2.5rem, 5vw, 5rem) 1.25rem;
 }
 
-.work-media {
-    position: absolute;
-    inset: 0;
-    background-color: #0A0A0A;
-}
+.work-tile:hover { translate: 0 -4px; box-shadow: 0 40px 70px -36px rgba(112, 40, 245, 0.8); }
 
-.work-media img {
+.work-tile img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    pointer-events: none;
+    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Ambient video: fades in over the poster once the player is ready */
-.work-media iframe {
+.work-tile:hover img { transform: scale(1.05); }
+
+/* Muted ambient preview over the lead poster: a 16:9 player sized to cover the tile */
+.work-tile iframe {
     position: absolute;
-    inset: 0;
-    width: 100%;
+    top: 50%;
+    left: 50%;
     height: 100%;
+    width: auto;
+    aspect-ratio: 16 / 9;
+    min-width: 100%;
     border: 0;
-    transform: scale(1.15); /* hides the player's letterbox edges */
+    translate: -50% -50%;
+    scale: 1.12;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.6s ease;
 }
 
-.work-media iframe.is-ready { opacity: 1; }
+.work-tile iframe.is-ready { opacity: 1; }
 
-/* Soft fade at the bottom so the caption stays readable */
-.work-card::after {
+.work-tile::after {
     content: '';
     position: absolute;
-    inset: 40% 0 0 0;
-    background: linear-gradient(to top, rgba(14, 6, 32, 0.8), rgba(14, 6, 32, 0));
+    inset: 35% 0 0 0;
+    z-index: 1;
+    background: linear-gradient(to top, rgba(14, 6, 32, 0.85), rgba(14, 6, 32, 0));
     pointer-events: none;
 }
 
-.work-caption {
+.work-tile-index {
     position: absolute;
     z-index: 2;
-    left: clamp(1.2rem, 2.6vw, 2.2rem);
-    right: clamp(1.2rem, 2.6vw, 2.2rem);
-    bottom: clamp(1.1rem, 2.4vw, 2rem);
-    display: flex;
-    align-items: flex-end;
-    gap: 1.5rem;
-    font-family: 'Inter Tight', var(--font-main);
+    top: 1.3rem;
+    left: 1.6rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: rgba(255, 255, 255, 0.75);
 }
 
-.work-heading { flex: 0 1 46%; }
+.work-tile-cap {
+    position: absolute;
+    z-index: 2;
+    left: clamp(1rem, 1.6vw, 1.6rem);
+    right: clamp(1rem, 1.6vw, 1.6rem);
+    bottom: clamp(0.9rem, 1.4vw, 1.4rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.work-tile--main .work-tile-cap { right: 5.5rem; }
+
+.work-tile-title {
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.work-tile--main .work-tile-title {
+    order: 2;
+    font-size: clamp(1.5rem, 2.6vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    line-height: 0.95;
+}
+
+.work-tile--main .work-tile-credit {
+    order: 3;
+    max-width: 26rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.72);
+    margin-top: 0.35rem;
+}
 
 .work-cat {
-    display: block;
-    font-size: 0.68rem;
+    font-size: 0.6rem;
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: #CBA8FF;
-    margin-bottom: 0.7rem;
 }
 
-.work-title {
-    font-size: clamp(1.4rem, 2.6vw, 2.5rem);
-    font-weight: 900;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    text-transform: uppercase;
-}
+.work-tile--main .work-cat { order: 1; font-size: 0.66rem; }
 
-.work-caption p {
-    flex: 1;
-    font-size: 0.78rem;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.75);
-    margin: 0 0 0.35rem;
-    max-width: 20rem;
-}
-
-.work-view {
-    position: relative;
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    padding: 0.35rem 0.4rem 0.35rem 1.1rem;
-    border-radius: 999px;
-    color: #FFFFFF;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.work-view i {
-    font-style: normal;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.9rem;
-    height: 1.9rem;
-    border-radius: 50%;
-    background: var(--ay-purple);
-    color: #FFFFFF;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-}
-
-.work-view:hover { background: #FFFFFF; color: var(--ay-ink); }
-
-/* Round arrows flank the active card */
-.slider-controls { display: contents; }
-
-.slider-btn {
+.work-tile-play {
     position: absolute;
-    z-index: 5;
+    z-index: 2;
+    right: clamp(1rem, 1.6vw, 1.6rem);
+    bottom: clamp(1rem, 1.6vw, 1.6rem);
+    display: grid;
+    place-items: center;
     width: 3.4rem;
     height: 3.4rem;
     border-radius: 50%;
     color: var(--ay-purple);
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, translate 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, scale 0.3s ease;
 }
 
-#works-next {
-    top: 12%;
-    left: calc(50% + var(--card-w) / 2 + 1.4rem);
-}
+.work-tile-play svg { width: 1.1rem; height: 1.1rem; margin-left: 2px; }
+.work-tile:hover .work-tile-play { background: var(--ay-purple); color: #FFFFFF; scale: 1.06; }
 
-#works-prev {
-    bottom: 6%;
-    left: calc(50% - var(--card-w) / 2 - 4.6rem);
-}
+.work-tile:focus-visible { outline: 3px solid var(--ay-purple); outline-offset: 4px; }
 
-.slider-btn:hover:not(:disabled) { background: var(--ay-purple); color: #FFFFFF; translate: 0 -2px; }
-
-.slider-btn:disabled {
-    opacity: 0.25;
-    cursor: default;
+@media (max-width: 860px) {
+    .work-wrap { grid-template-columns: 1fr; }
+    .feature-grid {
+        height: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+    }
+    .work-tile--main { grid-row: auto; aspect-ratio: 4 / 5; }
+    .work-tile:not(.work-tile--main) { aspect-ratio: 16 / 7; }
+    .work-tile--main .work-tile-credit { display: none; }
 }
 
 /* In-page video player */
@@ -1653,6 +1669,7 @@ html.js .split {
 
 .film-modal.is-open .film-modal-frame { transform: scale(1); }
 
+.film-modal-frame video,
 .film-modal-frame iframe {
     position: absolute;
     inset: 0;
@@ -1677,24 +1694,6 @@ html.js .split {
 }
 
 .film-modal-close:hover { background: #FFFFFF; color: #0a0a0a; }
-
-.work .center-cta { margin-top: clamp(2.5rem, 5vw, 4rem); }
-
-@media screen and (max-width: 992px) {
-    .work { --card-w: 82vw; --card-gap: 1rem; }
-    .work-head { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
-    .work-side { padding: 0; }
-    .work-card { aspect-ratio: 4 / 5; }
-    .work-caption { flex-wrap: wrap; gap: 0.8rem; }
-    .work-heading { flex-basis: 100%; }
-    .work-caption p { display: none; }
-    .slider-btn { display: none; }
-}
-
-.center-cta {
-    text-align: center;
-}
-
 
 /* ==========================================================================
    Behind The Scenes Section — ink stage, arch-topped frames like the hero portrait
@@ -1788,86 +1787,125 @@ html.js .split {
 }
 
 /* ==========================================================================
-   Contact Section & Footer — electric purple close, ink footer
+   Contact Section & Footer — purple "Got a story in mind?" card, ink footer
    ========================================================================== */
 .contact.section {
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(0.75rem, 1.6vw, 1.5rem);
+    background: var(--ay-bg);
+    font-family: var(--font-display);
+}
+
+.cta-card {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    padding: clamp(7rem, 12vw, 10rem) 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    align-items: end;
+    gap: 2rem 3rem;
+    padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 5rem);
+    border-radius: clamp(1.5rem, 3vw, 2.5rem);
     color: #FFFFFF;
-    font-family: var(--font-display);
     background:
-        radial-gradient(45% 55% at 50% 40%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 70%),
+        radial-gradient(45% 70% at 85% 30%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%),
         linear-gradient(135deg, #9C5DF8 0%, #7B36F6 50%, #5E16E2 100%);
+    box-shadow: 0 50px 100px -50px rgba(80, 30, 160, 0.7);
 }
 
-.contact .container { position: relative; z-index: 1; }
+.cta-card > :not(.sec-loop) { position: relative; z-index: 1; }
 
-.sec-loop--contact { left: -8%; top: -18%; width: 116%; height: 136%; }
+.sec-loop--contact { left: -6%; top: -16%; width: 112%; height: 132%; }
 .sec-loop--contact path { stroke: rgba(255, 255, 255, 0.14); stroke-width: 34; }
 
 .contact .sec-eyebrow { color: rgba(255, 255, 255, 0.8); }
-.contact .sec-title { color: #FFFFFF; font-size: clamp(3.2rem, 11vw, 11rem); margin-left: 0; }
+.contact .sec-title { color: #FFFFFF; font-size: clamp(2.8rem, 6.4vw, 6.8rem); }
 .contact .sec-title .accent { color: var(--ay-ink); }
 
 .contact .contact-text {
-    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
     font-weight: 400;
-    letter-spacing: -0.02em;
-    color: rgba(255, 255, 255, 0.82);
-    max-width: 600px;
-    margin: clamp(1.5rem, 3vw, 2.2rem) auto clamp(2rem, 4vw, 3rem);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 32rem;
+    margin: clamp(1.2rem, 3vw, 1.8rem) 0 clamp(1.6rem, 3vw, 2.2rem);
 }
+
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+}
+
+.cta-actions .btn-pill { background: var(--ay-ink); }
+.cta-actions .btn-pill:hover { background: #FFFFFF; color: var(--ay-purple); }
 
 .email-link {
     position: relative;
     display: inline-block;
-    font-size: clamp(1.8rem, 5vw, 4.4rem);
+    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
     font-weight: 600;
-    letter-spacing: -0.045em;
+    letter-spacing: -0.03em;
     color: #FFFFFF;
 }
 
 .email-link::after {
     content: '';
     position: absolute;
-    bottom: 0.02em;
+    bottom: -0.15em;
     left: 0;
     width: 100%;
-    height: 3px;
-    border-radius: 3px;
+    height: 2px;
+    border-radius: 2px;
     background-color: #FFFFFF;
-    transform: scaleX(0.25);
+    transform: scaleX(0.3);
     transform-origin: left;
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .email-link:hover::after { transform: scaleX(1); }
 
+.cta-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+
+.contact .cta-signature {
+    margin: 0;
+    font-family: var(--font-script);
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 400;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.9);
+    rotate: -8deg;
+    white-space: nowrap;
+}
+
 .social-links {
     display: flex;
-    justify-content: center;
-    gap: 0.9rem;
+    gap: 0.7rem;
 }
 
 .social-link {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.7rem 0.75rem 0.7rem 1.3rem;
-    border-radius: 999px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
     color: #FFFFFF;
     transition: background-color 0.3s ease, color 0.3s ease, translate 0.3s ease;
 }
 
-.social-link svg { width: 1em; height: 1em; transition: translate 0.3s ease; }
+.social-link svg { width: 1.2rem; height: 1.2rem; }
 .social-link:hover { background: #FFFFFF; color: var(--ay-purple); translate: 0 -2px; }
-.social-link:hover svg { translate: 2px -2px; }
+
+@media (max-width: 860px) {
+    .cta-card { grid-template-columns: 1fr; align-items: start; }
+    .cta-side { align-items: flex-start; }
+}
 
 .footer {
     background: var(--ay-ink);
@@ -1905,6 +1943,146 @@ html.js .split {
 .footer p a:hover { color: #CBA8FF; }
 .footer-ver { opacity: 0.45; }
 
+.bts-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4.5rem);
+}
+
+.bts .bts-copy .bts-intro { margin: clamp(1.2rem, 3vw, 1.8rem) 0 clamp(1.5rem, 3vw, 2.2rem); }
+
+.btn-pill--light { background: #FFFFFF; color: var(--ay-ink); }
+.btn-pill--light:hover { background: var(--ay-purple); color: #FFFFFF; }
+
+/* Film-strip collage: frames with sprocket holes, loosely pinned */
+.bts-collage {
+    position: relative;
+    height: clamp(340px, 34vw, 560px);
+}
+
+.strip {
+    position: absolute;
+    display: block;
+    padding: 1.1rem 0.5rem;
+    border-radius: 0.5rem;
+    background: #050308;
+    box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.strip::before,
+.strip::after {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    height: 0.45rem;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.55) 0 0.5rem, transparent 0.5rem 1.05rem);
+}
+
+.strip::before { top: 0.33rem; }
+.strip::after { bottom: 0.33rem; }
+
+.strip--v { padding: 0.5rem 1.1rem; }
+
+.strip--v::before,
+.strip--v::after {
+    top: 0.6rem;
+    bottom: 0.6rem;
+    left: 0.33rem;
+    right: auto;
+    width: 0.45rem;
+    height: auto;
+    background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0 0.5rem, transparent 0.5rem 1.05rem);
+}
+
+.strip--v::after { left: auto; right: 0.33rem; }
+
+.strip img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.2rem;
+    filter: grayscale(100%) contrast(1.05);
+}
+
+.strip--main img { filter: none; }
+
+.strip--main { left: 0;   top: 14%; width: 57%; height: 70%; rotate: -2deg; }
+.strip--b    { left: 59%; top: 0;   width: 20%; height: 47%; rotate: 3deg; }
+.strip--c    { left: 59%; top: 51%; width: 20%; height: 47%; rotate: -2deg; }
+.strip--d    { left: 81%; top: 12%; width: 19%; height: 62%; rotate: 4deg; }
+
+/* One frame graded in the hero's purple: the photo's luminosity over a violet gradient */
+.strip--d { background: linear-gradient(160deg, #9C5DF8, #4A12C2) content-box, #050308; }
+.strip--d img { mix-blend-mode: luminosity; }
+
+.bts-note {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: -4%;
+    font-family: var(--font-script);
+    font-size: clamp(1.7rem, 2.6vw, 2.8rem);
+    line-height: 0.95;
+    color: rgba(236, 226, 255, 0.75);
+    rotate: -10deg;
+    white-space: nowrap;
+}
+
+.bts-note span { display: block; }
+.bts-note span + span { padding-left: 0.8em; }
+
+.bts .bts-strip { margin-top: clamp(4rem, 7vw, 6rem); }
+
+@media (max-width: 860px) {
+    .bts-layout { grid-template-columns: 1fr; }
+    .bts-collage { height: 82vw; margin-top: 1rem; }
+    .strip { padding: 0.8rem 0.35rem; }
+    .strip--v { padding: 0.35rem 0.8rem; }
+    .bts-note { font-size: 1.5rem; bottom: -8%; }
+}
+
+/* ── Kind words (hidden until a real testimonial is added) ── */
+.kind-words.section {
+    padding: clamp(5rem, 9vw, 7rem) 0;
+    background: var(--ay-bg);
+    font-family: var(--font-display);
+}
+
+.kind-wrap {
+    width: calc(100% - var(--hero-pad) * 2);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+}
+
+.kind-quote {
+    margin: 0;
+    padding-left: clamp(1.5rem, 3vw, 3rem);
+    border-left: 1px solid rgba(112, 40, 245, 0.25);
+}
+
+.kind-quote blockquote p {
+    font-size: clamp(1.15rem, 1.8vw, 1.6rem);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ay-ink);
+    margin-bottom: 1.4rem;
+}
+
+.kind-quote figcaption strong { display: block; font-weight: 600; }
+.kind-quote figcaption span { font-size: 0.85rem; color: var(--ay-muted); }
+
+@media (max-width: 860px) {
+    .kind-wrap { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 640px) {
     .footer-inner { flex-direction: column; text-align: center; }
     .bts-frame:nth-child(even) { margin-top: 1.5rem; }
@@ -1938,42 +2116,155 @@ html.js .reveal.active {
     left: 0;
     width: 100%;
     height: 50.3%;
-    background: #0A0A0A;
+    background: #0B0714;
 }
 
-.intro-top { top: 0; }
-.intro-bottom { bottom: 0; }
+.intro-top {
+    top: 0;
+    background: radial-gradient(60% 90% at 50% 100%, rgba(112, 40, 245, 0.35) 0%, rgba(112, 40, 245, 0) 70%), #0B0714;
+}
 
-.intro-center {
+.intro-bottom {
+    bottom: 0;
+    background: radial-gradient(60% 90% at 50% 0%, rgba(112, 40, 245, 0.35) 0%, rgba(112, 40, 245, 0) 70%), #0B0714;
+}
+
+/* ── Splash clapperboard: hinged clapstick over a chalk slate ── */
+.clapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(520px, 86vw);
+    translate: -50% -50%;
+    color: #FFFFFF;
+    font-family: var(--font-display);
+    cursor: pointer;
+    filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.6));
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.clapper-sticks {
+    position: relative;
+    height: clamp(46px, 10vw, 64px);
+}
+
+.clapper-stick {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 50%;
+    height: 50%;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 2px #120B20;
+}
+
+.clapper-stick--top {
+    top: 0;
+    transform-origin: 0% 100%; /* swings on the hinge */
+    background: repeating-linear-gradient(118deg, #FFFFFF 0 24px, var(--ay-purple) 24px 48px);
+}
+
+.clapper-stick--bottom {
+    bottom: 0;
+    background: repeating-linear-gradient(62deg, #FFFFFF 0 24px, var(--ay-ink) 24px 48px);
+}
+
+.clapper-hinge {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    translate: 0 -50%;
+    background: #D7D9DF;
+    box-shadow: inset 0 0 0 3px #6B6F78;
+}
+
+/* Grid lines are the board colour showing through the gaps */
+.clapper-board {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2px;
+    padding: 2px;
+    border-radius: 0 0 14px 14px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.clapper-cell {
+    grid-column: span 2;
     display: flex;
-    justify-content: center;
-    padding-bottom: 1.2rem;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    padding: 0.55rem 0.8rem 0.6rem;
+    background: #120B20;
 }
 
-.intro-mark {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: #FFFFFF;
-    font-size: 0.72rem;
+.clapper-cell--wide { grid-column: span 6; }
+.clapper-cell--half { grid-column: span 3; }
+.clapper-cell:last-child { border-radius: 0 0 12px 12px; }
+
+.clapper-lbl {
+    font-size: 0.58rem;
     font-weight: 600;
-    letter-spacing: 0.32em;
-    opacity: 0;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #B98CFF;
 }
 
-.intro-line {
+.clapper-val {
+    font-size: clamp(1.05rem, 3vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+}
+
+.clapper-val--script {
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(1.7rem, 5vw, 2.6rem);
+    line-height: 1.05;
+}
+
+.clapper-tc {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.clapper-tc .clapper-val {
+    font-size: clamp(1.5rem, 5vw, 2.4rem);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 18px rgba(143, 70, 245, 0.85);
+}
+
+#intro .clapper-hint {
     position: absolute;
     left: 0;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.6);
-    transform: scaleX(0);
-    transform-origin: left center;
+    right: 0;
+    bottom: 8%;
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.clapper-flash {
+    position: absolute;
+    inset: 0;
+    background: #FFFFFF;
+    opacity: 0;
+    pointer-events: none;
 }
 
 #progress {
@@ -2024,10 +2315,6 @@ html.gsap-on .reveal {
         padding-right: 0;
     }
 
-    /* Portfolio slider: two cards feel cramped on tablet, show one with a peek of the next */
-    .works-grid {
-        gap: 1.25rem;
-    }
 
 }
 
@@ -2111,17 +2398,29 @@ html.gsap-on .reveal {
 
 <body>
 
-    <!-- Cinematic intro: line draws, wordmark appears, screen splits open (removed by script) -->
+    <!-- Splash: a working clapperboard. Live date and running timecode, the take number counts
+         this visitor's visits, tap (or any key) to call action early. Removed by script. -->
     <div id="intro" aria-hidden="true">
         <div class="intro-panel intro-top"></div>
         <div class="intro-panel intro-bottom"></div>
-        <div class="intro-center">
-            <span class="intro-mark">
-                <svg viewBox="0 0 24 24" width="16" height="16"><rect x="7.05" y="7.05" width="9.9" height="9.9" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(45 12 12)" /></svg>
-                AGGOR YORM
-            </span>
+        <div class="clapper" id="clapper">
+            <div class="clapper-sticks">
+                <span class="clapper-stick clapper-stick--bottom"></span>
+                <span class="clapper-stick clapper-stick--top"></span>
+                <span class="clapper-hinge"></span>
+            </div>
+            <div class="clapper-board">
+                <div class="clapper-cell clapper-cell--wide"><span class="clapper-lbl">Production</span><span class="clapper-val clapper-val--script">Why Not Me?</span></div>
+                <div class="clapper-cell"><span class="clapper-lbl">Roll</span><span class="clapper-val">A001</span></div>
+                <div class="clapper-cell"><span class="clapper-lbl">Scene</span><span class="clapper-val">01</span></div>
+                <div class="clapper-cell"><span class="clapper-lbl">Take</span><span class="clapper-val" id="clap-take">1</span></div>
+                <div class="clapper-cell clapper-cell--half"><span class="clapper-lbl">Director</span><span class="clapper-val clapper-val--script">Aggor Yorm</span></div>
+                <div class="clapper-cell clapper-cell--half"><span class="clapper-lbl">Date</span><span class="clapper-val" id="clap-date">&nbsp;</span></div>
+                <div class="clapper-cell clapper-cell--wide clapper-tc"><span class="clapper-lbl">Timecode</span><span class="clapper-val" id="clap-tc">00:00:00:00</span></div>
+            </div>
         </div>
-        <div class="intro-line"></div>
+        <p class="clapper-hint">Tap the slate to call action</p>
+        <div class="clapper-flash"></div>
     </div>
     <div id="progress" aria-hidden="true"></div>
 
@@ -2237,8 +2536,8 @@ html.gsap-on .reveal {
             </nav>
         </header>
 
-        <!-- About Section -->
-        <section id="about" class="about section">
+        <!-- Featured Work -->
+        <section id="work" class="work section">
             <svg class="about-ribbon" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true" focusable="false">
                 <defs>
                     <linearGradient id="about-ribbon-ink" x1="0" y1="0" x2="1" y2="0">
@@ -2250,20 +2549,57 @@ html.gsap-on .reveal {
                 <path fill="#C7A1FB" opacity="0.5" d="M0 0H1440V112C1210 128 960 104 720 72C470 38 230 18 0 22Z"/>
                 <path fill="url(#about-ribbon-ink)" d="M0 0H1440V84C1220 96 980 80 740 52C500 24 250 8 0 6Z"/>
             </svg>
-
-            <div class="about-stage">
-                <div class="about-copy">
-                    <p class="about-eyebrow">About<span aria-hidden="true">&bull;</span>Who I am</p>
-                    <h2 class="about-title"><span>Who</span><span class="accent">I am.</span></h2>
-                    <p class="split">Working where <strong>storytelling, culture, entertainment, and strategy</strong> meet, I am dedicated to shaping
-                        ideas into unforgettable experiences.</p>
-                    <p class="split">Whether producing a live television event, directing a documentary, building an original IP, or
-                        advising a brand, my mission is to shape African stories and creative businesses that influence
-                        culture and leave a lasting legacy.</p>
-                    <a href="#work" class="btn-pill">See Selected Works
+            <div class="work-wrap">
+                <div class="work-intro">
+                    <p class="sec-eyebrow">Featured work</p>
+                    <h2 class="sec-title"><span>Stories</span><span>that</span><span class="accent">move</span><span class="accent">culture.</span></h2>
+                    <p class="work-lede">Films, documentaries and live productions, shaped from first idea to final frame.</p>
+                    <a href="archive.html" class="btn-pill">View All Work
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
 
+                <div class="feature-grid">
+                    <a class="work-tile work-tile--main work-view" href="https://vimeo.com/1135942055/cafced5ff7" aria-label="Play One More Ride">
+                        <img src="assets/vimeo-1135942055.jpg" alt="" loading="lazy">
+                        <iframe title="One More Ride preview" tabindex="-1" aria-hidden="true"
+                            data-src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
+                            frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; picture-in-picture"></iframe>
+                        <span class="work-tile-index">01</span>
+                        <span class="work-tile-cap">
+                            <span class="work-cat">TVC &middot; Fiesta Condoms</span>
+                            <span class="work-tile-title">One More Ride</span>
+                            <span class="work-tile-credit">Fiesta Condoms TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</span>
+                        </span>
+                        <span class="work-tile-play glass" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 4.5v15l12-7.5z"/></svg></span>
+                    </a>
+                    <a class="work-tile work-view" href="https://vimeo.com/1127082566/6c883e9ae6" aria-label="Play Choices">
+                        <img src="assets/vimeo-1127082566.jpg" alt="" loading="lazy">
+                        <span class="work-tile-cap">
+                            <span class="work-tile-title">Choices</span>
+                            <span class="work-cat">TVC &middot; Lydia Contraceptives</span>
+                        </span>
+                    </a>
+                    <a class="work-tile work-view" href="https://vimeo.com/1072493289" aria-label="Play Atena Didi Daa">
+                        <img src="assets/vimeo-1072493289.jpg" alt="" loading="lazy">
+                        <span class="work-tile-cap">
+                            <span class="work-tile-title">Atena Didi Daa</span>
+                            <span class="work-cat">TVC &middot; Atena Games</span>
+                        </span>
+                    </a>
+                    <a class="work-tile work-view" href="https://youtu.be/rvXHNQqAfHM" aria-label="Play TGMA 2024 behind the scenes">
+                        <img src="assets/youtube-rvXHNQqAfHM.jpg" alt="" loading="lazy">
+                        <span class="work-tile-cap">
+                            <span class="work-tile-title">TGMA 2024</span>
+                            <span class="work-cat">Behind the Scenes &middot; TGMA</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about section">
+            <div class="about-stage">
                 <div class="about-visual">
                     <svg class="about-loops" viewBox="0 0 1360 980" aria-hidden="true" focusable="false">
                         <defs>
@@ -2275,11 +2611,12 @@ html.gsap-on .reveal {
                         </defs>
                         <path pathLength="1" d="M20 820C90 700 230 690 250 790C268 880 150 900 140 800C125 640 300 560 420 470M940 360C1060 250 1140 120 1250 110C1360 100 1370 230 1280 250C1190 270 1180 160 1260 90C1300 55 1330 30 1350 10"/>
                     </svg>
+                    <svg class="about-crown" viewBox="0 0 80 56" aria-hidden="true" focusable="false"><path pathLength="1" d="M8 46 4 12l20 18L40 4l16 26 20-18-4 34Z"/><path pathLength="1" d="M10 52h60"/></svg>
                     <span class="about-frame-ring" aria-hidden="true"></span>
                     <div class="about-frame">
                         <video src="assets/about-video.mp4"
                             class="about-image" loop muted playsinline autoplay
-                            preload="metadata" disablepictureinpicture aria-label="Behind-the-scenes reel of Aggor Yorm at work on set"
+                            preload="metadata" disablepictureinpicture aria-label="Behind-the-scenes reel of Aggor Yorm's productions"
                             controlslist="nodownload nofullscreen noremoteplayback"></video>
                     </div>
                     <ul class="about-chips" aria-label="Where my work sits">
@@ -2288,40 +2625,64 @@ html.gsap-on .reveal {
                         <li class="about-chip glass">Entertainment</li>
                         <li class="about-chip glass">Strategy</li>
                     </ul>
-                    <p class="about-note">where it all meets
-                        <svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 10C30 5 64 3 98 2"/></svg></p>
+                    <p class="about-note"><span>Creative</span><span>People</span><span>Build</span><span>Brighter</span><span>Futures.</span></p>
+                </div>
+
+                <div class="about-copy">
+                    <p class="about-eyebrow">About<span aria-hidden="true">&bull;</span>Who I am</p>
+                    <h2 class="about-title"><span>More than</span><span class="accent">a storyteller.</span></h2>
+                    <p class="split">Working where <strong>storytelling, culture, entertainment, and strategy</strong> meet, I am dedicated to shaping
+                        ideas into unforgettable experiences.</p>
+                    <p class="split">Whether producing a live television event, directing a documentary, building an original IP, or
+                        advising a brand, my mission is to shape African stories and creative businesses that influence
+                        culture and leave a lasting legacy.</p>
+                    <div class="about-actions">
+                        <a href="#work" class="btn-pill">See the Work
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                        <!-- Counted from what is on this site: films in archive.html, names in Clientele, roles in the hero -->
+                        <dl class="about-stats">
+                            <div><dt>Films in the archive</dt><dd>9</dd></div>
+                            <div><dt>Clients &amp; projects</dt><dd>10</dd></div>
+                            <div><dt>Disciplines</dt><dd>3</dd></div>
+                        </dl>
+                    </div>
                 </div>
             </div>
+
             <!-- What I do: the detail behind the hero pills, part of the About page -->
             <div class="about-services" id="services">
-                <div class="services-head">
-                    <h3 class="section-title">What I <em>do</em></h3>
+                <div class="services-intro">
+                    <p class="sec-eyebrow">What I do</p>
+                    <h3 class="sec-title"><span>Ideas</span><span>people</span><span class="accent">remember.</span></h3>
                     <p>From first idea to final delivery: stories, culture and entertainment, produced and directed with purpose.</p>
+                    <p class="services-also"><strong>Also &middot; Brand Advisory.</strong> Advising brands on how to tell their story across screen, stage and culture.</p>
+                    <a href="#contact" class="btn-pill">Start a Project
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
                 <div class="services-grid">
                     <article class="service-card" id="producing">
+                        <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="12" r="6"/><circle cx="27" cy="12" r="6"/><rect x="5" y="20" width="28" height="19" rx="3"/><path d="m33 27 10-6v17l-10-6"/><path d="M11 39v5M27 39v5"/></svg>
                         <span class="service-num">01</span>
                         <h4>Producing</h4>
                         <p>Live television events, documentaries and original IP, taken from first idea to final delivery with a focus on African stories.</p>
                         <div class="service-tags"><span>Live TV</span><span>Documentary</span><span>Original IP</span></div>
+                        <a class="service-link glass" href="#contact" aria-label="Start a producing project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                     </article>
                     <article class="service-card" id="directing">
+                        <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5h26v12H11z"/><path d="M11 17v7M37 17v7M7 24h34"/><path d="m13 24 22 20M35 24 13 44"/></svg>
                         <span class="service-num">02</span>
                         <h4>Directing</h4>
                         <p>Visual storytelling with a clear point of view, guiding cast, crew and craft toward work that lingers.</p>
                         <div class="service-tags"><span>Film</span><span>Television</span><span>Branded Content</span></div>
+                        <a class="service-link glass" href="#contact" aria-label="Start a directing project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                     </article>
                     <article class="service-card" id="creative-strategy">
+                        <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30 28c.4-2 1.4-3.4 3-5 2-1.8 3-4.4 3-7a12 12 0 0 0-24 0c0 2 .4 4.4 3 7 1.4 1.4 2.6 3 3 5"/><path d="M18 36h12M20 44h8"/><path d="M24 16v6M21 19h6"/></svg>
                         <span class="service-num">03</span>
                         <h4>Creative Strategy</h4>
                         <p>Building concepts and creative businesses that influence culture and leave a lasting legacy.</p>
                         <div class="service-tags"><span>Concept Development</span><span>Creative Direction</span></div>
-                    </article>
-                    <article class="service-card" id="brand-advisory">
-                        <span class="service-num">04</span>
-                        <h4>Brand Advisory</h4>
-                        <p>Advising brands on how to tell their story across screen, stage and culture.</p>
-                        <div class="service-tags"><span>Partnerships</span><span>Campaigns</span></div>
+                        <a class="service-link glass" href="#contact" aria-label="Start a creative strategy project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                     </article>
                 </div>
             </div>
@@ -2450,209 +2811,130 @@ html.gsap-on .reveal {
             </div>
         </section>
 
-        <!-- Selected Work / Portfolio -->
-        <section id="work" class="work section">
-            <div class="container">
-                <div class="work-head">
-                    <div>
-                        <p class="sec-eyebrow">Selected Works</p>
-                        <h2 class="sec-title"><span>Stories that move</span><span class="accent">culture forward.</span></h2>
-                    </div>
-                    <div class="work-side">
-                        <p>Films, documentaries and live productions, shaped from first idea to final frame.</p>
-                    </div>
-                </div>
-                <div class="works-slider reveal">
-                <div class="works-grid">
-                    <div class="work-card">
-                        <div class="work-media">
-                            <img src="assets/vimeo-1135942055.jpg" alt="One More Ride">
-                            <iframe title="vimeo-player"
-                                data-src="https://player.vimeo.com/video/1135942055?h=cafced5ff7&background=1&autopause=0"
-                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
-                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="work-caption">
-                            <div class="work-heading"><span class="work-cat">TVC &middot; Fiesta Condoms</span><h3 class="work-title">One More Ride</h3></div>
-                            <p>Fiesta Condoms TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
-                            <a class="work-view glass-dark" href="https://vimeo.com/1135942055/cafced5ff7" draggable="false">View <i>&#8250;</i></a>
-                        </div>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-media">
-                            <img src="assets/vimeo-1127082566.jpg" alt="Choices">
-                            <iframe title="vimeo-player"
-                                data-src="https://player.vimeo.com/video/1127082566?h=6c883e9ae6&background=1&autopause=0"
-                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
-                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="work-caption">
-                            <div class="work-heading"><span class="work-cat">TVC &middot; Lydia Contraceptives</span><h3 class="work-title">Choices</h3></div>
-                            <p>Lydia Contraceptives TVC for DKT AWA. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
-                            <a class="work-view glass-dark" href="https://vimeo.com/1127082566/6c883e9ae6" draggable="false">View <i>&#8250;</i></a>
-                        </div>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-media">
-                            <img src="assets/vimeo-1025899842.jpg" alt="Overstayed Guests">
-                            <iframe title="vimeo-player"
-                                data-src="https://player.vimeo.com/video/1025899842?background=1&autopause=0"
-                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
-                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="work-caption">
-                            <div class="work-heading"><span class="work-cat">TVC &middot; DStv Ghana</span><h3 class="work-title">Overstayed Guests</h3></div>
-                            <p>DStv Ghana TVC. Directed by Kwesi Apenteng-Mensah, line produced by Aggor Yorm.</p>
-                            <a class="work-view glass-dark" href="https://vimeo.com/1025899842" draggable="false">View <i>&#8250;</i></a>
-                        </div>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-media">
-                            <img src="assets/vimeo-1072493289.jpg" alt="Atena Didi Daa">
-                            <iframe title="vimeo-player"
-                                data-src="https://player.vimeo.com/video/1072493289?background=1&autopause=0"
-                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
-                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="work-caption">
-                            <div class="work-heading"><span class="work-cat">TVC &middot; Atena Games</span><h3 class="work-title">Atena Didi Daa</h3></div>
-                            <p>TVC for Atena Games. Directed by Kwesi Apenteng-Mensah, produced by Aggor Yorm.</p>
-                            <a class="work-view glass-dark" href="https://vimeo.com/1072493289" draggable="false">View <i>&#8250;</i></a>
-                        </div>
-                    </div>
-
-
-                    <div class="work-card">
-                        <div class="work-media">
-                            <img src="assets/youtube-Tyat2z0aMII.jpg" alt="Miss Malaika Ghana 2023 Finale">
-                            <iframe title="youtube-player"
-                                data-src="https://www.youtube-nocookie.com/embed/Tyat2z0aMII?autoplay=1&mute=1&controls=0&loop=1&playlist=Tyat2z0aMII&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
-                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
-                                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="work-caption">
-                            <div class="work-heading"><span class="work-cat">Behind the Scenes &middot; Miss Malaika Ghana</span><h3 class="work-title">Miss Malaika Ghana 2023 Finale</h3></div>
-                            <p>Behind the scenes of the Miss Malaika Ghana 2023 finale.</p>
-                            <a class="work-view glass-dark" href="https://youtu.be/Tyat2z0aMII" draggable="false">View <i>&#8250;</i></a>
-                        </div>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-media">
-                            <img src="assets/youtube-rvXHNQqAfHM.jpg" alt="TGMA 2024">
-                            <iframe title="youtube-player"
-                                data-src="https://www.youtube-nocookie.com/embed/rvXHNQqAfHM?autoplay=1&mute=1&controls=0&loop=1&playlist=rvXHNQqAfHM&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
-                                frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
-                                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="work-caption">
-                            <div class="work-heading"><span class="work-cat">Behind the Scenes &middot; TGMA</span><h3 class="work-title">TGMA 2024</h3></div>
-                            <p>Behind the scenes of the 2024 Telecel Ghana Music Awards.</p>
-                            <a class="work-view glass-dark" href="https://youtu.be/rvXHNQqAfHM" draggable="false">View <i>&#8250;</i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-controls">
-                    <button class="slider-btn glass" id="works-prev" type="button" aria-label="Previous work">&#8249;</button>
-                    <button class="slider-btn glass" id="works-next" type="button" aria-label="Next work">&#8250;</button>
-                </div>
-                </div>
-                <div class="center-cta mt-4">
-                    <a href="archive.html" class="btn-pill">View Full Archive
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-                </div>
-            </div>
-        </section>
-
         <!-- Behind The Scenes -->
         <section id="bts" class="bts section reveal">
             <div class="container">
-                <div class="bts-head">
-                    <div>
-                        <p class="sec-eyebrow">On set</p>
-                        <h2 class="sec-title"><span>Behind</span><span class="accent">the scenes.</span></h2>
+                <div class="bts-layout">
+                    <div class="bts-copy">
+                        <p class="sec-eyebrow">Behind the scenes</p>
+                        <h2 class="sec-title"><span>The real</span><span class="accent">stories.</span></h2>
+                        <p class="bts-intro split">A closer look at the sets, crews and quiet moments between takes that shape
+                            every finished frame.</p>
+                        <a href="assets/about-video.mp4" class="btn-pill btn-pill--light bts-reel">Watch the BTS Reel
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                     </div>
-                    <p class="bts-intro split">A closer look at the sets, crews and quiet moments between takes that shape
-                        every finished frame.</p>
+                    <div class="bts-collage" aria-hidden="true">
+                        <span class="strip strip--main"><img src="assets/bts/thumbs/JHOE4438.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--v strip--b"><img src="assets/bts/thumbs/JHOE4306.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--v strip--c"><img src="assets/bts/thumbs/JHOE4396.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--v strip--d"><img src="assets/bts/thumbs/JHOE4152.jpg" alt="" loading="lazy"></span>
+                        <span class="bts-note"><span>Real People.</span><span>Real Moments.</span></span>
+                    </div>
                 </div>
                 <div class="bts-strip">
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4152.jpg" alt="Aggor Yorm on set, behind the scenes (01)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4152.jpg" alt="Behind the scenes on set (01)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 01</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4161.jpg" alt="Aggor Yorm on set, behind the scenes (02)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4161.jpg" alt="Behind the scenes on set (02)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 02</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4179.jpg" alt="Aggor Yorm on set, behind the scenes (03)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4179.jpg" alt="Behind the scenes on set (03)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 03</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4193.jpg" alt="Aggor Yorm on set, behind the scenes (04)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4193.jpg" alt="Behind the scenes on set (04)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 04</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4237.jpg" alt="Aggor Yorm on set, behind the scenes (05)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4237.jpg" alt="Behind the scenes on set (05)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 05</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4284.jpg" alt="Aggor Yorm on set, behind the scenes (06)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4284.jpg" alt="Behind the scenes on set (06)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 06</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4288.jpg" alt="Aggor Yorm on set, behind the scenes (07)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4288.jpg" alt="Behind the scenes on set (07)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 07</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4294.jpg" alt="Aggor Yorm on set, behind the scenes (08)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4294.jpg" alt="Behind the scenes on set (08)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 08</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4306.jpg" alt="Aggor Yorm on set, behind the scenes (09)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4306.jpg" alt="Behind the scenes on set (09)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 09</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4336.jpg" alt="Aggor Yorm on set, behind the scenes (10)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4336.jpg" alt="Behind the scenes on set (10)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 10</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4396.jpg" alt="Aggor Yorm on set, behind the scenes (11)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4396.jpg" alt="Behind the scenes on set (11)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 11</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4399.jpg" alt="Aggor Yorm on set, behind the scenes (12)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4399.jpg" alt="Behind the scenes on set (12)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 12</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4438.jpg" alt="Aggor Yorm on set, behind the scenes (13)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4438.jpg" alt="Behind the scenes on set (13)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 13</figcaption>
                     </figure>
                     <figure class="bts-frame">
-                        <img src="assets/bts/thumbs/JHOE4560.jpg" alt="Aggor Yorm on set, behind the scenes (14)" loading="lazy">
+                        <img src="assets/bts/thumbs/JHOE4560.jpg" alt="Behind the scenes on set (14)" loading="lazy">
                         <figcaption class="glass-dark">On Set &middot; 14</figcaption>
                     </figure>
                 </div>
             </div>
         </section>
 
+        <!-- KIND WORDS — hidden until a real, approved testimonial exists.
+             To publish: replace the quote, name and role below, then delete the `hidden` attribute. -->
+        <section id="kind-words" class="kind-words section" hidden>
+            <div class="kind-wrap">
+                <div>
+                    <p class="sec-eyebrow">Kind words</p>
+                    <h2 class="sec-title"><span>Trusted by</span><span class="accent">visionaries.</span></h2>
+                </div>
+                <figure class="kind-quote">
+                    <blockquote><p>QUOTE</p></blockquote>
+                    <figcaption><strong>NAME</strong><span>ROLE, COMPANY</span></figcaption>
+                </figure>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section id="contact" class="contact section reveal">
-            <svg class="sec-loop sec-loop--contact" viewBox="0 0 1440 700" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path pathLength="1" d="M-40 560C120 420 300 470 300 580C300 680 160 660 180 540C210 360 420 260 600 300M900 120C1060 40 1240 80 1250 200C1260 300 1140 320 1130 230C1120 130 1260 60 1480 110"/>
-            </svg>
-            <div class="container text-center">
-                <p class="sec-eyebrow">Contact</p>
-                <h2 class="sec-title"><span>Let's</span><span class="accent">create.</span></h2>
-                <p class="contact-text split">Available for select projects and collaborations globally.</p>
-                <a href="mailto:info@aggoryorm.com" class="email-link">info@aggoryorm.com</a>
-
-                <div class="social-links mt-4">
-                    <a href="#" class="social-link glass-dark">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-                    <a href="#" class="social-link glass-dark">Vimeo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-                    <a href="#" class="social-link glass-dark">LinkedIn <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            <div class="cta-card">
+                <svg class="sec-loop sec-loop--contact" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path pathLength="1" d="M-40 500C120 380 300 420 300 520C300 610 160 590 180 480C210 320 420 230 600 270M980 90C1120 20 1270 60 1280 160C1290 250 1180 270 1170 190C1160 100 1290 40 1480 90"/>
+                </svg>
+                <div class="cta-copy">
+                    <p class="sec-eyebrow">Let's create together</p>
+                    <h2 class="sec-title"><span>Got a story</span><span class="accent">in mind?</span></h2>
+                    <p class="contact-text">Whether it's a film, a campaign or a bold new idea, I'd love to hear about it. Available for select projects and collaborations globally.</p>
+                    <div class="cta-actions">
+                        <a href="mailto:info@aggoryorm.com?subject=New%20project" class="btn-pill">Start a Project
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                        <a href="mailto:info@aggoryorm.com" class="email-link">info@aggoryorm.com</a>
+                    </div>
+                </div>
+                <div class="cta-side">
+                    <p class="cta-signature" aria-hidden="true">Aggor Yorm</p>
+                    <!-- SOCIAL: replace each href="#" with the real profile URL -->
+                    <div class="social-links">
+                        <a href="#" class="social-link glass-dark" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
+                        <a href="#" class="social-link glass-dark" aria-label="Vimeo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9c2-1.5 3.6-3 4.6-1.6.9 1.2 1.3 7.6 3 7.6 1.7 0 4.7-5.4 4.1-7.2-.7-2-3.2-.6-3.7.2.7-3.6 4.4-4.8 6.6-3.6 2.4 1.4.6 6-1.8 9.6-2.7 4-5.6 6.4-7.2 6-1.8-.6-2.4-9.4-3.4-10.4-.8-.8-1.6.2-2.2.6Z"/></svg></a>
+                        <a href="#" class="social-link glass-dark" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg></a>
+                    </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <footer class="footer">
@@ -2753,7 +3035,7 @@ html.gsap-on .reveal {
                     .from('.hero-note, .hero-spark', { y: 10, opacity: 0, duration: 1 }, 1.15)
                     .to(underline, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 1.5)
                     .from('.hero-scroll, .hero-markers', { opacity: 0, duration: 1 }, 1.3)
-                    .timeScale(0.75); // the intro timeline runs at 1.7×; keep the hero itself unhurried
+                    .timeScale(1.3);
             };
 
             // Glass pills hang in the air: slow bob and sway, each on its own rhythm; paused off-screen
@@ -2776,6 +3058,42 @@ html.gsap-on .reveal {
                 freeze(frozen);
                 document.documentElement.style.overflow = 'hidden';
 
+                // Slate details: today's date, a take number per visit, timecode running at 25fps
+                const pad = (n) => String(n).padStart(2, '0');
+                const now = new Date();
+                $('#clap-date').textContent = pad(now.getDate()) + '.' + pad(now.getMonth() + 1) + '.' + String(now.getFullYear()).slice(2);
+                let take = 1;
+                try { take = (parseInt(localStorage.getItem('ay-take'), 10) || 0) + 1; localStorage.setItem('ay-take', take); } catch (e) {}
+                $('#clap-take').textContent = take;
+                const tcEl = $('#clap-tc');
+                const tcStart = performance.now();
+                let tcRaf = 0;
+                const tick = () => {
+                    const t = (performance.now() - tcStart) / 1000;
+                    tcEl.textContent = '00:00:' + pad(Math.floor(t) % 60) + ':' + pad(Math.floor((t % 1) * 25));
+                    tcRaf = requestAnimationFrame(tick);
+                };
+                tcRaf = requestAnimationFrame(tick);
+
+                // The clap: a short filtered noise burst. Browsers only allow sound after a tap,
+                // so an untouched intro stays silent.
+                let audio = null;
+                const clapSound = () => {
+                    try {
+                        if (!audio || audio.state !== 'running') return;
+                        const len = Math.floor(audio.sampleRate * 0.12);
+                        const buf = audio.createBuffer(1, len, audio.sampleRate);
+                        const data = buf.getChannelData(0);
+                        for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);
+                        const src = audio.createBufferSource();
+                        const band = audio.createBiquadFilter();
+                        band.type = 'bandpass'; band.frequency.value = 1800; band.Q.value = 0.8;
+                        src.buffer = buf;
+                        src.connect(band).connect(audio.destination);
+                        src.start();
+                    } catch (e) {}
+                };
+
                 const tl = gsap.timeline({
                     onComplete: () => {
                         gsap.set(heroParts, { clearProps: 'transform,opacity' });
@@ -2786,16 +3104,36 @@ html.gsap-on .reveal {
                     }
                 });
 
-                tl.to('.intro-line', { scaleX: 1, duration: 1.1, ease: 'power3.inOut' })
-                  .fromTo('.intro-mark', { opacity: 0, letterSpacing: '0.7em' },
-                          { opacity: 1, letterSpacing: '0.32em', duration: 1.2, ease: 'power2.out' }, '-=0.7')
-                  .to('.intro-mark, .intro-line', { opacity: 0, duration: 0.45, ease: 'power1.in' }, '+=0.35')
-                  .to('.intro-top', { yPercent: -101, duration: 1.3, ease: 'expo.inOut' }, '<0.1')
-                  .to('.intro-bottom', { yPercent: 101, duration: 1.3, ease: 'expo.inOut',
+                tl.from('#clapper', { y: 40, scale: 0.92, opacity: 0, duration: 0.7, ease: 'expo.out' })
+                  .from('.clapper-hint', { opacity: 0, duration: 0.6 }, '<0.3')
+                  .to('.clapper-stick--top', { rotation: -32, duration: 0.55, ease: 'power3.out' }, '<')
+                  .addLabel('clap', '+=1.2')
+                  .to('.clapper-stick--top', {
+                      rotation: 0, duration: 0.14, ease: 'power4.in',
+                      onComplete: () => { cancelAnimationFrame(tcRaf); clapSound(); }
+                  }, 'clap')
+                  .fromTo('.clapper-flash', { opacity: 0.5 }, { opacity: 0, duration: 0.5, ease: 'power2.out', immediateRender: false }, 'clap+=0.14')
+                  .to('#clapper', { keyframes: { x: [0, -7, 6, -3, 0] }, duration: 0.3, ease: 'none' }, 'clap+=0.14')
+                  .to('.clapper-hint', { opacity: 0, duration: 0.3 }, 'clap+=0.14')
+                  .to('#clapper', { y: -30, scale: 0.96, opacity: 0, duration: 0.45, ease: 'power2.in' }, 'clap+=0.7')
+                  .to('.intro-top', { yPercent: -101, duration: 0.85, ease: 'expo.inOut' }, '<0.15')
+                  .to('.intro-bottom', { yPercent: 101, duration: 0.85, ease: 'expo.inOut',
                         onComplete: () => intro && intro.remove() }, '<')
-                  .addLabel('open', '<0.45')
+                  .addLabel('open', '<0.3')
                   .add(heroIn(), 'open');
-                tl.timeScale(1.7); // snappier first impression
+
+                // Tap the slate, or press any key, to call action now
+                const callAction = (e) => {
+                    if (!document.getElementById('intro') || tl.time() >= tl.labels.clap) return;
+                    if (e && e.type === 'keydown' && ['Tab', 'Shift', 'Alt', 'Control', 'Meta'].includes(e.key)) return;
+                    try {
+                        audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+                        if (audio.state === 'suspended') audio.resume();
+                    } catch (err) {}
+                    tl.play('clap');
+                };
+                intro.addEventListener('pointerdown', callAction);
+                document.addEventListener('keydown', callAction);
             }
 
             // 3. Hero drifts apart as you scroll away (side-by-side layouts only)
@@ -2813,7 +3151,7 @@ html.gsap-on .reveal {
                 yPercent: 45, opacity: 0, duration: 1.2, stagger: 0.12, ease: 'expo.out', clearProps: 'transform,opacity',
                 scrollTrigger: { trigger: '#about .about-title', start: 'top 85%', once: true }
             });
-            gsap.set('#about .about-loops path, #about .about-note path', { strokeDasharray: 1, strokeDashoffset: 1 });
+            gsap.set('#about .about-loops path, #about .about-crown path', { strokeDasharray: 1, strokeDashoffset: 1 });
             gsap.timeline({
                 defaults: { ease: 'expo.out' },
                 scrollTrigger: { trigger: '#about .about-visual', start: 'top 80%', once: true }
@@ -2824,7 +3162,7 @@ html.gsap-on .reveal {
                 .to('#about .about-loops path', { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' }, 0.2)
                 .from('#about .about-chip', { y: 16, scale: 0.94, opacity: 0, duration: 1, stagger: 0.1, ease: 'back.out(1.3)', clearProps: 'transform,opacity' }, 0.8)
                 .from('#about .about-note', { y: 10, opacity: 0, duration: 1 }, 1.1)
-                .to('#about .about-note path', { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 1.4)
+                .to('#about .about-crown path', { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 1.4)
                 .add(() => floatPills('#about .about-chip', '#about'));
 
             // 4b. Section headings: lines rise in as each section arrives
@@ -2840,13 +3178,14 @@ html.gsap-on .reveal {
                 });
             });
 
-            // 5. Selected Works: cards drop in one after another (order read at trigger time, after the shuffle)
-            ScrollTrigger.create({
-                trigger: '.works-slider', start: 'top 85%', once: true,
-                onEnter: () => gsap.from($$('.work-card'), {
-                    clipPath: 'inset(0% 0% 100% 0%)', duration: 1.5, stagger: 0.16,
-                    ease: 'expo.out', clearProps: 'clipPath'
-                })
+            // 5. Featured work tiles rise in; BTS film strips drop onto the table
+            gsap.from('.work-tile', {
+                y: 50, opacity: 0, duration: 1.3, stagger: 0.1, ease: 'expo.out', clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: '.feature-grid', start: 'top 85%', once: true }
+            });
+            gsap.from('.strip', {
+                y: 70, opacity: 0, duration: 1.4, stagger: 0.12, ease: 'expo.out', clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: '.bts-collage', start: 'top 85%', once: true }
             });
 
             // 6. Clientele rows slide in from opposite sides
@@ -2862,17 +3201,14 @@ html.gsap-on .reveal {
                 scrollTrigger: { trigger: '.bts-strip', start: 'top 90%', once: true }
             });
 
-            // 8. Call-to-action and contact details
-            const ctas = $$('.center-cta .btn-pill, .email-link, .social-link');
+            // 8. Closing card: actions and social icons
+            const ctas = $$('.cta-actions > *, .social-link');
             freeze(ctas);
-            const fadeUp = (targets, trigger, extra = {}) => gsap.from(targets, Object.assign({
-                opacity: 0, y: 40, duration: 1.3, stagger: 0.12, ease: 'expo.out',
+            gsap.from(ctas, {
+                opacity: 0, y: 30, duration: 1.3, stagger: 0.1, ease: 'expo.out',
                 clearProps: 'opacity,transform', onComplete: thaw(ctas),
-                scrollTrigger: { trigger, start: 'top 92%', once: true }
-            }, extra));
-            fadeUp('.center-cta .btn-pill', '.center-cta');
-            fadeUp('.email-link', '.email-link');
-            fadeUp('.social-link', '.social-links', { y: 30 });
+                scrollTrigger: { trigger: '.cta-card', start: 'top 80%', once: true }
+            });
 
             // 9. Thin film-strip progress line along the top edge
             gsap.to('#progress', {
@@ -2946,8 +3282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const r = el.getBoundingClientRect();
             return r.top < 50 && r.bottom > 50;
         });
-        navbar.classList.toggle('on-dark', under('.bts') || under('.clientele') || under('.contact') || under('.footer'));
-        navbar.classList.toggle('nav-hidden', under('.work'));
+        navbar.classList.toggle('on-dark', under('.bts') || under('.clientele') || under('.cta-card') || under('.footer'));
     }, { passive: true });
 
     // ── Scroll Reveal Animations ──────────────────────────────────────────────
@@ -3041,132 +3376,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 200); });
     })();
 
-    // ── Selected Works — show the films in a different order on every visit ───
-    const worksGrid = document.querySelector('.works-grid');
-    if (worksGrid) {
-        const items = Array.from(worksGrid.children);
-        for (let i = items.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [items[i], items[j]] = [items[j], items[i]];
-        }
-        items.forEach(item => worksGrid.appendChild(item));
-
-        // Infinite loop: [clones | originals | clones]. The slider re-centres on the
-        // originals whenever it settles inside a clone set (see the slider below).
-        const mkClone = (el) => {
-            const c = el.cloneNode(true);
-            c.setAttribute('aria-hidden', 'true');
-            c.querySelectorAll('a, button').forEach(a => a.setAttribute('tabindex', '-1'));
-            return c;
-        };
-        const before = document.createDocumentFragment();
-        const after = document.createDocumentFragment();
-        items.forEach(it => { before.appendChild(mkClone(it)); after.appendChild(mkClone(it)); });
-        worksGrid.insertBefore(before, worksGrid.firstChild);
-        worksGrid.appendChild(after);
-        worksGrid.dataset.loop = String(items.length);
-    }
-
-    // ── Selected Works slider — arrow buttons scroll one card at a time ───────
-    const slider = document.querySelector('.works-grid');
-    const prevBtn = document.getElementById('works-prev');
-    const nextBtn = document.getElementById('works-next');
-
-    if (slider && prevBtn && nextBtn) {
-        const step = () => {
-            const card = slider.querySelector('.work-card');
-            return card.offsetWidth + parseFloat(getComputedStyle(slider).columnGap || 0);
-        };
-        const cards = Array.from(slider.querySelectorAll('.work-card'));
-        const markActive = () => {
-            const mid = slider.getBoundingClientRect().left + slider.clientWidth / 2;
-            let best = null, bestD = Infinity;
-            cards.forEach(c => {
-                const r = c.getBoundingClientRect();
-                const d = Math.abs(r.left + r.width / 2 - mid);
-                if (d < bestD) { bestD = d; best = c; }
-            });
-            cards.forEach(c => c.classList.toggle('is-active', c === best));
-            if (best && window.loadWorkFrames) window.loadWorkFrames(best);
-        };
-        const N = parseInt(slider.dataset.loop || '0', 10);
-        const jump = (dx) => {
-            slider.style.scrollBehavior = 'auto';
-            slider.style.scrollSnapType = 'none';
-            slider.scrollLeft += dx;
-            slider.getBoundingClientRect(); // flush before restoring
-            slider.style.scrollBehavior = '';
-            slider.style.scrollSnapType = '';
-        };
-        // Once scrolling settles inside a clone set, hop one set over: clones are
-        // identical, so the swap is invisible and the track never runs out.
-        let settle;
-        const recenter = () => {
-            if (!N || slider.classList.contains('is-dragging')) return;
-            const setW = N * step();
-            if (slider.scrollLeft < setW - step() / 2) jump(setW);
-            else if (slider.scrollLeft > 2 * setW - step() / 2) jump(-setW);
-        };
-        const updateButtons = () => {
-            markActive();
-            if (!N) {
-                prevBtn.disabled = slider.scrollLeft <= 2;
-                nextBtn.disabled = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 2;
-                return;
-            }
-            clearTimeout(settle);
-            settle = setTimeout(recenter, 140);
-        };
-        prevBtn.addEventListener('click', () => slider.scrollBy({ left: -step(), behavior: 'smooth' }));
-        nextBtn.addEventListener('click', () => slider.scrollBy({ left: step(), behavior: 'smooth' }));
-        slider.addEventListener('scroll', updateButtons, { passive: true });
-        slider.addEventListener('pointerup', () => { clearTimeout(settle); settle = setTimeout(recenter, 400); });
-        window.addEventListener('resize', () => {
-            if (N) {
-                const idx = cards.findIndex(c => c.classList.contains('is-active'));
-                slider.style.scrollBehavior = 'auto';
-                slider.scrollLeft = (N + (Math.max(idx, 0) % N)) * step();
-                slider.style.scrollBehavior = '';
-            }
-            updateButtons();
-        });
-        if (N) {
-            // Start on the first original card
-            slider.style.scrollBehavior = 'auto';
-            slider.scrollLeft = N * step();
-            slider.style.scrollBehavior = '';
-        }
-        updateButtons();
-        window.addEventListener('load', markActive);
-    }
-
-    // ── Selected Works — mouse drag to scroll (touch uses native swipe) ───────
-    (function () {
-        const track = document.querySelector('.works-grid');
-        if (!track || window.matchMedia('(hover: none)').matches) return;
-        let down = false, moved = false, startX = 0, startLeft = 0;
-
-        track.addEventListener('pointerdown', (e) => {
-            if (e.button !== 0) return;
-            down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
-        });
-        window.addEventListener('pointermove', (e) => {
-            if (!down) return;
-            const dx = e.clientX - startX;
-            if (!moved && Math.abs(dx) > 5) { moved = true; track.classList.add('is-dragging'); }
-            if (moved) track.scrollLeft = startLeft - dx;
-        });
-        window.addEventListener('pointerup', () => {
-            if (!down) return;
-            down = false;
-            track.classList.remove('is-dragging');
-        });
-        // A drag must not open the "View" link it happened to start on
-        track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
-        track.addEventListener('dragstart', (e) => e.preventDefault());
-    })();
-
-    // ── Selected Works — "View" plays the film in a lightbox, on this page ────
+    // ── Films play in a lightbox, on this page ────────────────────────────────
     (function () {
         const modal = document.getElementById('film-modal');
         const frame = document.getElementById('film-frame');
@@ -3190,15 +3400,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (opener) opener.focus();
         };
 
-        // Work cards play their own link; the hero showreel plays its data-showreel link (if set)
-        document.querySelectorAll('.work-view, .hero-reel').forEach(link => {
+        // Work tiles play their own link; the hero showreel plays its data-showreel link (if set);
+        // the BTS button plays the local reel file
+        document.querySelectorAll('.work-view, .hero-reel, .bts-reel').forEach(link => {
             link.addEventListener('click', (e) => {
                 const src = link.classList.contains('hero-reel') ? link.dataset.showreel : link.getAttribute('href');
-                const url = src && embedUrl(src);
-                if (!url) return; // unknown host: fall back to the normal link
+                const local = src && /\.mp4$/i.test(src);
+                const url = src && !local && embedUrl(src);
+                if (!url && !local) return; // unknown host: fall back to the normal link
                 e.preventDefault();
                 opener = link;
-                frame.innerHTML = '<iframe src="' + url + '" title="Film player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+                frame.innerHTML = local
+                    ? '<video src="' + src + '" controls autoplay playsinline></video>'
+                    : '<iframe src="' + url + '" title="Film player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
                 modal.classList.add('is-open');
                 modal.setAttribute('aria-hidden', 'false');
                 document.body.style.overflow = 'hidden';
@@ -3211,29 +3425,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
     })();
 
-    // ── Portfolio Grid — lazy-load ambient video on hover/view ────────────────
-    // Each card shows a static poster by default; the Vimeo player loads only
-    // once the card is near the viewport, then fades in over the poster.
-    const workCards = Array.from(document.querySelectorAll('.work-card'));
-
-    if (workCards.length) {
-        const touchDevice = window.matchMedia('(hover: none)').matches;
-
-        const loadFrame = (card) => {
-            if (!card) return;
-            const frame = card.querySelector('iframe[data-src]');
-            if (!frame || touchDevice) return; // touch devices keep the static poster
-            frame.addEventListener('load', () => frame.classList.add('is-ready'), { once: true });
-            frame.src = frame.dataset.src;
-            frame.removeAttribute('data-src');
-        };
-
-        // The carousel calls this whenever the centered card changes
-        window.loadWorkFrames = (active) => {
-            const k = workCards.indexOf(active);
-            [k - 1, k, k + 1].forEach(n => loadFrame(workCards[n]));
-        };
-        window.loadWorkFrames(document.querySelector('.work-card.is-active') || workCards[0]);
+    // ── Featured work — the lead film plays muted in its tile once it is nearby ─
+    // Pointer devices only; phones and reduced-motion visitors keep the poster.
+    const leadFrame = document.querySelector('.work-tile--main iframe[data-src]');
+    if (leadFrame && 'IntersectionObserver' in window &&
+        !window.matchMedia('(hover: none)').matches &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver((entries) => {
+            if (!entries.some(en => en.isIntersecting)) return;
+            leadFrame.addEventListener('load', () => leadFrame.classList.add('is-ready'), { once: true });
+            leadFrame.src = leadFrame.dataset.src;
+            leadFrame.removeAttribute('data-src');
+            io.disconnect();
+        }, { rootMargin: '200px 0px' });
+        io.observe(leadFrame);
     }
 });
 
