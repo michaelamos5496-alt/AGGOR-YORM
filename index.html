@@ -240,46 +240,6 @@ p {
 .nav-cta:hover svg,
 .btn-pill:hover svg { translate: 2px -2px; }
 
-/* Overlay menu — phones and tablets */
-.nav-links {
-    color: var(--hero-ink); /* pill and overlay are white, so their text stays dark on dark sections */
-    position: fixed;
-    top: 0;
-    right: -100%;
-    height: 100vh;
-    height: 100dvh;
-    width: 100%;
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    transition: right 0.5s ease-in-out;
-}
-
-.nav-links.active { right: 0; }
-
-.nav-link {
-    font-size: 1.5rem;
-    font-weight: 400;
-    position: relative;
-    padding: 0.5rem 1rem;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background-color: var(--hero-ink);
-    transition: var(--transition);
-}
-
-.nav-link:hover::after { width: 100%; }
-
 .menu-toggle {
     display: block;
     cursor: pointer;
@@ -287,20 +247,169 @@ p {
     z-index: 1001;
     padding: 10px;
     margin-right: -10px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .bar {
     display: block;
-    width: 22px;
+    width: 24px;
     height: 2px;
     margin: 5px auto;
+    border-radius: 2px;
     background-color: var(--hero-ink);
-    transition: var(--transition);
+    transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.3s ease, background-color 0.3s ease, width 0.3s ease;
 }
+
+.bar:nth-child(2) { width: 16px; margin-right: 0; }
 
 .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
 .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.menu-extra { display: none; }
+
+/* ── Phones & tablets: full-screen violet panel that wipes down from the top ── */
+@media (max-width: 992px) {
+    .nav-links {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: clamp(6rem, 22vw, 7.5rem) var(--hero-pad) clamp(1.5rem, 6vw, 2.5rem);
+        overflow-y: auto;
+        color: #FFFFFF;
+        background:
+            radial-gradient(70% 45% at 100% 0%, rgba(143, 70, 245, 0.5) 0%, rgba(143, 70, 245, 0) 70%),
+            radial-gradient(60% 40% at 0% 100%, rgba(112, 40, 245, 0.4) 0%, rgba(112, 40, 245, 0) 70%),
+            #0B0714;
+        counter-reset: menu;
+        clip-path: inset(0 0 100% 0);
+        visibility: hidden;
+        transition: clip-path 0.65s cubic-bezier(0.7, 0, 0.2, 1), visibility 0s linear 0.65s;
+    }
+
+    .nav-links.active {
+        clip-path: inset(0 0 0 0);
+        visibility: visible;
+        transition: clip-path 0.65s cubic-bezier(0.7, 0, 0.2, 1), visibility 0s;
+    }
+
+    /* Decorative loop in the corner */
+    .nav-links::before {
+        content: '';
+        position: absolute;
+        right: -18%;
+        top: 8%;
+        width: 70%;
+        aspect-ratio: 1;
+        border: 22px solid rgba(143, 70, 245, 0.35);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .nav-links > li {
+        position: relative;
+        opacity: 0;
+        translate: 0 24px;
+        transition: opacity 0.4s ease, translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .nav-links.active > li { opacity: 1; translate: 0 0; }
+    .nav-links.active > li:nth-child(1) { transition-delay: 0.18s; }
+    .nav-links.active > li:nth-child(2) { transition-delay: 0.24s; }
+    .nav-links.active > li:nth-child(3) { transition-delay: 0.30s; }
+    .nav-links.active > li:nth-child(4) { transition-delay: 0.36s; }
+    .nav-links.active > li:nth-child(5) { transition-delay: 0.42s; }
+    .nav-links.active > li:nth-child(n + 6) { transition-delay: 0.5s; }
+
+    .nav-link {
+        counter-increment: menu;
+        display: flex;
+        align-items: baseline;
+        gap: 0.9rem;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid rgba(185, 140, 255, 0.18);
+        font-size: clamp(2.1rem, 9.5vw, 3.6rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        transition: color 0.3s ease, padding-left 0.3s ease;
+    }
+
+    .nav-link::before {
+        content: counter(menu, decimal-leading-zero);
+        min-width: 1.6rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        color: #B98CFF;
+        translate: 0 -0.9em;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible { color: #B98CFF; padding-left: 0.4rem; outline: none; }
+
+    /* Extras: CTA, email, socials, script sign-off */
+    .menu-extra { display: block; }
+    .menu-extra--cta { margin-top: auto; padding-top: 2.2rem; }
+
+    .menu-extra .btn-pill { background: #C9A6FF; color: var(--ay-ink); }
+
+    .menu-mail {
+        display: inline-block;
+        margin-top: 1.2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: rgba(236, 226, 255, 0.8);
+        border-bottom: 1px solid rgba(185, 140, 255, 0.5);
+    }
+
+    .menu-extra--foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 1.6rem;
+    }
+
+    .menu-extra .social-links { display: flex; gap: 0.6rem; }
+
+    .menu-extra .social-link {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 2.8rem;
+        height: 2.8rem;
+        border-radius: 50%;
+        color: #FFFFFF;
+    }
+
+    .menu-extra .social-link svg { width: 1.1rem; height: 1.1rem; }
+
+    .nav-links .menu-note {
+        margin: 0;
+        font-family: var(--font-script);
+        font-size: 1.9rem;
+        line-height: 0.9;
+        color: rgba(236, 226, 255, 0.7);
+        rotate: -8deg;
+        text-align: right;
+    }
+
+    /* Open menu: wordmark and the close (×) turn white over the panel */
+    body.menu-open .navbar { color: #FFFFFF; }
+    body.menu-open .bar { background-color: #FFFFFF; }
+}
+
+@media (max-width: 992px) and (prefers-reduced-motion: reduce) {
+    .nav-links,
+    .nav-links.active,
+    .nav-links > li { transition: none; }
+}
 
 /* The nav steps out of the way while Selected Works is on screen */
 .navbar { transition: translate 0.5s ease, opacity 0.4s ease; }
@@ -328,8 +437,11 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
         transform: translate(-50%, -50%);
         height: auto;
         width: auto;
+        display: flex;
+        align-items: center;
         flex-direction: row;
         gap: clamp(0rem, 1vw, 1.25rem);
+        color: var(--ay-ink); /* stays dark on its white pill, even over dark sections */
         background: transparent;
         padding: 0.3rem;
         border-radius: 999px;
@@ -353,7 +465,6 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
         white-space: nowrap;
     }
 
-    .nav-link::after { display: none; }
     .nav-link:hover,
     .nav-link.is-current { background: rgba(112, 40, 245, 0.08); }
 }
@@ -1031,146 +1142,349 @@ body:not(.menu-open) .navbar.on-dark .nav-cta { background: #FFFFFF; color: var(
     flex: 1;
 }
 
-/* ── Clientele & Notable Projects: two auto-scrolling marquee rows ── */
-.credit-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.credit-row {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-}
-
-.credit-track {
-    display: flex;
-    gap: 1.25rem;
-    width: max-content;
-    animation: credit-scroll-left 32s linear infinite;
-}
-
-.credit-row--right .credit-track {
-    animation-name: credit-scroll-right;
-}
-
-.credit-row:hover .credit-track {
-    animation-play-state: paused;
-}
-
-@keyframes credit-scroll-left {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-1 * var(--loop, 50%))); }
-}
-
-@keyframes credit-scroll-right {
-    from { transform: translateX(calc(-1 * var(--loop, 50%))); }
-    to { transform: translateX(0); }
-}
-
-.credit-card {
-    flex: 0 0 clamp(160px, 18vw, 210px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.9rem;
-    padding: 2rem 1rem;
-    border-radius: 1.4rem;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    background: linear-gradient(160deg, #FFFFFF 0%, #FFFFFF 55%, #F4ECFF 100%);
-    color: var(--ay-ink);
-    font-family: var(--font-display);
-    box-shadow: inset 0 1px 0 #FFFFFF, 0 24px 50px -30px rgba(112, 40, 245, 0.7);
-    transition: translate 0.4s ease, box-shadow 0.4s ease;
-}
-
-.credit-card:hover {
-    translate: 0 -4px;
-    box-shadow: inset 0 1px 0 #FFFFFF, 0 30px 60px -28px rgba(140, 70, 245, 0.9);
-}
-
-/* Clientele — deep violet stage between the lavender pages */
+/* ── Clientele & Notable Projects: dark violet stage, numbered rows of glass cards ── */
 .clientele.section {
     position: relative;
     overflow: hidden;
     isolation: isolate;
     padding: 0;
     color: #FFFFFF;
+    font-family: var(--font-display);
     background:
-        radial-gradient(45% 60% at 85% 10%, rgba(143, 70, 245, 0.45) 0%, rgba(143, 70, 245, 0) 70%),
-        radial-gradient(40% 50% at 5% 100%, rgba(112, 40, 245, 0.35) 0%, rgba(112, 40, 245, 0) 70%),
+        radial-gradient(40% 55% at 78% 18%, rgba(143, 70, 245, 0.42) 0%, rgba(143, 70, 245, 0) 70%),
+        radial-gradient(40% 50% at 4% 100%, rgba(112, 40, 245, 0.32) 0%, rgba(112, 40, 245, 0) 70%),
         linear-gradient(180deg, #140A28 0%, #0B0714 100%);
 }
 
 .clientele-card {
     position: relative;
     z-index: 1;
-    overflow: hidden;
-    color: #FFFFFF;
-    padding: clamp(5rem, 9vw, 8rem) 0;
+    width: calc(100% - var(--hero-pad) * 2);
+    margin: 0 auto;
+    padding: clamp(5rem, 9vw, 7.5rem) 0 clamp(3rem, 6vw, 4.5rem);
 }
 
-.clientele-card > .sec-head {
-    margin: 0 var(--hero-pad) clamp(2.5rem, 5vw, 4.5rem);
-}
+.sec-loop--clientele { right: 8%; top: -4%; width: min(34vw, 520px); }
+.sec-loop--clientele path { stroke: rgba(143, 70, 245, 0.55); stroke-width: 34; }
 
-.sec-loop--clientele { right: -6%; top: -10%; width: min(46vw, 640px); }
-.sec-loop--clientele path { stroke: rgba(182, 107, 250, 0.35); stroke-width: 30; }
-
-.credit-mark {
+.cl-head {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    border: 1.5px solid var(--ay-purple);
-    border-radius: 50%;
-    color: var(--ay-purple);
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
-.credit-logo {
+.clientele .sec-title { font-size: clamp(2.6rem, 6.2vw, 7rem); }
+.clientele .sec-title span:first-child { text-shadow: 0 0 40px rgba(255, 255, 255, 0.25); }
+
+.clientele .cl-lede {
+    max-width: 34rem;
+    margin: clamp(1.2rem, 3vw, 1.8rem) 0 0;
+    font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(236, 226, 255, 0.72);
+}
+
+.cl-aside {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
+    align-items: flex-end;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    flex-shrink: 0;
 }
 
-.credit-logo img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+.clientele .cl-note {
+    margin: 0;
+    font-family: var(--font-script);
+    font-size: clamp(1.8rem, 2.6vw, 2.8rem);
+    line-height: 0.95;
+    color: rgba(236, 226, 255, 0.7);
+    rotate: -12deg;
+    white-space: nowrap;
 }
 
-.credit-logo--wide {
-    width: 100%;
-}
+.cl-note span { display: block; }
+.cl-note span:nth-child(2) { padding-left: 0.5em; }
+.cl-note span:nth-child(3) { padding-left: 0.9em; }
 
-/* Charter House's wordmark is white, so it sits on a dark tile */
-.credit-logo--dark {
-    width: 72px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    background: #111111;
-    padding: 4px;
-}
-
-.credit-name {
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.credit-tag {
-    font-size: 0.65rem;
+.cl-tags {
+    position: relative;
+    margin: 0;
+    padding-left: 2rem;
+    text-align: right;
+    font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.26em;
+    line-height: 2;
     text-transform: uppercase;
-    color: var(--ay-purple);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cl-tags::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1.1rem;
+    height: 1.1rem;
+    translate: 0 -50%;
+    border: 1.5px solid rgba(185, 140, 255, 0.7);
+    border-radius: 50%;
+}
+
+/* Row heading: numbered badge, label, hairline, hint, arrows */
+.cl-group + .cl-group { margin-top: clamp(2rem, 4vw, 3rem); }
+
+.cl-row-head {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: 1.1rem;
+}
+
+.cl-num {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(185, 140, 255, 0.7);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.cl-label {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.cl-rule { flex: 1; height: 1px; background: rgba(185, 140, 255, 0.25); }
+
+.cl-hint {
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #B98CFF;
+    white-space: nowrap;
+}
+
+.cl-arrows { display: flex; gap: 0.5rem; }
+
+.cl-arrow {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.cl-arrow svg { width: 1rem; height: 1rem; }
+.cl-arrow:hover:not(:disabled) { background: #FFFFFF; color: var(--ay-purple); }
+.cl-arrow:disabled { opacity: 0.3; cursor: default; }
+
+/* Scrolling track: five across on desktop, swipe on smaller screens */
+.cl-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 4 * 1rem) / 5);
+    gap: 1rem;
+    margin: 0;
+    padding: 0.4rem 0 0.8rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.cl-track::-webkit-scrollbar { display: none; }
+
+.cl-track--projects { grid-auto-columns: calc((100% - 5 * 1rem) / 6); } /* wide card spans two */
+.cl-track--projects .cl-card--wide { grid-column: span 2; }
+
+.cl-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: clamp(10.5rem, 13vw, 12rem);
+    padding: 2.6rem 1rem 1.1rem;
+    border-radius: 1.2rem;
+    text-align: center;
+    scroll-snap-align: start;
+    transition: translate 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.cl-card:hover {
+    translate: 0 -4px;
+    border-color: rgba(185, 140, 255, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 26px 50px -24px rgba(112, 40, 245, 0.7);
+}
+
+.cl-idx {
+    position: absolute;
+    top: 0.9rem;
+    left: 1rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cl-logo {
+    display: grid;
+    place-items: center;
+    height: 4.2rem;
+    width: 100%;
+    margin-bottom: 0.9rem;
+}
+
+.cl-logo img { width: auto; max-width: 70%; max-height: 4.2rem; object-fit: contain; }
+
+.cl-mono {
+    display: grid;
+    place-items: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.cl-name { font-size: 0.98rem; font-weight: 500; letter-spacing: -0.02em; }
+
+.cl-tag {
+    margin-top: 0.35rem;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #B98CFF;
+}
+
+/* Project cards: real stills where we have them, a violet stage where we don't */
+.cl-card--project {
+    align-items: flex-start;
+    text-align: left;
+    min-height: clamp(12rem, 15vw, 14rem);
+    padding: 2.6rem 1.3rem 1.2rem;
+    background:
+        linear-gradient(to top, rgba(11, 7, 20, 0.92) 0%, rgba(11, 7, 20, 0.35) 60%, rgba(11, 7, 20, 0.55) 100%),
+        var(--bg, radial-gradient(80% 90% at 70% 20%, rgba(143, 70, 245, 0.55) 0%, rgba(26, 14, 52, 0.9) 70%)) center / cover no-repeat,
+        #140A28;
+}
+
+.cl-card--project .cl-logo { flex: 1; height: auto; min-height: 4.5rem; }
+.cl-card--project .cl-logo img { max-width: 62%; max-height: 4.5rem; }
+.cl-card--wide .cl-logo img { max-width: 46%; max-height: 6rem; }
+
+.cl-go {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #FFFFFF;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.cl-go svg { width: 0.95rem; height: 0.95rem; }
+.cl-go:hover { background: #FFFFFF; color: var(--ay-purple); }
+.cl-go::after { content: ''; position: absolute; inset: -40rem; } /* whole card is the hit area */
+.cl-card:has(.cl-go) { cursor: pointer; }
+.cl-card:has(.cl-go) .cl-name { padding-right: 2.6rem; }
+
+/* Closing bar */
+.cl-cta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.1fr) minmax(15rem, 1fr) auto;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.5rem, 3vw, 3rem);
+    border-radius: 1.4rem;
+}
+
+.clientele .cl-cta-eyebrow {
+    margin: 0;
+    padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    border-right: 1px solid rgba(185, 140, 255, 0.3);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    line-height: 1.8;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.clientele .cl-cta-title {
+    margin: 0;
+    font-size: clamp(1.6rem, 2.8vw, 2.8rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.cl-cta-title span { color: #B98CFF; }
+
+.clientele .cl-cta-text {
+    margin: 0;
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+    border-left: 1px solid rgba(185, 140, 255, 0.3);
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(236, 226, 255, 0.72);
+    max-width: 24rem;
+}
+
+.cl-cta-btn { background: #C9A6FF; color: var(--ay-ink); }
+.cl-cta-btn:hover { background: #FFFFFF; color: var(--ay-purple); }
+
+@media (max-width: 1100px) {
+    .cl-track { grid-auto-columns: calc((100% - 2 * 1rem) / 3.2); }
+    .cl-track--projects { grid-auto-columns: calc((100% - 2 * 1rem) / 3.4); }
+    .cl-cta { grid-template-columns: 1fr auto; }
+    .clientele .cl-cta-eyebrow,
+    .clientele .cl-cta-text { border: 0; padding: 0; }
+    .cl-cta-eyebrow { grid-column: 1 / -1; }
+    .clientele .cl-cta-text { grid-column: 1; }
+    .cl-cta-btn { grid-column: 2; grid-row: 2 / span 2; }
+}
+
+@media (max-width: 860px) {
+    .cl-head { flex-direction: column; align-items: flex-start; }
+    .cl-aside { display: none; }
+    .cl-hint { display: none; }
+}
+
+@media (max-width: 640px) {
+    .cl-track { grid-auto-columns: 62%; }
+    .cl-track--projects { grid-auto-columns: 72%; }
+    .cl-track--projects .cl-card--wide { grid-column: span 1; }
+    .cl-label { font-size: 0.7rem; letter-spacing: 0.22em; }
+    .cl-cta { grid-template-columns: 1fr; }
+    .cl-cta-btn { grid-column: 1; grid-row: auto; justify-self: start; }
 }
 
 /* ── Section headings: the hero's type system for every page section ── */
@@ -1681,6 +1995,144 @@ html.js .split {
     .work-tile--main .work-tile-credit { display: none; }
 }
 
+/* ── Behind-the-scenes gallery lightbox ── */
+button.btn-pill { border: 0; font-family: inherit; cursor: pointer; }
+.bts-collage [data-gallery-open] { cursor: zoom-in; }
+
+.gallery {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(0.75rem, 2vh, 1.25rem);
+    padding: clamp(1rem, 3vw, 2rem);
+    background:
+        radial-gradient(50% 50% at 50% 40%, rgba(112, 40, 245, 0.25) 0%, rgba(112, 40, 245, 0) 70%),
+        rgba(11, 7, 20, 0.95);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    color: #FFFFFF;
+    font-family: var(--font-display);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.gallery.is-open { opacity: 1; visibility: visible; }
+
+.gallery-top {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.gallery .gallery-title {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #B98CFF;
+}
+
+.gallery-count {
+    margin-left: auto;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.gallery-close,
+.gallery-nav {
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: #FFFFFF;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.gallery-close { width: 3rem; height: 3rem; font-size: 1.5rem; line-height: 1; }
+
+.gallery-close:hover,
+.gallery-nav:hover { background: #FFFFFF; color: var(--ay-purple); }
+
+.gallery-stage {
+    position: relative;
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: pan-y; /* horizontal swipes change photo */
+}
+
+.gallery-stage img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 1rem;
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.8);
+    transition: opacity 0.3s ease;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.gallery-stage img.is-loading { opacity: 0; }
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    width: 3.4rem;
+    height: 3.4rem;
+    translate: 0 -50%;
+}
+
+.gallery-nav svg { width: 1.3rem; height: 1.3rem; }
+.gallery-prev { left: clamp(0.25rem, 2vw, 1.5rem); }
+.gallery-next { right: clamp(0.25rem, 2vw, 1.5rem); }
+
+.gallery-thumbs {
+    display: flex;
+    justify-content: safe center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.25rem 0.1rem;
+    scrollbar-width: none;
+}
+
+.gallery-thumbs::-webkit-scrollbar { display: none; }
+
+.gallery-thumbs button {
+    flex: 0 0 auto;
+    width: 3.6rem;
+    height: 4.5rem;
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid transparent;
+    border-radius: 0.6rem;
+    background: #1A1426;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.gallery-thumbs button:hover { opacity: 0.85; }
+.gallery-thumbs button[aria-current="true"] { opacity: 1; border-color: #B98CFF; }
+.gallery-thumbs img { width: 100%; height: 100%; object-fit: cover; }
+
+.gallery button:focus-visible { outline: 2px solid #B98CFF; outline-offset: 3px; }
+
+@media (max-width: 640px) {
+    .gallery-nav { width: 2.8rem; height: 2.8rem; }
+    .gallery-thumbs button { width: 2.8rem; height: 3.5rem; }
+}
+
 /* In-page video player */
 .film-modal {
     position: fixed;
@@ -2031,11 +2483,27 @@ html.js .split {
     .bts-note { font-size: 1.5rem; bottom: -8%; }
 }
 
-/* ── Kind words (hidden until a real testimonial is added) ── */
+/* ── Kind words: frosted quote card; shows an invitation until real quotes are added ── */
 .kind-words.section {
-    padding: clamp(5rem, 9vw, 7rem) 0;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5rem, 9vw, 8rem) 0 clamp(3rem, 6vw, 5rem);
     background: var(--ay-bg);
     font-family: var(--font-display);
+}
+
+/* Colour behind the glass */
+.kind-words.section::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 10% 0 0 40%;
+    background:
+        radial-gradient(30% 50% at 30% 50%, rgba(143, 70, 245, 0.45) 0%, rgba(143, 70, 245, 0) 70%),
+        radial-gradient(30% 50% at 75% 40%, rgba(182, 107, 250, 0.45) 0%, rgba(182, 107, 250, 0) 70%);
+    filter: blur(30px);
+    pointer-events: none;
 }
 
 .kind-wrap {
@@ -2047,26 +2515,224 @@ html.js .split {
     gap: clamp(2rem, 5vw, 5rem);
 }
 
-.kind-quote {
-    margin: 0;
-    padding-left: clamp(1.5rem, 3vw, 3rem);
-    border-left: 1px solid rgba(112, 40, 245, 0.25);
+.kind-head .sec-title { font-size: clamp(2.6rem, 5vw, 5.6rem); }
+
+.kind-card {
+    position: relative;
+    isolation: isolate;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    border-radius: clamp(2.5rem, 5vw, 5rem) 1.5rem clamp(2.5rem, 5vw, 5rem) 1.5rem;
 }
 
-.kind-quote blockquote p {
+.kind-mark {
+    width: clamp(2.4rem, 3.6vw, 3.4rem);
+    fill: var(--ay-purple);
+    margin-bottom: 1.2rem;
+}
+
+.kind-quote { margin: 0; }
+.kind-quote[hidden] { display: none; }
+
+.kind-quote blockquote p,
+.kind-invite p {
     font-size: clamp(1.15rem, 1.8vw, 1.6rem);
     font-weight: 400;
     line-height: 1.4;
     letter-spacing: -0.02em;
     color: var(--ay-ink);
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.6rem;
 }
 
-.kind-quote figcaption strong { display: block; font-weight: 600; }
+.kind-quote figcaption strong { display: block; font-weight: 600; color: var(--ay-ink); }
+
+/* Placeholder reads as a template, not a real endorsement */
+.kind-quote--placeholder blockquote p { color: var(--ay-muted); }
+.kind-quote--placeholder figcaption { padding-bottom: 1.4rem; margin-bottom: 1.4rem; border-bottom: 1px solid rgba(112, 40, 245, 0.15); }
+
+.kind-card .kind-invite-lead {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--ay-ink);
+    margin-bottom: 1rem;
+}
 .kind-quote figcaption span { font-size: 0.85rem; color: var(--ay-muted); }
+
+.kind-controls {
+    position: absolute;
+    right: clamp(1.5rem, 3vw, 2.5rem);
+    bottom: clamp(1.5rem, 3vw, 2.5rem);
+    display: flex;
+    gap: 0.6rem;
+}
+
+.kind-controls[hidden] { display: none; }
+
+.kind-btn {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    color: var(--ay-ink);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.kind-btn svg { width: 1.1rem; height: 1.1rem; }
+.kind-btn:hover { background: var(--ay-purple); color: #FFFFFF; }
+
+.kind-share {
+    margin-top: clamp(1.2rem, 3vw, 1.8rem);
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--ay-purple);
+    cursor: pointer;
+    border-bottom: 1px solid currentColor;
+}
+
+.kind-share:hover { color: var(--ay-ink); }
+
+/* Testimonial pop-up */
+.kind-dialog {
+    width: min(560px, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    border-radius: 1.75rem;
+    color: var(--ay-ink);
+    font-family: var(--font-display);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(248, 238, 255, 0.86));
+}
+
+.kind-dialog::backdrop {
+    background: rgba(11, 7, 20, 0.55);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.kind-form,
+.kind-done {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.kind-done[hidden],
+.kind-form[hidden] { display: none; }
+
+.kind-dialog .sec-eyebrow { margin: 0; }
+
+.kind-dialog-title {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    text-transform: uppercase;
+}
+
+.kind-dialog .kind-dialog-note {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--ay-muted);
+    margin: 0 0 0.4rem;
+}
+
+.kind-dialog-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(112, 40, 245, 0.08);
+    color: var(--ay-ink);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.kind-dialog-close:hover { background: var(--ay-purple); color: #FFFFFF; }
+
+.kind-field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.kind-field em { font-style: normal; font-weight: 400; color: var(--ay-muted); }
+
+.kind-field input,
+.kind-field textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(112, 40, 245, 0.18);
+    border-radius: 0.9rem;
+    background: rgba(255, 255, 255, 0.75);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ay-ink);
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kind-field input:focus,
+.kind-field textarea:focus {
+    outline: none;
+    border-color: var(--ay-purple);
+    box-shadow: 0 0 0 4px rgba(112, 40, 245, 0.15);
+}
+
+.kind-field [aria-invalid="true"] { border-color: #D2345C; }
+
+.kind-count {
+    align-self: flex-end;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--ay-muted);
+}
+
+.kind-consent {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--ay-muted);
+}
+
+.kind-consent input { margin-top: 0.2rem; accent-color: var(--ay-purple); }
+
+.kind-honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.kind-dialog .kind-status {
+    min-height: 1.2em;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #D2345C;
+}
+
+.kind-dialog .kind-status a { color: var(--ay-purple); text-decoration: underline; }
+.kind-submit,
+.kind-done .btn-pill { align-self: flex-start; }
+.kind-submit[disabled] { opacity: 0.6; cursor: progress; }
 
 @media (max-width: 860px) {
     .kind-wrap { grid-template-columns: 1fr; }
+    .kind-controls { position: static; margin-top: 1.5rem; }
 }
 
 @media (max-width: 640px) {
@@ -2326,11 +2992,6 @@ html.gsap-on .reveal {
         font-size: 1rem;
     }
 
-    .credit-card {
-        flex-basis: 42vw;
-        padding: 1.25rem 0.75rem;
-    }
-
     .email-link {
         word-break: break-word;
     }
@@ -2352,10 +3013,6 @@ html.gsap-on .reveal {
     .work-media iframe,
     .nav-links {
         transition: none;
-    }
-
-    .credit-track {
-        animation: none;
     }
 }
     </style>
@@ -2417,6 +3074,19 @@ html.gsap-on .reveal {
                 <li><a href="#services" class="nav-link">Services</a></li>
                 <li><a href="#bts" class="nav-link">Behind The Scenes</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li class="menu-extra menu-extra--cta">
+                    <a href="#contact" class="btn-pill nav-link-cta">Start a Project
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><br>
+                    <a href="mailto:info@aggoryorm.com" class="menu-mail">info@aggoryorm.com</a>
+                </li>
+                <li class="menu-extra menu-extra--foot">
+                    <div class="social-links">
+                        <a href="#" class="social-link glass-dark" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
+                        <a href="#" class="social-link glass-dark" aria-label="Vimeo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9c2-1.5 3.6-3 4.6-1.6.9 1.2 1.3 7.6 3 7.6 1.7 0 4.7-5.4 4.1-7.2-.7-2-3.2-.6-3.7.2.7-3.6 4.4-4.8 6.6-3.6 2.4 1.4.6 6-1.8 9.6-2.7 4-5.6 6.4-7.2 6-1.8-.6-2.4-9.4-3.4-10.4-.8-.8-1.6.2-2.2.6Z"/></svg></a>
+                        <a href="#" class="social-link glass-dark" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg></a>
+                    </div>
+                    <p class="menu-note" aria-hidden="true">Stories<br>People Remember.</p>
+                </li>
             </ul>
             <a href="#contact" class="nav-cta">Start a Project
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
@@ -2672,124 +3342,71 @@ html.gsap-on .reveal {
         </section>
 
         <!-- Clientele & Projects -->
-        <section id="clientele" class="clientele section reveal">
-            <svg class="sec-loop sec-loop--clientele" viewBox="0 0 640 520" aria-hidden="true" focusable="false">
-                <path pathLength="1" d="M640 40C520 10 380 40 330 140C290 220 360 300 430 260C500 220 470 120 380 110C250 96 150 210 120 330C95 430 40 480 -20 500"/>
+        <section id="clientele" class="clientele section">
+            <svg class="sec-loop sec-loop--clientele" viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                <path pathLength="1" d="M60 760C120 560 260 300 400 160C470 90 560 60 590 120C620 190 520 260 450 250C360 236 380 120 470 80C540 50 610 70 640 110"/>
             </svg>
             <div class="clientele-card">
-                <div class="sec-head">
-                    <p class="sec-eyebrow">Selected credits</p>
-                    <h2 class="sec-title"><span>Clientele &amp;</span><span class="accent">Notable Projects.</span></h2>
+                <div class="cl-head">
+                    <div class="sec-head">
+                        <p class="sec-eyebrow">Selected credits</p>
+                        <h2 class="sec-title"><span>Clientele &amp;</span><span class="accent">Notable Projects.</span></h2>
+                        <p class="cl-lede">A selection of brands, organisations and cultural projects I've had the privilege to collaborate with, from commercial campaigns to defining moments in African media, music and entertainment.</p>
+                    </div>
+                    <div class="cl-aside" aria-hidden="true">
+                        <p class="cl-note"><span>Stories</span><span>People</span><span>Remember.</span></p>
+                        <ul class="cl-tags"><li>Film</li><li>Culture</li><li>People</li><li>Impact</li></ul>
+                    </div>
                 </div>
-                <div class="credit-rows">
-                    <div class="credit-row credit-row--left">
-                        <div class="credit-track">
-                            <div class="credit-card">
-                                <span class="credit-logo"><img src="assets/fanmilk.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">FanMilk</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo"><img src="assets/echo-house.webp" alt="" loading="lazy"></span>
-                                <span class="credit-name">Echo House</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo credit-logo--dark"><img src="assets/charter-house.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Charter House</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo"><img src="assets/burniton.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Burniton Group</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo"><img src="assets/oneshot.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">One Shot Studios</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo"><img src="assets/fanmilk.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">FanMilk</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo"><img src="assets/echo-house.webp" alt="" loading="lazy"></span>
-                                <span class="credit-name">Echo House</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo credit-logo--dark"><img src="assets/charter-house.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Charter House</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo"><img src="assets/burniton.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Burniton Group</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo"><img src="assets/oneshot.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">One Shot Studios</span>
-                                <span class="credit-tag">Client</span>
-                            </div>
+
+                <div class="cl-group">
+                    <div class="cl-row-head">
+                        <span class="cl-num">01</span>
+                        <h3 class="cl-label">Clientele</h3>
+                        <span class="cl-rule" aria-hidden="true"></span>
+                        <span class="cl-hint">Brands I've worked with</span>
+                        <div class="cl-arrows">
+                            <button class="cl-arrow glass-dark" type="button" data-cl-scroll="-1" aria-label="Previous clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+                            <button class="cl-arrow glass-dark" type="button" data-cl-scroll="1" aria-label="More clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
                         </div>
                     </div>
-                    <div class="credit-row credit-row--right">
-                        <div class="credit-track">
-                            <div class="credit-card">
-                                <span class="credit-mark">MM</span>
-                                <span class="credit-name">Miss Malaika</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo credit-logo--wide"><img src="assets/tgma-27.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Telecel Music Awards</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo credit-logo--wide"><img src="assets/besties.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Besties</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-mark">BS</span>
-                                <span class="credit-name">Black Star Line</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card">
-                                <span class="credit-logo credit-logo--wide"><img src="assets/global-citizen.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Global Citizen</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-mark">MM</span>
-                                <span class="credit-name">Miss Malaika</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo credit-logo--wide"><img src="assets/tgma-27.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Telecel Music Awards</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo credit-logo--wide"><img src="assets/besties.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Besties</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-mark">BS</span>
-                                <span class="credit-name">Black Star Line</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
-                            <div class="credit-card" aria-hidden="true">
-                                <span class="credit-logo credit-logo--wide"><img src="assets/global-citizen.png" alt="" loading="lazy"></span>
-                                <span class="credit-name">Global Citizen</span>
-                                <span class="credit-tag">Project</span>
-                            </div>
+                    <ul class="cl-track" aria-label="Clients">
+                        <li class="cl-card glass-dark"><span class="cl-idx">01</span><span class="cl-logo"><img src="assets/charter-house.png" alt="" loading="lazy"></span><span class="cl-name">Charter House</span><span class="cl-tag">Client</span></li>
+                        <li class="cl-card glass-dark"><span class="cl-idx">02</span><span class="cl-logo"><img src="assets/logos-dark/burniton.png" alt="" loading="lazy"></span><span class="cl-name">Burniton Group</span><span class="cl-tag">Client</span></li>
+                        <li class="cl-card glass-dark"><span class="cl-idx">03</span><span class="cl-logo"><img src="assets/oneshot.png" alt="" loading="lazy"></span><span class="cl-name">One Shot Studios</span><span class="cl-tag">Client</span></li>
+                        <li class="cl-card glass-dark"><span class="cl-idx">04</span><span class="cl-logo"><img src="assets/fanmilk.png" alt="" loading="lazy"></span><span class="cl-name">FanMilk</span><span class="cl-tag">Client</span></li>
+                        <li class="cl-card glass-dark"><span class="cl-idx">05</span><span class="cl-logo"><img src="assets/echo-house.webp" alt="" loading="lazy"></span><span class="cl-name">Echo House</span><span class="cl-tag">Client</span></li>
+                    </ul>
+                </div>
+
+                <div class="cl-group">
+                    <div class="cl-row-head">
+                        <span class="cl-num">02</span>
+                        <h3 class="cl-label">Notable Projects</h3>
+                        <span class="cl-rule" aria-hidden="true"></span>
+                        <span class="cl-hint">Selected work</span>
+                        <div class="cl-arrows">
+                            <button class="cl-arrow glass-dark" type="button" data-cl-scroll="-1" aria-label="Previous projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+                            <button class="cl-arrow glass-dark" type="button" data-cl-scroll="1" aria-label="More projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
                         </div>
                     </div>
+                    <ul class="cl-track cl-track--projects" aria-label="Notable projects">
+                        <li class="cl-card cl-card--project cl-card--wide glass-dark"><span class="cl-idx">01</span><span class="cl-logo"><img src="assets/besties.png" alt="" loading="lazy"></span><span class="cl-name">Besties</span><span class="cl-tag">Project</span></li>
+                        <li class="cl-card cl-card--project glass-dark" style="--bg: url('assets/youtube-Tyat2z0aMII.jpg')"><span class="cl-idx">02</span><span class="cl-logo"><span class="cl-mono">MM</span></span><span class="cl-name">Miss Malaika</span><span class="cl-tag">Project</span>
+                            <a class="cl-go work-view" href="https://youtu.be/Tyat2z0aMII" aria-label="Watch Miss Malaika Ghana 2023 finale, behind the scenes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+                        <li class="cl-card cl-card--project glass-dark" style="--bg: url('assets/youtube-rvXHNQqAfHM.jpg')"><span class="cl-idx">03</span><span class="cl-logo"><img src="assets/tgma-27.png" alt="" loading="lazy"></span><span class="cl-name">Telecel Music Awards</span><span class="cl-tag">Project</span>
+                            <a class="cl-go work-view" href="https://youtu.be/rvXHNQqAfHM" aria-label="Watch TGMA 2024, behind the scenes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+                        <li class="cl-card cl-card--project glass-dark"><span class="cl-idx">04</span><span class="cl-logo"><img src="assets/logos-dark/global-citizen.png" alt="" loading="lazy"></span><span class="cl-name">Global Citizen</span><span class="cl-tag">Project</span></li>
+                        <li class="cl-card cl-card--project glass-dark"><span class="cl-idx">05</span><span class="cl-logo"><span class="cl-mono">BS</span></span><span class="cl-name">Black Star Line</span><span class="cl-tag">Project</span></li>
+                    </ul>
+                </div>
+
+                <div class="cl-cta glass-dark">
+                    <p class="cl-cta-eyebrow">Let's<br>create together</p>
+                    <p class="cl-cta-title">Your brand <span>could be next.</span></p>
+                    <p class="cl-cta-text">I'm always open to meaningful collaborations with brands, creators and organisations who want to tell authentic stories.</p>
+                    <a href="#contact" class="btn-pill cl-cta-btn">Let's Collaborate
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
             </div>
         </section>
@@ -2803,32 +3420,54 @@ html.gsap-on .reveal {
                         <h2 class="sec-title"><span>The real</span><span class="accent">stories.</span></h2>
                         <p class="bts-intro split">A closer look at the sets, crews and quiet moments between takes that shape
                             every finished frame.</p>
-                        <a href="assets/about-video.mp4" class="btn-pill btn-pill--light bts-reel">Watch the BTS Reel
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                        <button type="button" class="btn-pill btn-pill--light" data-gallery-open="0">View the Gallery
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
                     </div>
                     <div class="bts-collage" aria-hidden="true">
-                        <span class="strip strip--main"><img src="assets/bts/thumbs/JHOE4438.jpg" alt="" loading="lazy"></span>
-                        <span class="strip strip--v strip--b"><img src="assets/bts/thumbs/JHOE4306.jpg" alt="" loading="lazy"></span>
-                        <span class="strip strip--v strip--c"><img src="assets/bts/thumbs/JHOE4396.jpg" alt="" loading="lazy"></span>
-                        <span class="strip strip--v strip--d"><img src="assets/bts/thumbs/JHOE4152.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--main" data-gallery-open="12"><img src="assets/bts/thumbs/JHOE4438.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--v strip--b" data-gallery-open="8"><img src="assets/bts/thumbs/JHOE4306.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--v strip--c" data-gallery-open="10"><img src="assets/bts/thumbs/JHOE4396.jpg" alt="" loading="lazy"></span>
+                        <span class="strip strip--v strip--d" data-gallery-open="0"><img src="assets/bts/thumbs/JHOE4152.jpg" alt="" loading="lazy"></span>
                         <span class="bts-note"><span>Real People.</span><span>Real Moments.</span></span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- KIND WORDS — hidden until a real, approved testimonial exists.
-             To publish: replace the quote, name and role below, then delete the `hidden` attribute. -->
-        <section id="kind-words" class="kind-words section" hidden>
+        <!-- KIND WORDS — testimonials. Add each real, approved quote as a <figure class="kind-quote">
+             inside #kind-slides by copying the template below. Until there is one, an invitation shows. -->
+        <section id="kind-words" class="kind-words section">
             <div class="kind-wrap">
-                <div>
+                <div class="kind-head">
                     <p class="sec-eyebrow">Kind words</p>
                     <h2 class="sec-title"><span>Trusted by</span><span class="accent">visionaries.</span></h2>
+                    <button type="button" class="kind-share" data-kind-open>Worked with Aggor? Share your experience &rarr;</button>
                 </div>
-                <figure class="kind-quote">
-                    <blockquote><p>QUOTE</p></blockquote>
-                    <figcaption><strong>NAME</strong><span>ROLE, COMPANY</span></figcaption>
-                </figure>
+                <div class="kind-card glass">
+                    <svg class="kind-mark" viewBox="0 0 48 36" aria-hidden="true" focusable="false"><path d="M0 36V22C0 9 6 2 18 0l2 5c-7 2-10 6-10 13h9v18Zm27 0V22C27 9 33 2 45 0l2 5c-7 2-10 6-10 13h9v18Z"/></svg>
+                    <div class="kind-slides" id="kind-slides">
+                        <!-- TEMPLATE (copy, fill in, keep the quote word for word as approved):
+                        <figure class="kind-quote">
+                            <blockquote><p>The quote, exactly as approved.</p></blockquote>
+                            <figcaption><strong>Full Name</strong><span>Role, Company</span></figcaption>
+                        </figure>
+                        -->
+                        <!-- PLACEHOLDER: hides itself as soon as a real .kind-quote is added above; delete when done -->
+                        <figure class="kind-quote kind-quote--placeholder" data-placeholder>
+                            <blockquote><p>This is where a client's words about working with Aggor will appear, once they have been shared and approved.</p></blockquote>
+                            <figcaption><strong>Client Name</strong><span>Role &middot; Company</span></figcaption>
+                        </figure>
+                    </div>
+                    <div class="kind-invite" id="kind-invite">
+                        <p class="kind-invite-lead">Worked with Aggor on a set, a stage or a brand?</p>
+                        <button type="button" class="btn-pill" data-kind-open>Share your experience
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></button>
+                    </div>
+                    <div class="kind-controls" id="kind-controls" hidden>
+                        <button class="kind-btn glass" id="kind-prev" type="button" aria-label="Previous testimonial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+                        <button class="kind-btn glass" id="kind-next" type="button" aria-label="Next testimonial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2869,6 +3508,55 @@ html.gsap-on .reveal {
             <p>Developed by <a href="https://theimagedept.vercel.app/" target="_blank" rel="noopener">TheImageDept</a> <span class="footer-ver">&middot; v20.6</span></p>
         </div>
     </footer>
+
+    <!-- Testimonial form. Submissions are emailed to Aggor (via the FormSubmit relay, KIND_ENDPOINT in the
+         page script) and only appear on the page once approved and added to #kind-slides. -->
+    <dialog class="kind-dialog glass" id="kind-dialog" aria-labelledby="kind-dialog-title">
+        <form class="kind-form" id="kind-form" novalidate>
+            <button class="kind-dialog-close" type="button" data-kind-close aria-label="Close">&times;</button>
+            <p class="sec-eyebrow">Kind words</p>
+            <h3 class="kind-dialog-title" id="kind-dialog-title">Share your experience</h3>
+            <p class="kind-dialog-note">Every message is read by Aggor before it is published here.</p>
+
+            <label class="kind-field"><span>Your name</span>
+                <input name="name" type="text" autocomplete="name" required maxlength="80"></label>
+            <label class="kind-field"><span>Role &amp; company <em>(optional)</em></span>
+                <input name="role" type="text" autocomplete="organization-title" maxlength="100" placeholder="e.g. Producer, Studio Name"></label>
+            <label class="kind-field"><span>Email <em>(not published)</em></span>
+                <input name="email" type="email" autocomplete="email" required maxlength="120"></label>
+            <label class="kind-field"><span>Your testimonial</span>
+                <textarea name="message" rows="5" required maxlength="600" placeholder="What was it like working with Aggor?"></textarea>
+                <small class="kind-count" id="kind-count">0 / 600</small></label>
+            <label class="kind-consent"><input name="consent" type="checkbox" required>
+                <span>I'm happy for these words to appear on this site with my name and role.</span></label>
+            <input class="kind-honey" name="_honey" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <p class="kind-status" id="kind-status" role="status" aria-live="polite"></p>
+            <button class="btn-pill kind-submit" type="submit">Send for review
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></button>
+        </form>
+        <div class="kind-done" id="kind-done" hidden>
+            <svg class="kind-mark" viewBox="0 0 48 36" aria-hidden="true" focusable="false"><path d="M0 36V22C0 9 6 2 18 0l2 5c-7 2-10 6-10 13h9v18Zm27 0V22C27 9 33 2 45 0l2 5c-7 2-10 6-10 13h9v18Z"/></svg>
+            <h3 class="kind-dialog-title">Thank you.</h3>
+            <p class="kind-dialog-note">Your words are on their way to Aggor. They'll appear here once she has read them.</p>
+            <button class="btn-pill" type="button" data-kind-close>Close</button>
+        </div>
+    </dialog>
+
+    <!-- Behind-the-scenes gallery: thumbnails are built by script from GALLERY in the page script -->
+    <div class="gallery" id="gallery" role="dialog" aria-modal="true" aria-label="Behind the scenes gallery" aria-hidden="true">
+        <div class="gallery-top">
+            <p class="gallery-title">Behind the scenes</p>
+            <span class="gallery-count" id="gallery-count" aria-live="polite"></span>
+            <button class="gallery-close glass-dark" id="gallery-close" type="button" aria-label="Close gallery">&times;</button>
+        </div>
+        <figure class="gallery-stage" id="gallery-stage">
+            <img id="gallery-img" alt="">
+            <button class="gallery-nav gallery-prev glass-dark" id="gallery-prev" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
+            <button class="gallery-nav gallery-next glass-dark" id="gallery-next" type="button" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+        </figure>
+        <div class="gallery-thumbs" id="gallery-thumbs"></div>
+    </div>
 
     <div class="film-modal" id="film-modal" role="dialog" aria-modal="true" aria-label="Film player" aria-hidden="true">
         <button class="film-modal-close" id="film-close" type="button" aria-label="Close player">&times;</button>
@@ -3113,15 +3801,14 @@ html.gsap-on .reveal {
                 scrollTrigger: { trigger: '.bts-collage', start: 'top 85%', once: true }
             });
 
-            // 6. Clientele rows slide in from opposite sides
-            gsap.from('.credit-row', {
-                opacity: 0, x: (i) => (i % 2 ? 160 : -160), duration: 1.6, stagger: 0.25, ease: 'expo.out',
-                clearProps: 'opacity,transform',
-                scrollTrigger: { trigger: '.credit-rows', start: 'top 88%', once: true }
-            });
+            // 6. Clientele cards rise row by row
+            $$('.cl-track').forEach(track => gsap.from(track.children, {
+                y: 40, opacity: 0, duration: 1.2, stagger: 0.08, ease: 'expo.out', clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: track, start: 'top 88%', once: true }
+            }));
 
             // 8. Closing card: actions and social icons
-            const ctas = $$('.cta-actions > *, .social-link');
+            const ctas = $$('.cta-actions > *, .cta-card .social-link');
             freeze(ctas);
             gsap.from(ctas, {
                 opacity: 0, y: 30, duration: 1.3, stagger: 0.1, ease: 'expo.out',
@@ -3155,6 +3842,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('menu-open', open);
         menuToggle.setAttribute('aria-expanded', String(open));
         if (panelMenu) panelMenu.setAttribute('aria-expanded', String(open));
+        if (open) setTimeout(() => { const first = navLinks.querySelector('.nav-link'); if (first) first.focus({ preventScroll: true }); }, 350);
+        else if (document.activeElement && navLinks.contains(document.activeElement)) menuToggle.focus();
     };
 
     if (panelMenu) {
@@ -3178,7 +3867,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Close mobile menu when clicking a nav link
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link, .nav-link-cta').forEach(link => {
         link.addEventListener('click', () => {
             if (navLinks.classList.contains('active')) {
                 setMenu(false);
@@ -3266,34 +3955,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Clientele marquee — repeat each row until it can never run dry ────────
-    // Cards are cloned so the track is at least (row width + one set) wide, and the
-    // keyframes move by exactly one set, so the wrap-around is seamless at any width.
-    (function () {
-        const tracks = Array.from(document.querySelectorAll('.credit-track'));
-        if (!tracks.length) return;
-        const build = (track) => {
-            const originals = track.__orig || (track.__orig = Array.from(track.children).filter(c => !c.hasAttribute('aria-hidden')));
-            Array.from(track.children).forEach(c => { if (c.hasAttribute('aria-hidden')) c.remove(); });
-            const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-            const setW = originals.reduce((w, c) => w + c.offsetWidth + gap, 0);
-            if (!setW) return;
-            const need = Math.ceil((track.parentElement.clientWidth + setW) / setW) - 1;
-            for (let i = 0; i < Math.max(need, 1); i++) {
-                originals.forEach(c => {
-                    const k = c.cloneNode(true);
-                    k.setAttribute('aria-hidden', 'true');
-                    track.appendChild(k);
-                });
-            }
-            track.style.setProperty('--loop', setW + 'px');
+    // ── Clientele rows: arrows page through each track; disabled at either end ──
+    document.querySelectorAll('.cl-group').forEach(group => {
+        const track = group.querySelector('.cl-track');
+        const [prev, next] = group.querySelectorAll('[data-cl-scroll]');
+        if (!track || !prev || !next) return;
+        const sync = () => {
+            const max = track.scrollWidth - track.clientWidth;
+            prev.disabled = track.scrollLeft <= 2;
+            next.disabled = track.scrollLeft >= max - 2;
         };
-        const run = () => tracks.forEach(build);
-        run();
-        window.addEventListener('load', run);
-        let t;
-        window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 200); });
-    })();
+        [prev, next].forEach(btn => btn.addEventListener('click', () => {
+            track.scrollBy({ left: Number(btn.dataset.clScroll) * track.clientWidth * 0.8, behavior: 'smooth' });
+        }));
+        track.addEventListener('scroll', sync, { passive: true });
+        window.addEventListener('resize', sync);
+        sync();
+    });
 
     // ── Films play in a lightbox, on this page ────────────────────────────────
     (function () {
@@ -3319,9 +3997,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (opener) opener.focus();
         };
 
-        // Work tiles play their own link; the hero showreel plays its data-showreel link (if set);
-        // the BTS button plays the local reel file
-        document.querySelectorAll('.work-view, .hero-reel, .bts-reel').forEach(link => {
+        // Work tiles play their own link; the hero showreel plays its data-showreel link (if set),
+        // which may also be a local .mp4
+        document.querySelectorAll('.work-view, .hero-reel').forEach(link => {
             link.addEventListener('click', (e) => {
                 const src = link.classList.contains('hero-reel') ? link.dataset.showreel : link.getAttribute('href');
                 const local = src && /\.mp4$/i.test(src);
@@ -3342,6 +4020,190 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn.addEventListener('click', close);
         modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
+    })();
+
+    // ── Behind-the-scenes gallery: arrows, keys, swipe and a thumbnail strip ──
+    (function () {
+        const GALLERY = ['JHOE4152', 'JHOE4161', 'JHOE4179', 'JHOE4193', 'JHOE4237', 'JHOE4284', 'JHOE4288',
+                         'JHOE4294', 'JHOE4306', 'JHOE4336', 'JHOE4396', 'JHOE4399', 'JHOE4438', 'JHOE4560'];
+        const box = document.getElementById('gallery');
+        if (!box) return;
+        const img = document.getElementById('gallery-img');
+        const count = document.getElementById('gallery-count');
+        const strip = document.getElementById('gallery-thumbs');
+        const closeBtn = document.getElementById('gallery-close');
+        const full = (name) => 'assets/bts/web/' + name + '.jpg';
+        const pad = (n) => String(n).padStart(2, '0');
+        let index = 0, opener = null;
+
+        const thumbs = GALLERY.map((name, i) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.setAttribute('aria-label', 'Show photo ' + (i + 1));
+            b.innerHTML = '<img src="assets/bts/thumbs/' + name + '.jpg" alt="" loading="lazy">';
+            b.addEventListener('click', () => show(i));
+            strip.appendChild(b);
+            return b;
+        });
+
+        const show = (i) => {
+            index = (i + GALLERY.length) % GALLERY.length;
+            img.classList.add('is-loading');
+            img.onload = () => img.classList.remove('is-loading');
+            img.src = full(GALLERY[index]);
+            img.alt = 'Behind the scenes on set, photo ' + (index + 1) + ' of ' + GALLERY.length;
+            count.textContent = pad(index + 1) + ' / ' + pad(GALLERY.length);
+            thumbs.forEach((t, k) => t.setAttribute('aria-current', String(k === index)));
+            thumbs[index].scrollIntoView({ block: 'nearest', inline: 'center' });
+            [index - 1, index + 1].forEach(n => { new Image().src = full(GALLERY[(n + GALLERY.length) % GALLERY.length]); });
+        };
+
+        const open = (i, from) => {
+            opener = from;
+            box.classList.add('is-open');
+            box.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            show(i);
+            closeBtn.focus();
+        };
+
+        const close = () => {
+            box.classList.remove('is-open');
+            box.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            if (opener) opener.focus();
+        };
+
+        document.querySelectorAll('[data-gallery-open]').forEach(el => {
+            el.addEventListener('click', () => open(parseInt(el.dataset.galleryOpen, 10) || 0, el));
+        });
+        document.getElementById('gallery-prev').addEventListener('click', () => show(index - 1));
+        document.getElementById('gallery-next').addEventListener('click', () => show(index + 1));
+        closeBtn.addEventListener('click', close);
+        box.addEventListener('click', (e) => { if (e.target === box || e.target.id === 'gallery-stage') close(); });
+        document.addEventListener('keydown', (e) => {
+            if (!box.classList.contains('is-open')) return;
+            if (e.key === 'Escape') close();
+            else if (e.key === 'ArrowLeft') show(index - 1);
+            else if (e.key === 'ArrowRight') show(index + 1);
+        });
+
+        // Swipe left/right on the photo
+        let startX = null;
+        const stage = document.getElementById('gallery-stage');
+        stage.addEventListener('pointerdown', (e) => { startX = e.clientX; });
+        stage.addEventListener('pointerup', (e) => {
+            if (startX === null) return;
+            const dx = e.clientX - startX;
+            startX = null;
+            if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+        });
+    })();
+
+    // ── Kind words: one quote at a time; the invitation shows until quotes exist ──
+    (function () {
+        const all = Array.from(document.querySelectorAll('#kind-slides .kind-quote'));
+        const quotes = all.filter(q => !q.hasAttribute('data-placeholder'));
+        const invite = document.getElementById('kind-invite');
+        const controls = document.getElementById('kind-controls');
+        if (!quotes.length || !invite) return; // placeholder + invitation stay until a real quote exists
+        all.filter(q => q.hasAttribute('data-placeholder')).forEach(q => q.remove());
+        invite.hidden = true;
+        let at = 0;
+        const show = (i) => {
+            at = (i + quotes.length) % quotes.length;
+            quotes.forEach((q, k) => { q.hidden = k !== at; });
+        };
+        if (quotes.length > 1) {
+            controls.hidden = false;
+            document.getElementById('kind-prev').addEventListener('click', () => show(at - 1));
+            document.getElementById('kind-next').addEventListener('click', () => show(at + 1));
+        }
+        show(0);
+    })();
+
+    // ── Kind words form: emails the testimonial for Aggor to approve ───────────
+    // FormSubmit relays the form to the inbox. The very first submission sends a one-time
+    // activation email to that address; nothing is delivered until that link is clicked.
+    (function () {
+        const KIND_ENDPOINT = 'https://formsubmit.co/ajax/info@aggoryorm.com';
+        const dialog = document.getElementById('kind-dialog');
+        const form = document.getElementById('kind-form');
+        if (!dialog || !form || typeof dialog.showModal !== 'function') return;
+        const done = document.getElementById('kind-done');
+        const status = document.getElementById('kind-status');
+        const counter = document.getElementById('kind-count');
+        const submit = form.querySelector('.kind-submit');
+        const message = form.elements.message;
+
+        const reset = () => {
+            form.hidden = false;
+            done.hidden = true;
+            status.textContent = '';
+            submit.disabled = false;
+        };
+        document.querySelectorAll('[data-kind-open]').forEach(b => b.addEventListener('click', () => {
+            reset();
+            dialog.showModal();
+            form.elements.name.focus();
+        }));
+        dialog.querySelectorAll('[data-kind-close]').forEach(b => b.addEventListener('click', () => dialog.close()));
+        dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); }); // click outside
+
+        message.addEventListener('input', () => { counter.textContent = message.value.length + ' / 600'; });
+
+        const mailtoFallback = (d) => 'mailto:info@aggoryorm.com?subject=' + encodeURIComponent('Kind words from ' + d.name) +
+            '&body=' + encodeURIComponent(d.message + '\n\n- ' + d.name + (d.role ? ', ' + d.role : ''));
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            let firstBad = null;
+            ['name', 'email', 'message', 'consent'].forEach(n => {
+                const el = form.elements[n];
+                const ok = el.type === 'checkbox' ? el.checked : el.value.trim() && el.checkValidity();
+                el.setAttribute('aria-invalid', String(!ok));
+                if (!ok && !firstBad) firstBad = el;
+            });
+            if (firstBad) {
+                status.textContent = firstBad.name === 'consent'
+                    ? 'Please tick the box so your words can be published.'
+                    : 'Please fill in your name, a valid email and your testimonial.';
+                firstBad.focus();
+                return;
+            }
+            if (form.elements._honey.value) return; // a bot filled the hidden field
+
+            const d = {
+                name: form.elements.name.value.trim(),
+                role: form.elements.role.value.trim(),
+                email: form.elements.email.value.trim(),
+                message: message.value.trim()
+            };
+            submit.disabled = true;
+            status.textContent = '';
+            try {
+                const res = await fetch(KIND_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify({
+                        _subject: 'New testimonial for approval: ' + d.name,
+                        _template: 'table',
+                        _captcha: 'false',
+                        Name: d.name, 'Role & company': d.role || '-', Email: d.email, Testimonial: d.message,
+                        Consent: 'Agreed to publication with name and role'
+                    })
+                });
+                if (!res.ok) throw new Error(res.status);
+                form.reset();
+                counter.textContent = '0 / 600';
+                form.hidden = true;
+                done.hidden = false;
+                done.querySelector('button').focus();
+            } catch (err) {
+                submit.disabled = false;
+                status.innerHTML = 'Couldn\'t send just now. <a href="' + mailtoFallback(d) + '">Send it by email instead</a>.';
+            }
+        });
     })();
 
     // ── Featured work — the lead film plays muted in its tile once it is nearby ─
